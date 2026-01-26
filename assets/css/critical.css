@@ -1,0 +1,66 @@
+/* Critical CSS - Loaded inline in <head> */
+
+:root {
+    --color-primary: #137fec;
+    --color-bg-light: #f3f4f6;
+    --header-height-mobile: 60px;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    opacity: 1;
+    /* Ensure body is visible */
+    background-color: var(--color-bg-light);
+}
+
+/* Preloader Styles */
+#adorkini-preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#adorkini-preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(19, 127, 236, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--color-primary);
+    animation: spin 0.8s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Header Skeleton */
+.site-header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    height: var(--header-height-mobile);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+/* Utility for hiding content while loading if needed */
+.cloak {
+    opacity: 0;
+}

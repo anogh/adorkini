@@ -1,0 +1,28 @@
+{
+    "en": {
+        "home": "Home",
+        "categories": "Categories",
+        "cart": "Cart",
+        "wishlist": "Wishlist",
+        "profile": "Profile",
+        "best_sellers": "Top 10 Best Sellers",
+        "new_arrivals": "New Arrivals",
+        "search_placeholder": "Search for products...",
+        "login": "Login",
+        "register": "Register",
+        "order_lookup": "Track Order"
+    },
+    "bn": {
+        "home": "হোম",
+        "categories": "ক্যাটাগরি",
+        "cart": "কার্ট",
+        "wishlist": "উইশলিস্ট",
+        "profile": "প্রোফাইল",
+        "best_sellers": "শীর্ষ ১০ বেস্ট সেলার",
+        "new_arrivals": "নতুন কালেকশন",
+        "search_placeholder": "পণ্য অনুসন্ধান করুন...",
+        "login": "লগিন",
+        "register": "রেজিস্টার",
+        "order_lookup": "অর্ডার ট্র্যাক"
+    }
+}

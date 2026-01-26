@@ -1,0 +1,84 @@
+/*
+Theme Name: Adorkini
+Theme URI: https://adorkini.com/
+Description: High-performance, mobile-first WooCommerce theme built for speed and conversion.
+Version: 1.0.0
+Author: Adorkini Dev Team
+Author URI: https://adorkini.com/
+Text Domain: adorkini
+Domain Path: /languages
+*/
+
+:root {
+    /* Color Palette */
+    --color-primary: #137fec;
+    --color-primary-hover: #0b6ad0;
+    --color-text-main: #1f2937;
+    --color-text-light: #6b7280;
+    --color-bg-light: #f3f4f6;
+    --color-white: #ffffff;
+    --color-border: #e5e7eb;
+
+    /* Product Ranking Colors */
+    --rank-gold: #ffd700;
+    --rank-silver: #c0c0c0;
+    --rank-bronze: #cd7f32;
+
+    /* Typography */
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-bengali: 'Noto Sans Bengali', sans-serif;
+
+    /* Spacing */
+    --container-width: 1280px;
+    --header-height-desktop: 80px;
+    --header-height-mobile: 60px;
+    --bottom-nav-height: 60px;
+}
+
+/* Base Reset & Setup */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text-main);
+    background-color: var(--color-bg-light);
+    line-height: 1.5;
+    margin: 0;
+    padding-bottom: var(--bottom-nav-height);
+    /* Space for bottom nav on mobile */
+}
+
+@media (min-width: 768px) {
+    body {
+        padding-bottom: 0;
+    }
+}
+
+/* Critical Helper Classes */
+.container {
+    max-width: var(--container-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+/* SVG Icon Helper */
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}
