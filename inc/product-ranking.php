@@ -1,99 +1,189 @@
 <?php
 /**
  * Product Ranking System
- * Adds custom ranking field and logic for ranking badges.
- * 
- * @package Adorkini
+ * Admin menu, settings, ranked products
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-/**
- * Add Meta Box for Ranking
- */
-function adorkini_add_ranking_meta_box() {
-    add_meta_box(
-        'adorkini_product_ranking',
-        __( 'Product Ranking', 'adorkini' ),
-        'adorkini_ranking_meta_box_callback',
-        'product',
-        'side',
-        'high'
+// Add admin menu for product ranking
+add_action('admin_menu', 'warafy_product_ranking_menu');
+function warafy_product_ranking_menu() {
+    add_theme_page(
+        'Product Ranking',
+        'Product Ranking',
+        'manage_options',
+        'warafy-product-ranking',
+        'warafy_product_ranking_page'
     );
 }
-add_action( 'add_meta_boxes', 'adorkini_add_ranking_meta_box' );
 
-/**
- * Meta Box Callback
- */
-function adorkini_ranking_meta_box_callback( $post ) {
-    $value = get_post_meta( $post->ID, '_adorkini_rank', true );
+// Display admin page for product ranking
+function warafy_product_ranking_page() {
     ?>
-    <label for="adorkini_rank_field"><?php _e( 'Rank (1-10):', 'adorkini' ); ?></label>
-    <select name="adorkini_rank_field" id="adorkini_rank_field" class="widefat">
-        <option value=""><?php _e( 'None', 'adorkini' ); ?></option>
-        <?php for ( $i = 1; $i <= 10; $i++ ) : ?>
-            <option value="<?php echo esc_attr( $i ); ?>" <?php selected( $value, $i ); ?>>
-                <?php echo is_int( $i ) ? '#' . $i : $i; ?>
-            </option>
-        <?php endfor; ?>
-    </select>
-    <p class="description"><?php _e( 'Set rank #1, #2, #3 for Gold, Silver, Bronze badges.', 'adorkini' ); ?></p>
+    <div class="wrap">
+        <h1>Product Ranking Management</h1>
+        <p>Enter comma-separated product IDs for ranking. The order determines the ranking position.</p>
+        
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('warafy_product_ranking');
+            do_settings_sections('warafy_product_ranking');
+            ?>
+            
+            <h2>Top 10 Products (Homepage)</h2>
+            <p>Enter up to 10 product IDs separated by commas. The first ID will be #1, second will be #2, etc.</p>
+            <table class="form-table">
+                <tr>
+                    <th scope="row">
+                        <label for="warafy_homepage_ranking_ids">Homepage Ranking IDs</label>
+                    </th>
+                    <td>
+                        <textarea id="warafy_homepage_ranking_ids" name="warafy_homepage_ranking_ids" rows="3" class="large-text" placeholder="123, 456, 789, 1011, 1213"><?php 
+                            $homepage_ids = get_option('warafy_homepage_ranking_ids', '');
+                            echo esc_textarea($homepage_ids);
+                        ?></textarea>
+                        <p class="description">Enter product IDs separated by commas. Maximum 10 products.</p>
+                    </td>
+                </tr>
+            </table>
+            
+            <div class="homepage-preview">
+                <h3>Preview:</h3>
+                <div id="homepage-preview-container" class="ranking-preview">
+                    <?php
+                    $homepage_ids = get_option('warafy_homepage_ranking_ids', '');
+                    if (!empty($homepage_ids)) {
+                        $ids_array = array_map('trim', explode(',', $homepage_ids));
+                        $ids_array = array_filter($ids_array);
+                        $ids_array = array_slice($ids_array, 0, 10);
+                        
+                        foreach ($ids_array as $index => $product_id) {
+                            $product = wc_get_product($product_id);
+                            if ($product) {
+                                echo '<div class="preview-item">';
+                                echo '<span class="rank">#' . ($index + 1) . '</span>';
+                                echo '<span class="product-info">' . $product->get_name() . ' (ID: ' . $product_id . ')</span>';
+                                echo '</div>';
+                            } else {
+                                echo '<div class="preview-item error">';
+                                echo '<span class="rank">#' . ($index + 1) . '</span>';
+                                echo '<span class="product-info">Invalid Product ID: ' . $product_id . '</span>';
+                                echo '</div>';
+                            }
+                        }
+                    } else {
+                        echo '<p class="no-products">No product IDs entered.</p>';
+                    }
+                    ?>
+                </div>
+            </div>
+            
+            <h2 class="mt-8">Top 100 Products (Ranking Page)</h2>
+            <p>Enter up to 100 product IDs separated by commas. The first ID will be #1, second will be #2, etc.</p>
+            <table class="form-table">
+                <tr>
+                    <th scope="row">
+                        <label for="warafy_full_ranking_ids">Full Ranking IDs</label>
+                    </th>
+                    <td>
+                        <textarea id="warafy_full_ranking_ids" name="warafy_full_ranking_ids" rows="5" class="large-text" placeholder="123, 456, 789, 1011, 1213, 1415, 1617, 1819, 2021, 2223"><?php 
+                            $full_ids = get_option('warafy_full_ranking_ids', '');
+                            echo esc_textarea($full_ids);
+                        ?></textarea>
+                        <p class="description">Enter product IDs separated by commas. Maximum 100 products.</p>
+                    </td>
+                </tr>
+            </table>
+            
+            <div class="full-preview">
+                <h3>Preview (First 20):</h3>
+                <div id="full-preview-container" class="ranking-preview">
+                    <?php
+                    $full_ids = get_option('warafy_full_ranking_ids', '');
+                    if (!empty($full_ids)) {
+                        $ids_array = array_map('trim', explode(',', $full_ids));
+                        $ids_array = array_filter($ids_array);
+                        $preview_ids = array_slice($ids_array, 0, 20);
+                        
+                        foreach ($preview_ids as $index => $product_id) {
+                            $product = wc_get_product($product_id);
+                            if ($product) {
+                                echo '<div class="preview-item">';
+                                echo '<span class="rank">#' . ($index + 1) . '</span>';
+                                echo '<span class="product-info">' . $product->get_name() . ' (ID: ' . $product_id . ')</span>';
+                                echo '</div>';
+                            } else {
+                                echo '<div class="preview-item error">';
+                                echo '<span class="rank">#' . ($index + 1) . '</span>';
+                                echo '<span class="product-info">Invalid Product ID: ' . $product_id . '</span>';
+                                echo '</div>';
+                            }
+                        }
+                        
+                        if (count($ids_array) > 20) {
+                            echo '<p class="more-items">... and ' . (count($ids_array) - 20) . ' more products</p>';
+                        }
+                    } else {
+                        echo '<p class="no-products">No product IDs entered.</p>';
+                    }
+                    ?>
+                </div>
+            </div>
+            
+            <?php submit_button(); ?>
+        </form>
+    </div>
+    
+    <style>
+    .ranking-preview { border: 1px solid #ddd; padding: 10px; background: #f9f9f9; margin: 10px 0; max-height: 300px; overflow-y: auto; }
+    .preview-item { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid #eee; }
+    .preview-item:last-child { border-bottom: none; }
+    .preview-item.error { color: #d63638; }
+    .rank { font-weight: bold; color: #0073aa; min-width: 40px; }
+    .product-info { flex: 1; }
+    .no-products, .more-items { text-align: center; color: #666; font-style: italic; padding: 20px; }
+    </style>
     <?php
 }
 
-/**
- * Save Meta Box Data
- */
-function adorkini_save_ranking_meta_box( $post_id ) {
-    if ( array_key_exists( 'adorkini_rank_field', $_POST ) ) {
-        update_post_meta(
-            $post_id,
-            '_adorkini_rank',
-            sanitize_text_field( $_POST['adorkini_rank_field'] )
-        );
+// Register settings
+add_action('admin_init', 'warafy_product_ranking_settings');
+function warafy_product_ranking_settings() {
+    register_setting('warafy_product_ranking', 'warafy_homepage_ranking_ids');
+    register_setting('warafy_product_ranking', 'warafy_full_ranking_ids');
+}
+
+// AJAX handler for product verification
+add_action('wp_ajax_warafy_verify_product', 'warafy_verify_product');
+function warafy_verify_product() {
+    $product_id = intval($_POST['product_id']);
+    
+    $product = wc_get_product($product_id);
+    if ($product) {
+        wp_send_json_success(['name' => $product->get_name()]);
+    } else {
+        wp_send_json_error('Product not found');
     }
 }
-add_action( 'save_post', 'adorkini_save_ranking_meta_box' );
 
-/**
- * Get Product Rank
- */
-function adorkini_get_product_rank( $product_id ) {
-    return get_post_meta( $product_id, '_adorkini_rank', true );
-}
-
-/**
- * Display Ranking Badge
- */
-function adorkini_show_ranking_badge() {
-    global $product;
-    if ( ! $product ) return;
-
-    $rank = adorkini_get_product_rank( $product->get_id() );
-    if ( ! $rank ) return;
-
-    $badge_color = 'bg-gray-500'; // Default 4-10
-    $border_color = 'border-gray-500';
-    
-    if ( $rank == 1 ) {
-        $badge_color = 'bg-[#ffd700] text-black'; // Gold
-        $border_color = 'border-[#dba100]';
-    } elseif ( $rank == 2 ) {
-        $badge_color = 'bg-[#c0c0c0] text-black'; // Silver
-        $border_color = 'border-[#a0a0a0]';
-    } elseif ( $rank == 3 ) {
-        $badge_color = 'bg-[#cd7f32] text-white'; // Bronze
-        $border_color = 'border-[#a05a1f]';
+// Get ranked products helper function
+function warafy_get_ranked_products($type = 'homepage', $limit = null) {
+    if ($type === 'homepage') {
+        $ids_string = get_option('warafy_homepage_ranking_ids', '');
+    } else {
+        $ids_string = get_option('warafy_full_ranking_ids', '');
     }
-
-    set_query_var( 'rank', $rank );
-    set_query_var( 'badge_color', $badge_color );
-    set_query_var( 'border_color', $border_color );
     
-    get_template_part( 'template-parts/ranking-badge' );
+    $rankings = array_map('trim', explode(',', $ids_string));
+    $rankings = array_filter($rankings);
+    $rankings = array_map('intval', $rankings);
+    
+    if ($limit) {
+        $rankings = array_slice($rankings, 0, $limit);
+    }
+    
+    return $rankings;
 }
-add_action( 'woocommerce_before_shop_loop_item_title', 'adorkini_show_ranking_badge', 10 );
-add_action( 'woocommerce_single_product_summary', 'adorkini_show_ranking_badge', 5 );

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Loading Test</title>
+    <link rel="preload" href="./assets/fonts/material-symbols.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="./assets/css/material-symbols.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .icon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .icon-item { padding: 15px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
+        .material-symbols-outlined { font-size: 32px; margin-bottom: 10px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>Material Symbols Icon Loading Test</h1>
+    
+    <div id="loading-status">
+        <div class="status">Testing icon loading...</div>
+    </div>
+
+    <div class="icon-grid">
+        <div class="icon-item">
+            <span class="material-symbols-outlined">search</span>
+            <div>search</div>
+        </div>
+        <div class="icon-item">
+            <span class="material-symbols-outlined">favorite</span>
+            <div>favorite</div>
+        </div>
+        <div class="icon-item">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            <div>shopping_cart</div>
+        </div>
+        <div class="icon-item">
+            <span class="material-symbols-outlined">person</span>
+            <div>person</div>
+        </div>
+        <div class="icon-item">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <div>arrow_back</div>
+        </div>
+        <div class="icon-item">
+            <span class="material-symbols-outlined">more_vert</span>
+            <div>more_vert</div>
+        </div>
+        <div class="icon-item">
+            <span class="material-symbols-outlined">close</span>
+            <div>close</div>
+        </div>
+        <div class="icon-item">
+            <span class="material-symbols-outlined">home</span>
+            <div>home</div>
+        </div>
+    </div>
+
+    <script>
+        // Test if fonts are loading properly
+        document.addEventListener('DOMContentLoaded', function() {
+            const testElement = document.createElement('span');
+            testElement.className = 'material-symbols-outlined';
+            testElement.style.position = 'absolute';
+            testElement.style.visibility = 'hidden';
+            testElement.textContent = 'search';
+            document.body.appendChild(testElement);
+
+            // Check if the font loaded by measuring the character
+            setTimeout(() => {
+                const computedStyle = window.getComputedStyle(testElement);
+                const fontFamily = computedStyle.fontFamily;
+                
+                const statusDiv = document.getElementById('loading-status');
+                
+                if (fontFamily.includes('Material Symbols Outlined')) {
+                    statusDiv.innerHTML = '<div class="status success">✓ Icons are loading successfully from local hosting!</div>';
+                    console.log('✓ Material Symbols loaded locally');
+                } else {
+                    statusDiv.innerHTML = '<div class="status error">✗ Icons may not be loading properly. Font family: ' + fontFamily + '</div>';
+                    console.error('✗ Material Symbols failed to load locally');
+                }
+                
+                document.body.removeChild(testElement);
+            }, 1000);
+        });
+
+        // Log network requests for debugging
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            const url = args[0];
+            if (typeof url === 'string' && url.includes('fonts.googleapis.com') || url.includes('gstatic.com')) {
+                console.warn('⚠️ CDN request detected:', url);
+            }
+            return originalFetch.apply(this, args);
+        };
+    </script>
+</body>
+</html>
