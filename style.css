@@ -32,14 +32,14 @@ Text Domain: warafy-modern
 
 /* Bengali mode specific styling */
 .bengali-mode .warafy-language-toggle {
-    background: #137fec;
+    background: #dd1a1e;
     color: white;
-    border-color: #137fec;
+    border-color: #dd1a1e;
 }
 
 .bengali-mode .warafy-language-toggle:hover {
-    background: #0ea5e9;
-    border-color: #0ea5e9;
+    background: #b91519;
+    border-color: #b91519;
 }
 
 /* Translatable content transitions */
@@ -205,7 +205,7 @@ Text Domain: warafy-modern
 
 .add-to-cart-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(19, 127, 236, 0.3);
+    box-shadow: 0 4px 12px rgba(221, 26, 30, 0.3);
 }
 
 .warafy-wishlist-btn:hover {
@@ -215,7 +215,7 @@ Text Domain: warafy-modern
 
 /* See Full Ranking button */
 .see-ranking-btn {
-    background: linear-gradient(135deg, #137fec, #0ea5e9);
+    background: linear-gradient(135deg, #dd1a1e, #fcb711);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -223,7 +223,7 @@ Text Domain: warafy-modern
 
 .see-ranking-btn:hover {
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(19, 127, 236, 0.4);
+    box-shadow: 0 8px 25px rgba(221, 26, 30, 0.4);
 }
 
 .see-ranking-btn::before {
@@ -434,8 +434,8 @@ Text Domain: warafy-modern
 /* Make radio buttons and checkboxes more visible */
 input[type="radio"],
 input[type="checkbox"] {
-    accent-color: #9333ea !important;
-    /* Purple color to match theme */
+    accent-color: #dd1a1e !important;
+    /* Red color to match theme */
     width: 1.25rem !important;
     height: 1.25rem !important;
     cursor: pointer !important;
@@ -443,7 +443,7 @@ input[type="checkbox"] {
 
 /* Enhanced radio button styling */
 input[type="radio"]:checked {
-    accent-color: #9333ea !important;
+    accent-color: #dd1a1e !important;
 }
 
 /* SPECIFIC FIX FOR WOOCOMMERCE PAYMENT RADIO BUTTONS */
@@ -456,7 +456,7 @@ input[name="payment_method"] {
     position: relative !important;
     width: 1.25rem !important;
     height: 1.25rem !important;
-    accent-color: #9333ea !important;
+    accent-color: #dd1a1e !important;
 }
 
 /* ============================================
@@ -484,7 +484,7 @@ input[name="payment_method"] {
     }
 
     .dark .wp-block-woocommerce-cart {
-        background: #101922 !important;
+        background: #000000 !important;
     }
 
     /* Cart items container */
@@ -522,7 +522,7 @@ input[name="payment_method"] {
 
     .dark .wc-block-cart-items__row {
         border-color: #374151 !important;
-        background: #101922 !important;
+        background: #000000 !important;
     }
 
     /* Remove default table cell styling */
@@ -638,21 +638,21 @@ input[name="payment_method"] {
 
     /* Plus button - special styling */
     .wc-block-cart-item__quantity button:last-child {
-        border: 2px solid #137fec !important;
-        background: rgba(19, 127, 236, 0.1) !important;
-        color: #137fec !important;
+        border: 2px solid #dd1a1e !important;
+        background: rgba(221, 26, 30, 0.1) !important;
+        color: #dd1a1e !important;
     }
 
     .dark .wc-block-cart-item__quantity button:last-child {
-        background: rgba(19, 127, 236, 0.2) !important;
+        background: rgba(221, 26, 30, 0.2) !important;
     }
 
     .wc-block-cart-item__quantity button:last-child:hover {
-        background: rgba(19, 127, 236, 0.2) !important;
+        background: rgba(221, 26, 30, 0.2) !important;
     }
 
     .dark .wc-block-cart-item__quantity button:last-child:hover {
-        background: rgba(19, 127, 236, 0.3) !important;
+        background: rgba(221, 26, 30, 0.3) !important;
     }
 
     /* Quantity number */
@@ -712,7 +712,7 @@ input[name="payment_method"] {
     }
 
     .dark .wc-block-cart__totals-container {
-        background: #101922 !important;
+        background: #000000 !important;
         border-top-color: #374151 !important;
     }
 
@@ -754,7 +754,7 @@ input[name="payment_method"] {
 
     /* Checkout button styling for mobile */
     .wc-block-cart__checkout-button {
-        background: #137fec !important;
+        background: #dd1a1e !important;
         color: white !important;
         border-radius: 9999px !important;
         height: 48px !important;
@@ -775,7 +775,7 @@ input[name="payment_method"] {
     }
 
     .wc-block-cart__checkout-button:hover {
-        background: #0ea5e9 !important;
+        background: #b91519 !important;
     }
 
     /* Add arrow icon to checkout button */
@@ -1091,7 +1091,7 @@ input[name="payment_method"] {
     }
 
     .wc-block-cart__checkout-button:hover {
-        background: #0ea5e9 !important;
+        background: #b91519 !important;
     }
 
     /* Shipping note */
