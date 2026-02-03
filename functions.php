@@ -4,7 +4,7 @@ function warafy_enqueue_scripts() {
     wp_enqueue_style('google-fonts-bengali', 'https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap', array(), null);
     
     // Modern SVG Icons (Premium design alternative to Material Symbols font)
-    wp_enqueue_style('material-symbols', get_template_directory_uri() . '/assets/css/modern-svg-icons.css', array(), '1.4.0');
+    wp_enqueue_style('material-symbols', get_template_directory_uri() . '/assets/css/modern-svg-icons.css', array(), '1.5.0');
     
     // Tailwind CDN
     wp_enqueue_script('tailwind', 'https://cdn.tailwindcss.com?plugins=forms,container-queries', array(), null, false);
