@@ -29,6 +29,7 @@ This project is a custom WordPress WooCommerce theme named "Ador Kini". It featu
 - **style.css**: Main stylesheet (Tailwind CSS utilities are likely used in markup, but this file contains theme definitions).
 - **translations.json**: JSON file handling translations (English/Bengali) for the custom `__t()` function.
 - **CRITICAL_RULES.md**: Contains strict rules for development, particularly regarding SVG icons, mobile visibility classes, and code integrity.
+- **inc/logo-settings.php**: Admin settings page (Appearance → Logo Settings) for managing logo image URL and size multiplier (0.5× to 2.0×). Provides helper functions `warafy_get_logo_url()` and `warafy_get_logo_multiplier()` used in `header.php`.
 
 ## Key Features & Implementations
 - **Icon System**: Uses SVG icons (Material Symbols) rendered via `data-icon` attributes and background images, not font files.

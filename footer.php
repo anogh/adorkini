@@ -42,7 +42,7 @@
 </div>
 <div class="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
 <p>© 2026 Ador Kini. <?php echo __t('All Rights Reserved.'); ?></p>
-<p class="text-xs mt-2"><?php echo __t('Version'); ?> 3.2.1</p>
+<p class="text-xs mt-2"><?php echo __t('Version'); ?> 3.3.0</p>
 <p class="text-xs mt-2">Last edit: <?php echo esc_html( current_time( 'M j, Y g:i A' ) ); ?></p>
 </div>
 </div>

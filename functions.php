@@ -132,6 +132,7 @@ add_filter('get_site_icon_url', function() {
 // Register Shop Sidebar
 require_once get_template_directory() . '/inc/class-warafy-session-manager.php';
 require_once get_template_directory() . '/inc/homepage-settings.php';
+require_once get_template_directory() . '/inc/logo-settings.php';
 require_once get_template_directory() . '/inc/translation-hub.php';
 
 // Initialize Session Manager
