@@ -187,6 +187,30 @@ get_header(); ?>
    GLOBAL HEADER & FOOTER OVERRIDES (Force Dark)
    ========================================= */
    
+/* Force Primary Color for Icons (fixes missing icons on desktop) */
+.acct-main .bg-primary, header .bg-primary, footer .bg-primary {
+    background-color: #F5A623 !important;
+}
+.acct-main .text-primary, header .text-primary, footer .text-primary {
+    color: #F5A623 !important;
+}
+
+/* Force Desktop Header to Dark Mode */
+header.hidden.lg\:block {
+    background-color: #000000 !important;
+    border-bottom-color: #374151 !important;
+}
+
+/* Fix Search Bar on Desktop Header */
+header input[type="search"] {
+    background-color: #1f2937 !important; /* Dark gray background */
+    border-color: #374151 !important;
+    color: #ffffff !important;
+}
+header form .material-symbols-outlined {
+    color: #9ca3af !important; /* Search icon color */
+}
+
 /* Force Mobile Header to Dark Mode */
 header[class*="bg-background-light"] {
     background-color: rgba(0, 0, 0, 0.9) !important;
@@ -194,7 +218,7 @@ header[class*="bg-background-light"] {
 }
 header h1 { color: #ffffff !important; }
 header .material-symbols-outlined { color: #d1d5db !important; } /* Icons */
-header button, header a { color: #d1d5db !important; } /* General text/buttons */
+header button, header a:not(.bg-primary) { color: #d1d5db !important; } /* General text/buttons, exclude primary buttons */
 
 /* Force Footer to Dark Mode */
 footer { 
