@@ -280,15 +280,7 @@ nav.fixed.bottom-0 .text-slate-500 {
 nav.fixed.bottom-0 > div > a:last-child {
     color: #F5A623 !important; /* Force orange text */
 }
-nav.fixed.bottom-0 > div > a:last-child > div:first-child {
-    background-color: #F5A623 !important; /* Force orange bg circle */
-}
-nav.fixed.bottom-0 > div > a:last-child > div:first-child svg {
-    stroke: #ffffff !important; /* Force white icon */
-}
-nav.fixed.bottom-0 > div > a:last-child span {
-    font-weight: 700 !important; /* Bold text */
-}
+/* Icon background is now handled globally in footer.php (always bg-primary) */
 </style>
 
 <main class="acct-main flex-grow min-h-screen pb-20 lg:pb-12" style="background-color: #000000;">

@@ -52,7 +52,7 @@
 <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-20 w-full border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-background-dark/90 backdrop-blur-sm">
 <div class="flex h-16 items-center justify-around">
 <a class="flex flex-col items-center justify-center gap-1 <?php echo (is_front_page() || is_home()) ? 'text-primary' : 'text-slate-500 dark:text-slate-400'; ?>" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-<div class="flex h-10 w-10 items-center justify-center rounded-full <?php echo (is_front_page() || is_home()) ? 'bg-primary' : 'bg-gray-800'; ?> shadow-lg">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-lg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
         <polyline points="9,22 9,12 15,12 15,22"/>
@@ -61,7 +61,7 @@
 <span class="text-xs <?php echo (is_front_page() || is_home()) ? 'font-bold' : 'font-medium'; ?>"><?php echo __t('Home'); ?></span>
 </a>
 <a class="flex flex-col items-center justify-center gap-1 <?php echo (is_page('categories') || get_post_type() === 'product') ? 'text-primary' : 'text-slate-500 dark:text-slate-400'; ?>" href="<?php echo esc_url( site_url( '/categories' ) ); ?>">
-<div class="flex h-10 w-10 items-center justify-center rounded-full <?php echo (is_page('categories') || get_post_type() === 'product') ? 'bg-primary' : 'bg-gray-800'; ?> shadow-lg">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-lg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
         <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
     </svg>
@@ -70,7 +70,7 @@
 </a>
 <a class="flex flex-col items-center justify-center gap-1 <?php echo is_cart() ? 'text-primary' : 'text-slate-500 dark:text-slate-400'; ?>" href="<?php echo esc_url( wc_get_cart_url() ); ?>">
     <div class="relative">
-        <div class="flex h-10 w-10 items-center justify-center rounded-full <?php echo is_cart() ? 'bg-primary' : 'bg-gray-800'; ?> shadow-lg">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
@@ -85,7 +85,7 @@
 </a>
 <a class="flex flex-col items-center justify-center gap-1 <?php echo is_page('my-love') ? 'text-primary' : 'text-slate-500 dark:text-slate-400'; ?>" href="<?php echo esc_url( home_url( '/my-love' ) ); ?>">
     <div class="relative">
-        <div class="flex h-10 w-10 items-center justify-center rounded-full <?php echo is_page('my-love') ? 'bg-primary' : 'bg-gray-800'; ?> shadow-lg">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
@@ -95,7 +95,7 @@
     <span class="text-xs <?php echo is_page('my-love') ? 'font-bold' : 'font-medium'; ?>"><?php echo __t('My Love'); ?></span>
 </a>
 <a class="flex flex-col items-center justify-center gap-1 <?php echo (is_account_page() || is_page('profile') || is_page('my-account')) ? 'text-primary' : 'text-slate-500 dark:text-slate-400'; ?>" href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>">
-<div class="flex h-10 w-10 items-center justify-center rounded-full <?php echo (is_account_page() || is_page('profile') || is_page('my-account')) ? 'bg-primary' : 'bg-gray-800'; ?> shadow-lg">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-lg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
     </svg>
