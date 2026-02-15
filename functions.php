@@ -20,7 +20,7 @@ function warafy_enqueue_scripts() {
         theme: {
           extend: {
             colors: {
-              "primary": "#137fec",
+              "primary": "#F5A623",
               "background-light": "#f6f7f8",
               "background-dark": "#101922",
             },
@@ -109,8 +109,8 @@ function warafy_theme_setup() {
     add_theme_support('post-thumbnails');
     add_theme_support('woocommerce');
     register_nav_menus(array(
-        'primary' => __('Primary Menu', 'warafy-modern'),
-        'mobile' => __('Mobile Menu', 'warafy-modern'),
+        'primary' => __('Primary Menu', 'adorkini'),
+        'mobile' => __('Mobile Menu', 'adorkini'),
     ));
 }
 add_action('after_setup_theme', 'warafy_theme_setup');
@@ -163,7 +163,7 @@ function warafy_load_recommendations_ajax() {
                 </div>
                 <!-- Action Buttons: Add to Cart & Wishlist -->
                 <div class="flex gap-2">
-                    <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                    <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-black text-white text-sm font-bold hover:bg-gray-800 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
                         <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
                         <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                         <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
@@ -267,7 +267,7 @@ function warafy_load_related_products_ajax() {
                 </div>
                 <!-- Action Buttons: Add to Cart & Wishlist -->
                 <div class="flex gap-2">
-                    <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                    <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-black text-white text-sm font-bold hover:bg-gray-800 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
                         <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
                         <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                         <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>

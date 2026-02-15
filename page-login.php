@@ -73,7 +73,7 @@ get_header(); ?>
             <!-- Logo Section -->
             <div class="text-center mb-8">
                 <div class="flex justify-center mb-4">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Warafy" class="h-12 w-auto object-contain">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.jpg" alt="Ador Kini" class="h-12 w-auto object-contain">
                 </div>
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo __t('Welcome Back'); ?></h2>
                 <p class="mt-2 text-gray-600 dark:text-gray-400"><?php echo __t('Sign in to your account to continue'); ?></p>
@@ -174,7 +174,7 @@ get_header(); ?>
                     </a>
                 </div>
 
-                <button type="submit" class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/90 transition-colors">
+                <button type="submit" class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-black text-white text-base font-bold hover:bg-gray-800 transition-colors">
                     <span><?php echo __t('Sign In'); ?></span>
                 </button>
             </form>

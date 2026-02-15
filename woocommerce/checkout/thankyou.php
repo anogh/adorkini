@@ -43,10 +43,10 @@ if (!$warafy_has_header) {
                     </div>
                     <div class="flex-1 h-1 bg-green-500 mx-2"></div>
                     <div class="flex flex-col items-center flex-1">
-                        <div class="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center mb-2 shadow-lg animate-pulse">
+                        <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center mb-2 shadow-lg animate-pulse">
                             <span class="material-symbols-outlined" data-icon="task_alt"></span>
                         </div>
-                        <span class="text-sm font-semibold text-purple-600">Complete</span>
+                        <span class="text-sm font-semibold text-primary">Complete</span>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@ if (!$warafy_has_header) {
                         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Payment Failed</h2>
                         <p class="text-gray-600 dark:text-gray-300 mb-6">Unfortunately your order cannot be processed because the bank/merchant has declined your transaction. Please attempt your purchase again.</p>
                         <div class="flex flex-wrap items-center justify-center gap-4">
-                            <a href="<?php echo esc_url($order->get_checkout_payment_url()); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition">
+                            <a href="<?php echo esc_url($order->get_checkout_payment_url()); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-black text-white font-semibold hover:bg-gray-800 transition">
                                 <span class="material-symbols-outlined text-base" data-icon="refresh"></span>
                                 Pay Again
                             </a>
@@ -80,7 +80,7 @@ if (!$warafy_has_header) {
                                     <div>
                                         <p class="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">Success</p>
                                         <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Your order is confirmed!</h2>
-                                        <p class="text-gray-700 dark:text-gray-200 text-lg leading-relaxed">Your order number is <span class="font-semibold text-purple-600">#<?php echo esc_html($order->get_order_number()); ?></span>. Thank you for ordering with us &mdash; we'll notify you once it ships.</p>
+                                        <p class="text-gray-700 dark:text-gray-200 text-lg leading-relaxed">Your order number is <span class="font-semibold text-primary">#<?php echo esc_html($order->get_order_number()); ?></span>. Thank you for ordering with us &mdash; we'll notify you once it ships.</p>
                                     </div>
                                 </div>
 
@@ -143,7 +143,7 @@ if (!$warafy_has_header) {
                                         $public_order_url = home_url("/order-details/{$order_key}/");
                                     }
                                     ?>
-                                    <a href="<?php echo esc_url($public_order_url); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition">
+                                    <a href="<?php echo esc_url($public_order_url); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-black text-white font-semibold hover:bg-gray-800 transition">
                                         <span class="material-symbols-outlined text-base" data-icon="visibility"></span>
                                         View order details
                                     </a>
@@ -156,7 +156,7 @@ if (!$warafy_has_header) {
 
                             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
                                 <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white flex items-center justify-center shadow-lg">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-yellow-600 text-white flex items-center justify-center shadow-lg">
                                         <span class="material-symbols-outlined text-2xl" data-icon="inventory_2"></span>
                                     </div>
                                     Items in your order
@@ -166,7 +166,7 @@ if (!$warafy_has_header) {
                                         $product = $item->get_product();
                                         ?>
                                         <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
-                                            <div class="w-14 h-14 rounded-xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-200 flex items-center justify-center flex-shrink-0">
+                                            <div class="w-14 h-14 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200 flex items-center justify-center flex-shrink-0">
                                                 <?php if ($product && $product->get_image()) : ?>
                                                     <?php echo $product->get_image('thumbnail', ['class' => 'w-full h-full object-cover rounded-xl']); ?>
                                                 <?php else : ?>
@@ -206,12 +206,12 @@ if (!$warafy_has_header) {
                                 </div>
                                 
                                 <!-- Order Status -->
-                                <div class="mt-6 p-4 rounded-xl bg-purple-50 dark:bg-purple-900/30">
+                                <div class="mt-6 p-4 rounded-xl bg-gray-100 dark:bg-gray-800/50">
                                     <div class="flex items-center gap-3">
-                                        <span class="material-symbols-outlined text-purple-600 dark:text-purple-300" data-icon="info"></span>
+                                        <span class="material-symbols-outlined text-primary" data-icon="info"></span>
                                         <div>
-                                            <p class="text-sm font-semibold text-purple-900 dark:text-purple-100">Order Status</p>
-                                            <p class="text-sm text-purple-700 dark:text-purple-300"><?php echo esc_html(wc_get_order_status_name($order->get_status())); ?></p>
+                                            <p class="text-sm font-semibold text-gray-900 dark:text-white">Order Status</p>
+                                            <p class="text-sm text-gray-700 dark:text-gray-300"><?php echo esc_html(wc_get_order_status_name($order->get_status())); ?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -231,11 +231,11 @@ if (!$warafy_has_header) {
                 <?php do_action('woocommerce_thankyou', $order->get_id()); ?>
             <?php else : ?>
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 text-center">
-                    <span class="material-symbols-outlined text-6xl text-purple-500 mb-4" data-icon="info"></span>
+                    <span class="material-symbols-outlined text-6xl text-primary mb-4" data-icon="info"></span>
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Thank you!</h2>
                     <p class="text-gray-600 dark:text-gray-300 mb-6">We've received your order. If you need details, please contact support and we'll be happy to help.</p>
                     <div class="flex flex-wrap items-center justify-center gap-4">
-                        <a href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition">
+                        <a href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-black text-white font-semibold hover:bg-gray-800 transition">
                             <span class="material-symbols-outlined text-base" data-icon="storefront"></span>
                             Continue shopping
                         </a>

@@ -19,7 +19,7 @@ defined('ABSPATH') || exit;
                 <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3">Your cart is empty</h2>
                 <p class="text-gray-600 dark:text-gray-400 mb-8">Looks like you haven't added anything to your cart yet.</p>
                 <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>" 
-                   class="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-full font-semibold hover:bg-primary/90 transition-all shadow-lg">
+                   class="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition-all shadow-lg">
                     <span class="material-symbols-outlined" data-icon="storefront"></span>
                     Continue Shopping
                 </a>
@@ -294,7 +294,7 @@ defined('ABSPATH') || exit;
                             <p class="text-lg font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
                         </div>
                         <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" 
-                           class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:bg-primary/90">
+                           class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-black text-white text-base font-bold shadow-lg hover:bg-gray-800">
                             <span>Proceed to Checkout</span>
                         </a>
                         <p class="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">Shipping and taxes calculated at checkout.</p>
@@ -317,7 +317,7 @@ defined('ABSPATH') || exit;
                 <p class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
             </div>
             <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" 
-               class="flex w-auto cursor-pointer items-center justify-center gap-2 rounded-full h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:bg-primary/90">
+               class="flex w-auto cursor-pointer items-center justify-center gap-2 rounded-full h-12 px-6 bg-black text-white text-base font-bold shadow-lg hover:bg-gray-800">
                 <span>Checkout</span>
                 <span class="material-symbols-outlined" data-icon="arrow_forward"></span>
             </a>

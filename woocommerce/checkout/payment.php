@@ -45,7 +45,7 @@ if (!wp_doing_ajax()) {
         <?php do_action('woocommerce_review_order_before_submit'); ?>
 
         <button type="submit" 
-                class="button alt w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg" 
+                class="button alt w-full bg-black text-white font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg hover:bg-gray-800" 
                 name="woocommerce_checkout_place_order" 
                 id="place_order" 
                 value="<?php esc_attr_e('Place order', 'woocommerce'); ?>" 

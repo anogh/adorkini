@@ -138,7 +138,7 @@ $is_facebook_webview = (
 <?php if (!$is_facebook_webview): ?>
 <!-- Preloader -->
 <div id="warafy-preloader">
-    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Ador Kini" class="preloader-logo">
+    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.jpg" alt="Ador Kini" class="preloader-logo">
 </div>
 <?php endif; ?>
 <script>
@@ -292,7 +292,7 @@ $is_facebook_webview = (
 <div class="flex items-center gap-2">
 <a href="<?php echo esc_url( home_url( '/my-love' ) ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800">
     <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="favorite"></span>
-    <span class="warafy-wishlist-count absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white" style="display: none;">0</span>
+    <span class="warafy-wishlist-count absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs font-bold text-black" style="display: none;">0</span>
 </a>
 <a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800">
 <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="person"></span>

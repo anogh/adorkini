@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['warafy_forgot_passwor
                 $reset_link = home_url("/reset-password?token={$reset_token}&user_id={$user->ID}");
                 $subject = __t('Reset Your Password');
                 $message_body = sprintf(
-                    __t("Hi %s,\n\nYou requested to reset your password. Click the link below to set a new password:\n\n%s\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this email.\n\nBest regards,\nWarafy Team"),
+                    __t("Hi %s,\n\nYou requested to reset your password. Click the link below to set a new password:\n\n%s\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this email.\n\nBest regards,\nAdor Kini Team"),
                     $user->display_name,
                     $reset_link
                 );
@@ -123,7 +123,7 @@ get_header(); ?>
                     </div>
                 </div>
 
-                <button type="submit" name="warafy_forgot_password" class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/90 transition-colors">
+                <button type="submit" name="warafy_forgot_password" class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-black text-white text-base font-bold hover:bg-gray-800 transition-colors">
                     <span class="material-symbols-outlined mr-2" data-icon="mail"></span>
                     <span><?php echo __t('Send Reset Link'); ?></span>
                 </button>
