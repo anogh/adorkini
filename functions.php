@@ -45,7 +45,16 @@ function warafy_enqueue_scripts() {
         ));
     }
     
-    // My Account page now uses default page template or WooCommerce template
+    // Force My Account page to use our custom template
+    add_filter('template_include', function($template) {
+        if (is_page('my-account')) {
+            $custom_template = get_stylesheet_directory() . '/page-my-account.php';
+            if (file_exists($custom_template)) {
+                return $custom_template;
+            }
+        }
+        return $template;
+    }, 99);
 
 // Add hash handler for my-account page
     if (is_page('my-account')) {
