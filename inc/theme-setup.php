@@ -31,7 +31,7 @@ function warafy_enqueue_scripts() {
             colors: {
               "primary": "#F5A623",
               "background-light": "#f6f7f8",
-              "background-dark": "#101922",
+              "background-dark": "#000000",
             },
             fontFamily: {
               "display": ["Inter", "sans-serif"]

@@ -484,7 +484,7 @@ input[name="payment_method"] {
     }
 
     .dark .wp-block-woocommerce-cart {
-        background: #101922 !important;
+        background: #000000 !important;
     }
 
     /* Cart items container */
@@ -522,7 +522,7 @@ input[name="payment_method"] {
 
     .dark .wc-block-cart-items__row {
         border-color: #374151 !important;
-        background: #101922 !important;
+        background: #000000 !important;
     }
 
     /* Remove default table cell styling */
@@ -712,7 +712,7 @@ input[name="payment_method"] {
     }
 
     .dark .wc-block-cart__totals-container {
-        background: #101922 !important;
+        background: #000000 !important;
         border-top-color: #374151 !important;
     }
 
@@ -815,7 +815,7 @@ input[name="payment_method"] {
     }
 
     .dark .wc-block-cart__main {
-        background: #101922 !important;
+        background: #000000 !important;
         border-color: #374151 !important;
     }
 
@@ -1002,7 +1002,7 @@ input[name="payment_method"] {
     }
 
     .dark .wc-block-cart__totals-container {
-        background: #101922 !important;
+        background: #000000 !important;
         border-color: #374151 !important;
     }
 
@@ -3215,7 +3215,7 @@ html {
     .dark .mobile-grid-2>div.rounded-xl.border,
     .dark .grid.grid-cols-2>div.rounded-xl.border {
         border-color: #374151 !important;
-        background: #101922 !important;
+        background: #000000 !important;
     }
 
     /* Product images get smaller rounded corners */

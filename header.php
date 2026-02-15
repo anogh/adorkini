@@ -65,7 +65,7 @@ $is_facebook_webview = (
             bottom: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background: #101922 !important;
+            background: #000000 !important;
             z-index: 999999 !important;
             display: flex !important;
             align-items: center !important;
