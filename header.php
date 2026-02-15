@@ -312,7 +312,7 @@ $is_facebook_webview = (
     </svg>
     <span class="cart-count absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-primary border-2 border-primary shadow-lg" style="z-index: 20; transform: none; line-height: 1;"><?php 
     $cart_count = WC()->cart->get_cart_contents_count();
-    echo $cart_count > 0 ? $cart_count : '';
+    echo '<span class="warafy-cart-qty">' . $cart_count . '</span>';
 ?></span>
 </a>
 </div>

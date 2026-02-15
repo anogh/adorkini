@@ -662,7 +662,7 @@ function warafy_refresh_fragments() {
             $fragments = [];
             
             // Create simple HTML fragments for common selectors
-            $fragments['.cart-count'] = '<span class="cart-count">' . $count . '</span>';
+            $fragments['.warafy-cart-qty'] = '<span class="warafy-cart-qty">' . $count . '</span>';
             $fragments['.cart-counter'] = '<span class="cart-counter">' . $count . '</span>';
             
             wp_send_json_success([
