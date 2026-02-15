@@ -370,7 +370,8 @@ $is_facebook_webview = (
     </header>
 <?php else : ?>
     <!-- Default Mobile Header -->
-    <header class="lg:hidden sticky top-0 z-20 flex flex-col border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark">
+    <header class="lg:hidden sticky top-0 z-20 flex flex-col bg-white dark:bg-background-dark">
+        <div class="border-b border-solid border-slate-200 dark:border-slate-800"></div>
         <div class="relative flex items-center justify-between px-4 py-3 w-full mb-2">
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center">
