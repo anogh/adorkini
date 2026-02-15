@@ -31,9 +31,9 @@ $is_facebook_webview = (
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="<?php echo get_template_directory_uri(); ?>/assets/images/favicon.jpg">
-    <link rel="shortcut icon" type="image/jpeg" href="<?php echo get_template_directory_uri(); ?>/assets/images/favicon.jpg">
-    <link rel="apple-touch-icon" href="<?php echo get_template_directory_uri(); ?>/assets/images/favicon.jpg">
+    <link rel="icon" type="image/jpeg" href="<?php echo esc_url( home_url('/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg') ); ?>">
+    <link rel="shortcut icon" type="image/jpeg" href="<?php echo esc_url( home_url('/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg') ); ?>">
+    <link rel="apple-touch-icon" href="<?php echo esc_url( home_url('/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg') ); ?>">
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <?php wp_head(); ?>
     <?php if ($is_facebook_webview): ?>
@@ -142,7 +142,7 @@ $is_facebook_webview = (
 <?php if (!$is_facebook_webview): ?>
 <!-- Preloader -->
 <div id="warafy-preloader">
-    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.jpg" alt="Ador Kini" class="preloader-logo">
+    <img src="<?php echo esc_url( home_url('/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg') ); ?>" alt="Ador Kini" class="preloader-logo">
 </div>
 <?php endif; ?>
 <script>
@@ -267,7 +267,7 @@ $is_facebook_webview = (
 <div class="flex h-16 items-center justify-between">
 <div class="flex items-center gap-8">
 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3">
-<img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.jpg" alt="Ador Kini" class="h-10 w-auto object-contain" style="max-width: 150px;">
+<img src="<?php echo esc_url( home_url('/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg') ); ?>" alt="Ador Kini" class="h-10 w-auto object-contain" style="max-width: 150px;">
 </a>
 </div>
 <div class="hidden flex-1 justify-center lg:flex">
@@ -378,7 +378,7 @@ $is_facebook_webview = (
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center">
                 <div class="h-14 w-auto">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.jpg" alt="Ador Kini" class="h-full w-full object-contain" style="max-width: 200px;">
+                    <img src="<?php echo esc_url( home_url('/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg') ); ?>" alt="Ador Kini" class="h-full w-full object-contain" style="max-width: 200px;">
                 </div>
             </a>
             
