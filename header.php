@@ -26,7 +26,7 @@ $is_facebook_webview = (
     (preg_match('/(iPhone|iPod|iPad).*AppleWebKit/i', $user_agent) && strpos($user_agent, 'Safari') === false)
 );
 ?>
-<html <?php language_attributes(); ?> class="light">
+<html <?php language_attributes(); ?> class="dark">
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,15 +65,12 @@ $is_facebook_webview = (
             bottom: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background: #ffffff !important;
+            background: #101922 !important;
             z-index: 999999 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             overflow: hidden !important;
-        }
-        .dark #warafy-preloader {
-            background: #101922 !important;
         }
         #warafy-preloader .preloader-logo {
             width: 40px;
