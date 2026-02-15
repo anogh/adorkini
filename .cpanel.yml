@@ -1,4 +1,5 @@
+---
 deployment:
   tasks:
     - export DEPLOYPATH=/home/plysxpvv/public_html/wp-content/themes/adorkini
-    - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp -rf * $DEPLOYPATH
