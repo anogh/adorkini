@@ -182,6 +182,56 @@ get_header(); ?>
 .acct-main .bg-red-50 { background-color: rgba(239,68,68,0.1) !important; }
 .acct-main .text-green-700 { color: #4ade80 !important; }
 .acct-main .text-red-700 { color: #f87171 !important; }
+
+/* =========================================
+   GLOBAL HEADER & FOOTER OVERRIDES (Force Dark)
+   ========================================= */
+   
+/* Force Mobile Header to Dark Mode */
+header[class*="bg-background-light"] {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    border-bottom-color: rgba(55, 65, 81, 0.5) !important;
+}
+header h1 { color: #ffffff !important; }
+header .material-symbols-outlined { color: #d1d5db !important; } /* Icons */
+header button, header a { color: #d1d5db !important; } /* General text/buttons */
+
+/* Force Footer to Dark Mode */
+footer { 
+    background-color: #000000 !important; 
+    border-top-color: #374151 !important; 
+}
+footer h4 { color: #ffffff !important; }
+footer a { color: #9ca3af !important; }
+footer p { color: #9ca3af !important; }
+footer .text-gray-900 { color: #ffffff !important; }
+footer .text-gray-500 { color: #9ca3af !important; }
+
+/* Force Mobile Bottom Nav to Dark Mode */
+nav.fixed.bottom-0 {
+    background-color: rgba(0, 0, 0, 0.9) !important; /* Dark background */
+    border-top-color: #1e293b !important; /* Dark border */
+}
+/* Bottom nav icons container - Force dark/gray background instead of white */
+nav.fixed.bottom-0 .bg-white {
+    background-color: #1f2937 !important; 
+    box-shadow: none !important;
+}
+/* Profile active state - highlighted orange text */
+nav.fixed.bottom-0 .text-primary { 
+    color: #F5A623 !important; 
+}
+/* Inactive states */
+nav.fixed.bottom-0 .text-slate-500 { 
+    color: #94a3b8 !important; 
+}
+/* Highlight the Profile icon specifically if class missing */
+nav.fixed.bottom-0 a[href*="my-account"] .bg-gray-800 {
+    background-color: #F5A623 !important; /* Force orange bg if active */
+}
+nav.fixed.bottom-0 a[href*="my-account"] .text-slate-500 {
+    color: #ffffff !important; /* Force white text if active but wrong class */
+}
 </style>
 
 <main class="acct-main flex-grow min-h-screen pb-20 lg:pb-12" style="background-color: #000000;">
