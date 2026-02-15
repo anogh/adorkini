@@ -1,7 +1,7 @@
-# Warafy Theme Project Structure
+# Ador Kini Theme Project Structure
 
 ## Project Overview
-This project is a custom WordPress WooCommerce theme named "Warafy". It features a modern, responsive design with specific optimizations for mobile users and performance (including a preloader and critical CSS). It supports bilingual content (English and Bengali) and custom product ranking.
+This project is a custom WordPress WooCommerce theme named "Ador Kini". It features a modern, responsive design with specific optimizations for mobile users and performance (including a preloader and critical CSS). It supports bilingual content (English and Bengali) and custom product ranking.
 
 ## File Descriptions
 
@@ -36,4 +36,4 @@ This project is a custom WordPress WooCommerce theme named "Warafy". It features
 - **Preloader**: A custom preloader that handles specific user agents (like Facebook WebView) to avoid display issues.
 - **YouTube Video Gallery**: Products can have a YouTube video URL set in admin. If set, a "Video Gallery" section appears below the product image gallery on the product detail page (both desktop and mobile). The video field is added under "Product Data" → "General" tab in WooCommerce product edit page.
 
-site link: warafy.com
+site link: adorkini.com

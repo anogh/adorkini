@@ -1,13 +1,13 @@
 /*
-Theme Name: Warafy Modern
-Theme URI: http://warafy.com
+Theme Name: Ador Kini
+Theme URI: http://adorkini.com
 Author: Antigravity
-Author URI: http://warafy.com
-Description: A modern e-commerce theme for Warafy.
-Version: 3.1.6
+Author URI: http://adorkini.com
+Description: A modern e-commerce theme for Ador Kini.
+Version: 3.2.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: warafy-modern
+Text Domain: adorkini
 */
 
 /* ============================================
@@ -205,7 +205,7 @@ Text Domain: warafy-modern
 
 .add-to-cart-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(19, 127, 236, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .warafy-wishlist-btn:hover {
@@ -215,7 +215,7 @@ Text Domain: warafy-modern
 
 /* See Full Ranking button */
 .see-ranking-btn {
-    background: linear-gradient(135deg, #137fec, #0ea5e9);
+    background: linear-gradient(135deg, #F5A623, #E8960E);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -223,7 +223,7 @@ Text Domain: warafy-modern
 
 .see-ranking-btn:hover {
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(19, 127, 236, 0.4);
+    box-shadow: 0 8px 25px rgba(245, 166, 35, 0.4);
 }
 
 .see-ranking-btn::before {
@@ -434,8 +434,8 @@ Text Domain: warafy-modern
 /* Make radio buttons and checkboxes more visible */
 input[type="radio"],
 input[type="checkbox"] {
-    accent-color: #9333ea !important;
-    /* Purple color to match theme */
+    accent-color: #F5A623 !important;
+    /* Gold color to match Ador Kini theme */
     width: 1.25rem !important;
     height: 1.25rem !important;
     cursor: pointer !important;
@@ -443,7 +443,7 @@ input[type="checkbox"] {
 
 /* Enhanced radio button styling */
 input[type="radio"]:checked {
-    accent-color: #9333ea !important;
+    accent-color: #F5A623 !important;
 }
 
 /* SPECIFIC FIX FOR WOOCOMMERCE PAYMENT RADIO BUTTONS */
@@ -456,7 +456,7 @@ input[name="payment_method"] {
     position: relative !important;
     width: 1.25rem !important;
     height: 1.25rem !important;
-    accent-color: #9333ea !important;
+    accent-color: #F5A623 !important;
 }
 
 /* ============================================
@@ -638,21 +638,21 @@ input[name="payment_method"] {
 
     /* Plus button - special styling */
     .wc-block-cart-item__quantity button:last-child {
-        border: 2px solid #137fec !important;
-        background: rgba(19, 127, 236, 0.1) !important;
-        color: #137fec !important;
+        border: 2px solid #F5A623 !important;
+        background: rgba(245, 166, 35, 0.1) !important;
+        color: #F5A623 !important;
     }
 
     .dark .wc-block-cart-item__quantity button:last-child {
-        background: rgba(19, 127, 236, 0.2) !important;
+        background: rgba(245, 166, 35, 0.2) !important;
     }
 
     .wc-block-cart-item__quantity button:last-child:hover {
-        background: rgba(19, 127, 236, 0.2) !important;
+        background: rgba(245, 166, 35, 0.2) !important;
     }
 
     .dark .wc-block-cart-item__quantity button:last-child:hover {
-        background: rgba(19, 127, 236, 0.3) !important;
+        background: rgba(245, 166, 35, 0.3) !important;
     }
 
     /* Quantity number */
@@ -754,7 +754,7 @@ input[name="payment_method"] {
 
     /* Checkout button styling for mobile */
     .wc-block-cart__checkout-button {
-        background: #137fec !important;
+        background: #000000 !important;
         color: white !important;
         border-radius: 9999px !important;
         height: 48px !important;
@@ -775,7 +775,7 @@ input[name="payment_method"] {
     }
 
     .wc-block-cart__checkout-button:hover {
-        background: #0ea5e9 !important;
+        background: #222222 !important;
     }
 
     /* Add arrow icon to checkout button */
@@ -3240,4 +3240,81 @@ html {
     .warafy-recommended-grid {
         gap: 12px !important;
     }
+}
+
+/* ============================================
+   ADOR KINI BRAND OVERRIDES
+   Black buttons, Yellow cart, White text
+   ============================================ */
+
+/* --- BLACK BUTTONS WITH WHITE TEXT --- */
+.add-to-cart-btn,
+button.single_add_to_cart_button,
+.woocommerce .button,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce #respond input#submit,
+.checkout-button,
+.wc-block-cart__checkout-button,
+.wc-block-components-checkout-place-order-button,
+.wp-element-button {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: #000000 !important;
+}
+
+.add-to-cart-btn:hover,
+button.single_add_to_cart_button:hover,
+.woocommerce .button:hover,
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover,
+.checkout-button:hover,
+.wc-block-cart__checkout-button:hover,
+.wc-block-components-checkout-place-order-button:hover,
+.wp-element-button:hover {
+    background: #222222 !important;
+    color: #ffffff !important;
+    border-color: #222222 !important;
+}
+
+/* --- YELLOW / GOLD CART BADGE --- */
+.cart-count,
+.warafy-wishlist-count {
+    background: #F5A623 !important;
+    color: #000000 !important;
+}
+
+/* Mobile bottom nav cart badge */
+nav.lg\:hidden .bg-red-500 {
+    background: #F5A623 !important;
+    color: #000000 !important;
+}
+
+/* --- GOLD ACTIVE NAV ITEMS (replaces green) --- */
+nav.lg\:hidden a.text-green-600 {
+    color: #F5A623 !important;
+}
+
+/* Newsletter / sign-up button */
+footer .bg-primary {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+footer .bg-primary:hover {
+    background: #222222 !important;
+}
+
+/* Bengali mode language toggle - match brand */
+.bengali-mode .warafy-language-toggle {
+    background: #F5A623 !important;
+    color: #000000 !important;
+    border-color: #F5A623 !important;
+}
+
+.bengali-mode .warafy-language-toggle:hover {
+    background: #E8960E !important;
+    border-color: #E8960E !important;
 }

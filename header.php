@@ -138,7 +138,7 @@ $is_facebook_webview = (
 <?php if (!$is_facebook_webview): ?>
 <!-- Preloader -->
 <div id="warafy-preloader">
-    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Warafy" class="preloader-logo">
+    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Ador Kini" class="preloader-logo">
 </div>
 <?php endif; ?>
 <script>
@@ -263,7 +263,7 @@ $is_facebook_webview = (
 <div class="flex h-16 items-center justify-between">
 <div class="flex items-center gap-8">
 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3">
-<img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Warafy" class="h-10 w-auto object-contain" style="max-width: 150px;">
+<img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Ador Kini" class="h-10 w-auto object-contain" style="max-width: 150px;">
 </a>
 </div>
 <div class="hidden flex-1 justify-center lg:flex">
@@ -374,7 +374,7 @@ $is_facebook_webview = (
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center">
                 <div class="h-14 w-auto">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Warafy" class="h-full w-full object-contain" style="max-width: 200px;">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Ador Kini" class="h-full w-full object-contain" style="max-width: 200px;">
                 </div>
             </a>
             

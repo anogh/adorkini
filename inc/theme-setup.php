@@ -29,7 +29,7 @@ function warafy_enqueue_scripts() {
         theme: {
           extend: {
             colors: {
-              "primary": "#137fec",
+              "primary": "#F5A623",
               "background-light": "#f6f7f8",
               "background-dark": "#101922",
             },
@@ -108,8 +108,8 @@ function warafy_theme_setup() {
     add_theme_support('post-thumbnails');
     add_theme_support('woocommerce');
     register_nav_menus(array(
-        'primary' => __('Primary Menu', 'warafy-modern'),
-        'mobile' => __('Mobile Menu', 'warafy-modern'),
+        'primary' => __('Primary Menu', 'adorkini'),
+        'mobile' => __('Mobile Menu', 'adorkini'),
     ));
 }
 add_action('after_setup_theme', 'warafy_theme_setup');
@@ -117,9 +117,9 @@ add_action('after_setup_theme', 'warafy_theme_setup');
 // Register Shop Sidebar
 function warafy_widgets_init() {
     register_sidebar( array(
-        'name'          => esc_html__( 'Shop Sidebar', 'warafy-modern' ),
+        'name'          => esc_html__( 'Shop Sidebar', 'adorkini' ),
         'id'            => 'shop-sidebar',
-        'description'   => esc_html__( 'Add widgets here to appear in your shop page sidebar.', 'warafy-modern' ),
+        'description'   => esc_html__( 'Add widgets here to appear in your shop page sidebar.', 'adorkini' ),
         'before_widget' => '<div id="%1$s" class="widget %2$s mb-8">',
         'after_widget'  => '</div>',
         'before_title'  => '<h3 class="text-base font-bold text-gray-900 dark:text-white mb-4">',
