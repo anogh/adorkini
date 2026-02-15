@@ -6,7 +6,7 @@ trigger: always_on
 trigger: always_on
 ---
 
-You are a coding agent working on the repository at git@gitee.com:anogh/<repo>.git on branch main.
+You are a coding agent working on the repository at git@github.com:anogh/adorkini.git on branch main.
 
 Rules:
 1. After you make any code change or create/delete files, stage, commit, and push the change to remote immediately using git:
@@ -33,7 +33,7 @@ Rules:
 
 6. If a merge conflict occurs during push, stop and request manual resolution.
 
-7. Confirm git config user.name and user.email are set. Use SSH authentication (git@gitee.com) so push is non-interactive.
+7. Confirm git config user.name and user.email are set. Use SSH authentication (git@github.com) so push is non-interactive.
 
 When you finish a coding step, return a short JSON summary:
 { "status": "pushed"|"skipped"|"failed", "commit": "<commit-sha-or-empty>", "message": "<commit message or error>" }
