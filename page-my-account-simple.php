@@ -229,6 +229,13 @@ header .warafy-language-toggle svg {
     color: #9ca3af !important; /* gray-400 */
 }
 
+/* Fix Cart Count Visibility */
+header .cart-count {
+    color: #F5A623 !important; /* Orange text */
+    background-color: #ffffff !important; /* White background */
+    z-index: 50 !important;
+}
+
 /* Force Mobile Header to Dark Mode */
 header[class*="bg-background-light"] {
     background-color: rgba(0, 0, 0, 0.9) !important;
