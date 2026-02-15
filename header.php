@@ -291,16 +291,21 @@ $is_facebook_webview = (
 </button>
 </nav>
 <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 hidden lg:block"></div>
+<style>
+    .warafy-header-icon-btn .material-symbols-outlined {
+        filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+    }
+</style>
 <div class="flex items-center gap-2">
-<a href="<?php echo esc_url( home_url( '/my-love' ) ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
-    <span class="material-symbols-outlined text-white" data-icon="favorite"></span>
+<a href="<?php echo esc_url( home_url( '/my-love' ) ); ?>" class="warafy-header-icon-btn relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+    <span class="material-symbols-outlined" data-icon="favorite"></span>
     <span class="warafy-wishlist-count absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-xs font-bold text-primary" style="display: none;">0</span>
 </a>
-<a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
-<span class="material-symbols-outlined text-white" data-icon="person"></span>
+<a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" class="warafy-header-icon-btn flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+<span class="material-symbols-outlined" data-icon="person"></span>
 </a>
-<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
-<span class="material-symbols-outlined text-white" data-icon="shopping_cart"></span>
+<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="warafy-header-icon-btn relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+<span class="material-symbols-outlined" data-icon="shopping_cart"></span>
 <span class="cart-count absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-primary border-2 border-primary shadow-lg" style="z-index: 20; transform: none; line-height: 1;"><?php 
     $cart_count = WC()->cart->get_cart_contents_count();
     echo $cart_count > 0 ? $cart_count : '';
