@@ -265,7 +265,7 @@ $is_facebook_webview = (
 <div class="flex h-16 items-center justify-between">
 <div class="flex items-center gap-8">
 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3">
-<img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-10 w-auto object-contain" style="max-width: 150px;">
+<img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-14 w-auto object-contain" style="max-width: 180px;">
 </a>
 </div>
 <div class="hidden flex-1 justify-center lg:flex">
