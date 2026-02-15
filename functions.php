@@ -47,7 +47,7 @@ function warafy_enqueue_scripts() {
     
     // Force My Account page to use our custom template
     add_filter('template_include', function($template) {
-        if (is_page('my-account')) {
+        if (is_page('my-account') || is_account_page()) {
             $custom_template = get_stylesheet_directory() . '/page-my-account.php';
             if (file_exists($custom_template)) {
                 return $custom_template;
@@ -57,7 +57,7 @@ function warafy_enqueue_scripts() {
     }, 99);
 
 // Add hash handler for my-account page
-    if (is_page('my-account')) {
+    if (is_page('my-account') || is_account_page()) {
         wp_add_inline_script('tailwind', '
             (function() {
                 const handleHash = () => {
