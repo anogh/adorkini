@@ -259,7 +259,8 @@ $is_facebook_webview = (
 <div id="warafy-content" class="relative flex min-h-screen w-full flex-col"<?php if ($is_facebook_webview): ?> style="opacity:1!important;visibility:visible!important;pointer-events:auto!important;animation:none!important;"<?php endif; ?>>
 
 <!-- Desktop Header -->
-<header class="hidden lg:block sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark">
+<header class="hidden lg:block sticky top-0 z-50 w-full bg-white dark:bg-background-dark">
+<div class="border-b border-gray-200 dark:border-gray-700"></div>
 <div class="container mx-auto px-6">
 <div class="flex h-16 items-center justify-between">
 <div class="flex items-center gap-8">
