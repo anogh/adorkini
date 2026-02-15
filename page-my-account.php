@@ -3,6 +3,12 @@
 Template Name: My Account Page
 */
 
+// Force dark mode on this page
+add_filter('body_class', function($classes) {
+    $classes[] = 'dark';
+    return $classes;
+});
+
 // Debug: This template is being loaded
 // echo "<!-- DEBUG: Using page-my-account.php template -->";
 
@@ -74,6 +80,12 @@ $display_name = $current_user->display_name ?: ($current_user->first_name . ' ' 
 if (trim($display_name) === '') {
     $display_name = $current_user->user_login;
 }
+
+// Add dark class to html element via action
+add_action('wp_head', function() {
+    echo '<script>document.documentElement.classList.add("dark");</script>';
+    echo '<style>html { background-color: #000000 !important; }</style>';
+});
 
 get_header(); 
 ?>
