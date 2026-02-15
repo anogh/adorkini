@@ -3605,22 +3605,22 @@ function warafy_get_youtube_thumbnail($url, $quality = 'maxresdefault') {
 add_filter('template_include', function($template) {
     if (function_exists('is_account_page') && is_account_page()) {
         $custom = get_stylesheet_directory() . '/page-my-account-simple.php';
-        if (file_exists($custom)) {
-            return $custom;
-        }
+        if (file_exists($custom)) return $custom;
     }
     
-    if (is_page('login')) {
+    $request_uri = $_SERVER['REQUEST_URI'];
+    
+    if (strpos($request_uri, '/login') !== false) {
         $custom = get_stylesheet_directory() . '/page-login.php';
         if (file_exists($custom)) return $custom;
     }
     
-    if (is_page('register')) {
+    if (strpos($request_uri, '/register') !== false) {
         $custom = get_stylesheet_directory() . '/page-register.php';
         if (file_exists($custom)) return $custom;
     }
     
-    if (is_page('forgot-password')) {
+    if (strpos($request_uri, '/forgot-password') !== false) {
         $custom = get_stylesheet_directory() . '/page-forgot-password.php';
         if (file_exists($custom)) return $custom;
     }
