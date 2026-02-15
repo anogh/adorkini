@@ -45,26 +45,7 @@ function warafy_enqueue_scripts() {
         ));
     }
     
-    // Force My Account page to use our custom template
-add_filter('template_include', function($template) {
-    if (is_page('my-account')) {
-        // Handle WooCommerce My Account view-order endpoint first
-        if (function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('view-order')) {
-            $view_order_template = get_stylesheet_directory() . '/woocommerce/my-account/view-order.php';
-            if (file_exists($view_order_template)) {
-                return $view_order_template;
-            }
-        }
-
-        // Otherwise load the main account page
-        $custom_template = get_stylesheet_directory() . '/page-my-account.php';
-        if (file_exists($custom_template)) {
-            return $custom_template;
-        }
-    }
-    
-    return $template;
-}, 99);
+    // My Account page now uses default page template or WooCommerce template
 
 // Add hash handler for my-account page
     if (is_page('my-account')) {
