@@ -211,6 +211,24 @@ header form .material-symbols-outlined {
     color: #9ca3af !important; /* Search icon color */
 }
 
+/* Force Header Navigation Links to Light Gray */
+header nav a {
+    color: #e5e7eb !important; /* gray-200 */
+}
+header nav a:hover {
+    color: #F5A623 !important; /* primary */
+}
+
+/* Force Language Toggle Styling */
+header .warafy-language-toggle {
+    background-color: #1f2937 !important; /* gray-800 */
+    border-color: #374151 !important; /* gray-700 */
+    color: #e5e7eb !important; /* gray-200 */
+}
+header .warafy-language-toggle svg {
+    color: #9ca3af !important; /* gray-400 */
+}
+
 /* Force Mobile Header to Dark Mode */
 header[class*="bg-background-light"] {
     background-color: rgba(0, 0, 0, 0.9) !important;
