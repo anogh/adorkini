@@ -79,7 +79,7 @@ get_header();
 ?>
 
 <!-- Mobile Header -->
-<header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light dark:bg-background-dark backdrop-blur-sm">
     <div class="container mx-auto px-4">
         <div class="flex h-16 items-center justify-between">
             <button onclick="history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
@@ -91,7 +91,7 @@ get_header();
     </div>
 </header>
 
-<main class="flex-grow">
+<main class="flex-grow bg-background-light dark:bg-background-dark">
     <div class="container mx-auto px-4 py-6 lg:px-6 lg:py-8 max-w-5xl">
         
         <!-- Page Title (Desktop) -->
