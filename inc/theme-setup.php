@@ -29,10 +29,9 @@ function warafy_enqueue_scripts() {
         theme: {
           extend: {
             colors: {
-              "primary": "#dd1a1e",
-              "secondary": "#fcb711",
+              "primary": "#137fec",
               "background-light": "#f6f7f8",
-              "background-dark": "#000000",
+              "background-dark": "#101922",
             },
             fontFamily: {
               "display": ["Inter", "sans-serif"]
