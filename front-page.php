@@ -92,7 +92,7 @@ $random_products_query = new WP_Query([
                                         : 'flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800/50';
                                     ?>
                                     <a class="<?php echo esc_attr($class); ?>" href="<?php echo esc_url(get_term_link($category)); ?>">
-                                        <span class="material-symbols-outlined" data-icon="<?php echo esc_attr($icon); ?>"></span>
+                                        <?php echo warafy_get_icon_svg($icon, 'w-5 h-5'); ?>
                                         <p class="text-sm font-medium"><?php echo esc_html($category->name); ?></p>
                                     </a>
                                     <?php
@@ -540,8 +540,8 @@ $random_products_query = new WP_Query([
                         }
                         ?>
                         <a class="flex flex-col items-center justify-center gap-2 flex-shrink-0 w-20 mobile-scroll-item" href="<?php echo esc_url(get_term_link($category)); ?>">
-                            <div class="flex items-center justify-center rounded-full size-16 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary transition-colors border border-gray-200 dark:border-gray-700">
-                                <span class="material-symbols-outlined text-2xl" data-icon="<?php echo esc_attr($icon); ?>"></span>
+                            <div class="flex items-center justify-center rounded-full size-16 bg-gray-800 hover:bg-primary transition-colors border border-gray-700">
+                                <?php echo warafy_get_icon_svg($icon, 'w-8 h-8'); ?>
                             </div>
                             <p class="text-slate-800 dark:text-slate-200 text-xs font-bold text-center line-clamp-1"><?php echo esc_html($category->name); ?></p>
                         </a>
