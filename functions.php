@@ -3609,6 +3609,22 @@ add_filter('template_include', function($template) {
             return $custom;
         }
     }
+    
+    if (is_page('login')) {
+        $custom = get_stylesheet_directory() . '/page-login.php';
+        if (file_exists($custom)) return $custom;
+    }
+    
+    if (is_page('register')) {
+        $custom = get_stylesheet_directory() . '/page-register.php';
+        if (file_exists($custom)) return $custom;
+    }
+    
+    if (is_page('forgot-password')) {
+        $custom = get_stylesheet_directory() . '/page-forgot-password.php';
+        if (file_exists($custom)) return $custom;
+    }
+
     return $template;
 }, 999);
 
@@ -3650,3 +3666,18 @@ function warafy_change_password_handler() {
     
     wp_send_json_success(['message' => 'Password changed successfully']);
 }
+
+// Custom Login URL
+add_filter('login_url', function($login_url, $redirect, $force_reauth) {
+    return home_url('/login/') . ($redirect ? '?redirect_to=' . urlencode($redirect) : '');
+}, 999, 3);
+
+// Custom Register URL
+add_filter('register_url', function($register_url) {
+    return home_url('/register/');
+}, 999);
+
+// Custom Lost Password URL
+add_filter('lostpassword_url', function($lostpassword_url, $redirect) {
+    return home_url('/forgot-password/') . ($redirect ? '?redirect_to=' . urlencode($redirect) : '');
+}, 999, 2);
