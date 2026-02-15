@@ -94,13 +94,13 @@
     </div>
     <span class="text-xs <?php echo is_page('my-love') ? 'font-bold' : 'font-medium'; ?>"><?php echo __t('My Love'); ?></span>
 </a>
-<a class="flex flex-col items-center justify-center gap-1 <?php echo (is_account_page() || is_page('profile')) ? 'text-primary' : 'text-slate-500 dark:text-slate-400'; ?>" href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>">
-<div class="flex h-10 w-10 items-center justify-center rounded-full <?php echo (is_account_page() || is_page('profile')) ? 'bg-primary' : 'bg-gray-800'; ?> shadow-lg">
+<a class="flex flex-col items-center justify-center gap-1 <?php echo (is_account_page() || is_page('profile') || is_page('my-account')) ? 'text-primary' : 'text-slate-500 dark:text-slate-400'; ?>" href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>">
+<div class="flex h-10 w-10 items-center justify-center rounded-full <?php echo (is_account_page() || is_page('profile') || is_page('my-account')) ? 'bg-primary' : 'bg-gray-800'; ?> shadow-lg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
     </svg>
 </div>
-<span class="text-xs <?php echo (is_account_page() || is_page('profile')) ? 'font-bold' : 'font-medium'; ?>"><?php echo __t('Profile'); ?></span>
+<span class="text-xs <?php echo (is_account_page() || is_page('profile') || is_page('my-account')) ? 'font-bold' : 'font-medium'; ?>"><?php echo __t('Profile'); ?></span>
 </a>
 </div>
 </nav>
