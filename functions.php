@@ -45,16 +45,49 @@ function warafy_enqueue_scripts() {
         ));
     }
     
-    // Force My Account page to use our custom template
-    add_filter('template_include', function($template) {
-        if (is_page('my-account') || is_account_page()) {
-            $custom_template = get_stylesheet_directory() . '/page-my-account.php';
-            if (file_exists($custom_template)) {
-                return $custom_template;
-            }
+    // Add dark mode styles to WooCommerce account pages
+    add_action('wp_head', function() {
+        if (is_account_page() || is_page('my-account')) {
+            ?>
+            <style>
+                /* Force dark mode on all account pages */
+                html, body, .woocommerce-account, .woocommerce-account * {
+                    background-color: #000000 !important;
+                    color: #ffffff !important;
+                }
+                
+                h1, h2, h3, h4, h5, h6 {
+                    color: #ffffff !important;
+                }
+                
+                a {
+                    color: #F5A623 !important;
+                }
+                
+                .woocommerce-MyAccount-navigation-link.is-active a {
+                    color: #F5A623 !important;
+                    background-color: #1a1a1a !important;
+                }
+                
+                button, .button, input[type="submit"] {
+                    background-color: #F5A623 !important;
+                    color: #ffffff !important;
+                }
+                
+                input, textarea, select {
+                    background-color: #1a1a1a !important;
+                    border-color: #333333 !important;
+                    color: #ffffff !important;
+                }
+                
+                table, th, td {
+                    border-color: #333333 !important;
+                    background-color: #000000 !important;
+                }
+            </style>
+            <?php
         }
-        return $template;
-    }, 99);
+    });
 
 // Add hash handler for my-account page
     if (is_page('my-account') || is_account_page()) {
