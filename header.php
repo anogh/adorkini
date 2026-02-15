@@ -292,16 +292,16 @@ $is_facebook_webview = (
 </nav>
 <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 hidden lg:block"></div>
 <div class="flex items-center gap-2">
-<a href="<?php echo esc_url( home_url( '/my-love' ) ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800">
-    <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="favorite"></span>
-    <span class="warafy-wishlist-count absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs font-bold text-black" style="display: none;">0</span>
+<a href="<?php echo esc_url( home_url( '/my-love' ) ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+    <span class="material-symbols-outlined text-white" data-icon="favorite"></span>
+    <span class="warafy-wishlist-count absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-xs font-bold text-primary" style="display: none;">0</span>
 </a>
-<a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800">
-<span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="person"></span>
+<a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+<span class="material-symbols-outlined text-white" data-icon="person"></span>
 </a>
-<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800">
-<span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="shopping_cart"></span>
-<span class="cart-count absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white border-2 border-white dark:border-gray-800 shadow-lg" style="z-index: 20; transform: none; line-height: 1;"><?php 
+<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+<span class="material-symbols-outlined text-white" data-icon="shopping_cart"></span>
+<span class="cart-count absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-primary border-2 border-primary shadow-lg" style="z-index: 20; transform: none; line-height: 1;"><?php 
     $cart_count = WC()->cart->get_cart_contents_count();
     echo $cart_count > 0 ? $cart_count : '';
 ?></span>
