@@ -236,13 +236,7 @@ header .cart-count {
     z-index: 50 !important;
 }
 
-/* Force Logo Smaller on My Account Page */
-header img[src*="logo"], 
-header .flex.items-center.gap-3 img {
-    height: 40px !important; /* h-10 equivalent */
-    width: auto !important;
-    max-width: 150px !important;
-}
+/* Logo size is now controlled globally via Admin → Logo Settings */
 
 /* Force Mobile Header to Dark Mode */
 header[class*="bg-background-light"] {

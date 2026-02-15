@@ -139,7 +139,7 @@ get_header(); ?>
             <!-- Logo Section -->
             <div class="text-center mb-8">
                 <div class="flex justify-center mb-4">
-                    <img src="<?php echo esc_url( home_url('/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg') ); ?>" alt="Ador Kini" class="h-12 w-auto object-contain">
+                    <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
                 </div>
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo __t('Create Account'); ?></h2>
                 <p class="mt-2 text-gray-600 dark:text-gray-400"><?php echo __t('Join us today and start shopping'); ?></p>

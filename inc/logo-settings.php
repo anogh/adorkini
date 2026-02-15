@@ -1,7 +1,9 @@
 <?php
 /**
  * Logo Settings
- * Admin menu for managing site logo URL and size multiplier
+ * Admin menu for managing site logo URL and size (pixel height).
+ * Outputs a single CSS custom property (--logo-h) so every page
+ * inherits the same logo size with zero per-page overrides.
  */
 
 if (!defined('ABSPATH')) {
@@ -11,7 +13,7 @@ if (!defined('ABSPATH')) {
 // Default logo URL (the original hardcoded one)
 define('WARAFY_DEFAULT_LOGO_URL', '/wp-content/uploads/2026/02/Weixin-Image_20260127091047_649_135.jpg');
 
-// Register Admin Menu
+// ── Admin Menu ─────────────────────────────────────────────
 add_action('admin_menu', 'warafy_logo_settings_menu');
 
 function warafy_logo_settings_menu() {
@@ -24,7 +26,7 @@ function warafy_logo_settings_menu() {
     );
 }
 
-// Register Settings
+// ── Register Settings ──────────────────────────────────────
 add_action('admin_init', 'warafy_logo_settings_init');
 
 function warafy_logo_settings_init() {
@@ -32,19 +34,24 @@ function warafy_logo_settings_init() {
         'sanitize_callback' => 'esc_url_raw',
         'default' => '',
     ));
-    register_setting('warafy_logo_settings', 'warafy_logo_multiplier', array(
-        'sanitize_callback' => 'warafy_sanitize_logo_multiplier',
-        'default' => '1.0',
+    register_setting('warafy_logo_settings', 'warafy_logo_height', array(
+        'sanitize_callback' => 'warafy_sanitize_logo_height',
+        'default' => '48',
     ));
 }
 
-function warafy_sanitize_logo_multiplier($value) {
-    $allowed = array('0.5','0.6','0.7','0.8','0.9','1.0','1.1','1.2','1.3','1.4','1.5','1.6','1.7','1.8','1.9','2.0');
-    return in_array($value, $allowed) ? $value : '1.0';
+function warafy_sanitize_logo_height($value) {
+    $value = intval($value);
+    // Clamp between 24px and 120px
+    if ($value < 24) $value = 24;
+    if ($value > 120) $value = 120;
+    return $value;
 }
 
+// ── Helper Functions (used across templates) ───────────────
+
 /**
- * Helper to get the logo URL (used in header.php)
+ * Get the logo URL.
  */
 function warafy_get_logo_url() {
     $url = get_option('warafy_logo_url', '');
@@ -55,22 +62,47 @@ function warafy_get_logo_url() {
 }
 
 /**
- * Helper to get the logo size multiplier
+ * Get the logo height in pixels.
  */
-function warafy_get_logo_multiplier() {
-    return floatval(get_option('warafy_logo_multiplier', '1.0'));
+function warafy_get_logo_height() {
+    return intval(get_option('warafy_logo_height', '48'));
 }
 
-// Render Page
+/**
+ * (Legacy) Get the logo size multiplier.
+ * Kept for backward-compat; returns 1.0 since we now use absolute px.
+ */
+function warafy_get_logo_multiplier() {
+    return 1.0;
+}
+
+// ── Centralized Logo CSS (injected into <head> on EVERY page) ──
+add_action('wp_head', 'warafy_logo_inline_css', 5);
+
+function warafy_logo_inline_css() {
+    $h = warafy_get_logo_height();
+    echo "<style id=\"warafy-logo-size\">
+:root { --logo-h: {$h}px; }
+/* Unified logo styling — single source of truth */
+.warafy-logo-img {
+    height: var(--logo-h) !important;
+    width: auto !important;
+    max-width: 280px !important;
+    object-fit: contain !important;
+    display: block;
+}
+</style>\n";
+}
+
+// ── Admin Settings Page ────────────────────────────────────
 function warafy_logo_settings_page() {
-    $logo_url = get_option('warafy_logo_url', '');
+    $logo_url    = get_option('warafy_logo_url', '');
     $display_url = !empty($logo_url) ? $logo_url : home_url(WARAFY_DEFAULT_LOGO_URL);
-    $multiplier = get_option('warafy_logo_multiplier', '1.0');
-    $multiplier_options = array('0.5','0.6','0.7','0.8','0.9','1.0','1.1','1.2','1.3','1.4','1.5','1.6','1.7','1.8','1.9','2.0');
+    $height      = get_option('warafy_logo_height', '48');
     ?>
     <div class="wrap">
         <h1>Logo Settings</h1>
-        <p>Manage your site logo image URL and size multiplier. Changes apply to all header logos, preloader, and favicons across the site.</p>
+        <p>Manage your site logo image and size. Changes apply <strong>globally</strong> to every page (header, login, register, preloader, favicon).</p>
 
         <form method="post" action="options.php">
             <?php
@@ -92,9 +124,9 @@ function warafy_logo_settings_page() {
                         <th scope="row">Current Logo Preview</th>
                         <td>
                             <div id="logo-preview-wrapper" style="padding: 15px; background: #f0f0f1; border-radius: 8px; display: inline-block; margin-bottom: 10px;">
-                                <img id="logo-preview" src="<?php echo esc_url($display_url); ?>" alt="Logo Preview" style="max-width: 300px; height: auto; display: block; transform: scale(<?php echo esc_attr($multiplier); ?>); transform-origin: left top;">
+                                <img id="logo-preview" src="<?php echo esc_url($display_url); ?>" alt="Logo Preview" style="height: <?php echo esc_attr($height); ?>px; width: auto; display: block;">
                             </div>
-                            <p class="description">Preview of how the logo will appear (with current multiplier applied).</p>
+                            <p class="description">Preview of how the logo will appear at the current height.</p>
                         </td>
                     </tr>
                 </table>
@@ -104,16 +136,11 @@ function warafy_logo_settings_page() {
                 <h2 class="title">Logo Size</h2>
                 <table class="form-table">
                     <tr>
-                        <th scope="row"><label for="warafy_logo_multiplier">Size Multiplier</label></th>
+                        <th scope="row"><label for="warafy_logo_height">Logo Height (px)</label></th>
                         <td>
-                            <select name="warafy_logo_multiplier" id="warafy_logo_multiplier">
-                                <?php foreach ($multiplier_options as $opt): ?>
-                                    <option value="<?php echo esc_attr($opt); ?>" <?php selected($multiplier, $opt); ?>>
-                                        <?php echo esc_html($opt); ?>×
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <p class="description">Multiply the logo size. 1.0× = original size. Range: 0.5× (half) to 2.0× (double).</p>
+                            <input type="range" name="warafy_logo_height" id="warafy_logo_height" min="24" max="120" step="2" value="<?php echo esc_attr($height); ?>" style="width: 300px; vertical-align: middle;">
+                            <span id="height-display" style="font-weight: bold; font-size: 16px; margin-left: 12px;"><?php echo esc_html($height); ?>px</span>
+                            <p class="description" style="margin-top: 8px;">Drag to adjust. All logos across the site will use this exact height. Range: 24px – 120px.</p>
                         </td>
                     </tr>
                 </table>
@@ -134,10 +161,11 @@ function warafy_logo_settings_page() {
             $('#logo-preview').attr('src', url);
         });
 
-        // Live preview: update scale when multiplier changes
-        $('#warafy_logo_multiplier').on('change', function() {
-            var scale = $(this).val();
-            $('#logo-preview').css('transform', 'scale(' + scale + ')');
+        // Live preview: update height when slider changes
+        $('#warafy_logo_height').on('input change', function() {
+            var h = $(this).val();
+            $('#height-display').text(h + 'px');
+            $('#logo-preview').css('height', h + 'px');
         });
     });
     </script>

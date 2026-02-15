@@ -265,7 +265,7 @@ $is_facebook_webview = (
 <div class="flex h-16 items-center justify-between">
 <div class="flex items-center gap-8">
 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3">
-<img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-14 w-auto object-contain" style="max-width: 180px;">
+<img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
 </a>
 </div>
 <div class="hidden flex-1 justify-center lg:flex">
@@ -413,9 +413,7 @@ $is_facebook_webview = (
         <div class="relative flex items-center justify-between px-4 py-3 w-full mb-2">
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center">
-                <div class="h-14 w-auto">
-                    <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-full w-full object-contain" style="max-width: 200px; transform: scale(<?php echo esc_attr( warafy_get_logo_multiplier() ); ?>); transform-origin: center center;">
-                </div>
+                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
             </a>
             
             <!-- Cart Icon - Hidden on mobile since it's in sticky menu -->

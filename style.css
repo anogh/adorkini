@@ -4,7 +4,7 @@ Theme URI: http://adorkini.com
 Author: Antigravity
 Author URI: http://adorkini.com
 Description: A modern e-commerce theme for Ador Kini.
-Version: 3.3.5
+Version: 3.4.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: adorkini
@@ -2541,19 +2541,7 @@ body.woocommerce-page form .woocommerce-shipping-fields__field-wrapper .form-row
 
 @media (max-width: 1023px) {
 
-    /* Logo Wrapper - Force h-14 equivalent */
-    header.lg\\:hidden a>div {
-        height: 3.5rem !important;
-        width: auto !important;
-    }
-
-    /* Logo Image - Force max-width 200px */
-    header.lg\\:hidden a>div>img {
-        max-width: 200px !important;
-        height: 100% !important;
-        width: 100% !important;
-        object-fit: contain !important;
-    }
+    /* Logo size is now controlled globally via Admin → Logo Settings (.warafy-logo-img) */
 
     /* Gap between Logo row and Search row */
     header.lg\\:hidden>div:first-child {
