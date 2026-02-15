@@ -79,12 +79,37 @@ get_header();
 ?>
 
 <!-- Force Dark Mode for this page -->
-<script>
-    document.documentElement.classList.add('dark');
-</script>
+<style>
+    /* Force dark mode styles */
+    .my-account-page {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
+    .my-account-page .card {
+        background-color: #111111 !important;
+        border-color: #333333 !important;
+    }
+    .my-account-page .card-header {
+        background-color: #1a1a1a !important;
+        border-color: #333333 !important;
+    }
+    .my-account-page input {
+        background-color: #1a1a1a !important;
+        border-color: #444444 !important;
+        color: #ffffff !important;
+    }
+    .my-account-page label {
+        color: #cccccc !important;
+    }
+    .my-account-page h1,
+    .my-account-page h2,
+    .my-account-page h3 {
+        color: #ffffff !important;
+    }
+</style>
 
 <!-- Mobile Header -->
-<header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-700 bg-background-dark backdrop-blur-sm">
+<header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-700 bg-black backdrop-blur-sm">
     <div class="container mx-auto px-4">
         <div class="flex h-16 items-center justify-between">
             <button onclick="history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
@@ -96,11 +121,11 @@ get_header();
     </div>
 </header>
 
-<main class="flex-grow bg-background-dark">
+<main class="flex-grow my-account-page" style="background-color: #000000;">
     <div class="container mx-auto px-4 py-6 lg:px-6 lg:py-8 max-w-5xl">
         
         <!-- Page Title (Desktop) -->
-        <h1 class="hidden lg:block text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-8"><?php echo __t('My Account'); ?></h1>
+        <h1 class="hidden lg:block text-3xl font-bold tracking-tight mb-8" style="color: #ffffff;"><?php echo __t('My Account'); ?></h1>
         
         <!-- Success/Error Messages -->
         <?php if ($message) : ?>
@@ -135,11 +160,11 @@ get_header();
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             <!-- Personal Information Section -->
-            <div class="bg-white rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-background-dark overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+            <div class="card rounded-xl border overflow-hidden" style="background-color: #111111; border-color: #333333;">
+                <div class="card-header px-6 py-4 border-b" style="background-color: #1a1a1a; border-color: #333333;">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-primary" data-icon="person"></span>
-                        <h3 class="font-bold text-gray-900 dark:text-white"><?php echo __t('Personal Information'); ?></h3>
+                        <h3 class="font-bold" style="color: #ffffff;"><?php echo __t('Personal Information'); ?></h3>
                     </div>
                 </div>
                 <form method="post" class="p-6">
@@ -147,25 +172,25 @@ get_header();
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('First Name'); ?></label>
-                                <input type="text" name="first_name" value="<?php echo esc_attr($current_user->first_name); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <label class="block text-sm font-medium mb-1" style="color: #cccccc;"><?php echo __t('First Name'); ?></label>
+                                <input type="text" name="first_name" value="<?php echo esc_attr($current_user->first_name); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Last Name'); ?></label>
-                                <input type="text" name="last_name" value="<?php echo esc_attr($current_user->last_name); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <label class="block text-sm font-medium mb-1" style="color: #cccccc;"><?php echo __t('Last Name'); ?></label>
+                                <input type="text" name="last_name" value="<?php echo esc_attr($current_user->last_name); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Display Name'); ?></label>
-                            <input type="text" name="display_name" value="<?php echo esc_attr($current_user->display_name); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <label class="block text-sm font-medium mb-1" style="color: #cccccc;"><?php echo __t('Display Name'); ?></label>
+                            <input type="text" name="display_name" value="<?php echo esc_attr($current_user->display_name); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Email Address'); ?></label>
-                            <input type="email" name="email" value="<?php echo esc_attr($current_user->user_email); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <label class="block text-sm font-medium mb-1" style="color: #cccccc;"><?php echo __t('Email Address'); ?></label>
+                            <input type="email" name="email" value="<?php echo esc_attr($current_user->user_email); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Phone Number'); ?></label>
-                            <input type="tel" name="phone" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_phone', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <label class="block text-sm font-medium mb-1" style="color: #cccccc;"><?php echo __t('Phone Number'); ?></label>
+                            <input type="tel" name="phone" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_phone', true)); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                         </div>
                         <button type="submit" name="save_account_details" class="w-full px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium text-sm">
                             <?php echo __t('Save Changes'); ?>
@@ -175,26 +200,26 @@ get_header();
             </div>
 
             <!-- Shipping Address Section -->
-            <div class="bg-white rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-background-dark overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+            <div class="card rounded-xl border overflow-hidden" style="background-color: #111111; border-color: #333333;">
+                <div class="card-header px-6 py-4 border-b" style="background-color: #1a1a1a; border-color: #333333;">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-primary" data-icon="local_shipping"></span>
-                        <h3 class="font-bold text-gray-900 dark:text-white"><?php echo __t('Shipping Address'); ?></h3>
+                        <h3 class="font-bold" style="color: #ffffff;"><?php echo __t('Shipping Address'); ?></h3>
                     </div>
                 </div>
                 <form method="post" class="p-6">
                     <?php wp_nonce_field('update_address', 'update_address_nonce'); ?>
                     <div class="space-y-4">
                         <div class="space-y-3">
-                            <input type="text" name="shipping_address_1" placeholder="<?php echo __t('Street Address'); ?>" value="<?php echo esc_attr($customer->get_shipping_address_1()); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                            <input type="text" name="shipping_address_2" placeholder="<?php echo __t('Apartment, suite, etc.'); ?>" value="<?php echo esc_attr($customer->get_shipping_address_2()); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            <input type="text" name="shipping_address_1" placeholder="<?php echo __t('Street Address'); ?>" value="<?php echo esc_attr($customer->get_shipping_address_1()); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
+                            <input type="text" name="shipping_address_2" placeholder="<?php echo __t('Apartment, suite, etc.'); ?>" value="<?php echo esc_attr($customer->get_shipping_address_2()); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                             <div class="grid grid-cols-2 gap-3">
-                                <input type="text" name="shipping_city" placeholder="<?php echo __t('City'); ?>" value="<?php echo esc_attr($customer->get_shipping_city()); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                <input type="text" name="shipping_postcode" placeholder="<?php echo __t('Postal Code'); ?>" value="<?php echo esc_attr($customer->get_shipping_postcode()); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <input type="text" name="shipping_city" placeholder="<?php echo __t('City'); ?>" value="<?php echo esc_attr($customer->get_shipping_city()); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
+                                <input type="text" name="shipping_postcode" placeholder="<?php echo __t('Postal Code'); ?>" value="<?php echo esc_attr($customer->get_shipping_postcode()); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                             </div>
                             <div class="grid grid-cols-2 gap-3">
-                                <input type="text" name="shipping_state" placeholder="<?php echo __t('State/Province'); ?>" value="<?php echo esc_attr($customer->get_shipping_state()); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                <input type="text" name="shipping_country" placeholder="<?php echo __t('Country'); ?>" value="<?php echo esc_attr($customer->get_shipping_country()); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <input type="text" name="shipping_state" placeholder="<?php echo __t('State/Province'); ?>" value="<?php echo esc_attr($customer->get_shipping_state()); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
+                                <input type="text" name="shipping_country" placeholder="<?php echo __t('Country'); ?>" value="<?php echo esc_attr($customer->get_shipping_country()); ?>" class="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary" style="background-color: #1a1a1a; border-color: #444444; color: #ffffff;">
                             </div>
                         </div>
                         
@@ -207,14 +232,14 @@ get_header();
         </div>
 
         <!-- Order History Section -->
-        <div class="mt-6 bg-white rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-background-dark overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <div class="mt-6 card rounded-xl border overflow-hidden" style="background-color: #111111; border-color: #333333;">
+            <div class="card-header px-6 py-4 border-b" style="background-color: #1a1a1a; border-color: #333333;">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <span class="material-symbols-outlined text-primary" data-icon="receipt_long"></span>
-                        <h3 class="font-bold text-gray-900 dark:text-white"><?php echo __t('Order History'); ?></h3>
+                        <h3 class="font-bold" style="color: #ffffff;"><?php echo __t('Order History'); ?></h3>
                     </div>
-                    <span class="text-sm text-gray-500 dark:text-gray-400"><?php echo count($customer_orders); ?> <?php echo __t('orders'); ?></span>
+                    <span class="text-sm" style="color: #888888;"><?php echo count($customer_orders); ?> <?php echo __t('orders'); ?></span>
                 </div>
             </div>
             
