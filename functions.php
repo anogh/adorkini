@@ -115,6 +115,20 @@ function warafy_theme_setup() {
 }
 add_action('after_setup_theme', 'warafy_theme_setup');
 
+// Custom Favicon - use logo image as favicon
+function warafy_custom_favicon() {
+    $favicon_url = get_template_directory_uri() . '/assets/images/favicon.jpg';
+    echo '<link rel="icon" type="image/jpeg" href="' . esc_url($favicon_url) . '">' . "\n";
+    echo '<link rel="shortcut icon" type="image/jpeg" href="' . esc_url($favicon_url) . '">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url($favicon_url) . '">' . "\n";
+}
+add_action('wp_head', 'warafy_custom_favicon', 1);
+
+// Remove default WordPress site icon to prevent conflicts
+add_filter('get_site_icon_url', function() {
+    return get_template_directory_uri() . '/assets/images/favicon.jpg';
+}, 999);
+
 // Register Shop Sidebar
 require_once get_template_directory() . '/inc/class-warafy-session-manager.php';
 require_once get_template_directory() . '/inc/homepage-settings.php';
