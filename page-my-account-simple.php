@@ -225,12 +225,18 @@ nav.fixed.bottom-0 .text-primary {
 nav.fixed.bottom-0 .text-slate-500 { 
     color: #94a3b8 !important; 
 }
-/* Highlight the Profile icon specifically if class missing */
-nav.fixed.bottom-0 a[href*="my-account"] .bg-gray-800 {
-    background-color: #F5A623 !important; /* Force orange bg if active */
+/* Highlight the Profile icon specifically - The last item in the nav */
+nav.fixed.bottom-0 > div > a:last-child {
+    color: #F5A623 !important; /* Force orange text */
 }
-nav.fixed.bottom-0 a[href*="my-account"] .text-slate-500 {
-    color: #ffffff !important; /* Force white text if active but wrong class */
+nav.fixed.bottom-0 > div > a:last-child > div:first-child {
+    background-color: #F5A623 !important; /* Force orange bg circle */
+}
+nav.fixed.bottom-0 > div > a:last-child > div:first-child svg {
+    stroke: #ffffff !important; /* Force white icon */
+}
+nav.fixed.bottom-0 > div > a:last-child span {
+    font-weight: 700 !important; /* Bold text */
 }
 </style>
 
