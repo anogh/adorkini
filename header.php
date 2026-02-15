@@ -265,7 +265,7 @@ $is_facebook_webview = (
 <div class="flex h-16 items-center justify-between">
 <div class="flex items-center gap-8">
 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3">
-<img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-10 w-auto object-contain" style="max-width: 150px; transform: scale(<?php echo esc_attr( warafy_get_logo_multiplier() ); ?>); transform-origin: left center;">
+<img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-14 w-auto object-contain" style="max-width: 180px;">
 </a>
 </div>
 <div class="hidden flex-1 justify-center lg:flex">
@@ -306,9 +306,9 @@ $is_facebook_webview = (
 </a>
 <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
-        <circle cx="9" cy="21" r="1"/>
-        <circle cx="20" cy="21" r="1"/>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
     </svg>
     <span class="cart-count absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-primary border-2 border-primary shadow-lg" style="z-index: 20; transform: none; line-height: 1;"><?php 
     $cart_count = WC()->cart->get_cart_contents_count();
