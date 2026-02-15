@@ -3628,6 +3628,38 @@ add_filter('template_include', function($template) {
     return $template;
 }, 999);
 
+// Early redirect for auth pages to ensure themed templates are used
+add_action('template_redirect', function() {
+    $request_uri = $_SERVER['REQUEST_URI'];
+    
+    // Skip if in admin
+    if (is_admin()) return;
+    
+    if (strpos($request_uri, '/login') !== false && !is_user_logged_in()) {
+        $template = get_stylesheet_directory() . '/page-login.php';
+        if (file_exists($template)) {
+            include $template;
+            exit;
+        }
+    }
+    
+    if (strpos($request_uri, '/register') !== false && !is_user_logged_in()) {
+        $template = get_stylesheet_directory() . '/page-register.php';
+        if (file_exists($template)) {
+            include $template;
+            exit;
+        }
+    }
+    
+    if (strpos($request_uri, '/forgot-password') !== false && !is_user_logged_in()) {
+        $template = get_stylesheet_directory() . '/page-forgot-password.php';
+        if (file_exists($template)) {
+            include $template;
+            exit;
+        }
+    }
+});
+
 // Handle password change via AJAX
 add_action('wp_ajax_warafy_change_password', 'warafy_change_password_handler');
 function warafy_change_password_handler() {
