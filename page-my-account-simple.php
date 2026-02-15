@@ -84,7 +84,107 @@ if (trim($display_name) === '') {
 
 get_header(); ?>
 
-<main class="flex-grow bg-background-light dark:bg-background-dark min-h-screen pb-20 lg:pb-12">
+<style>
+/* Force dark theme for My Account page — comprehensive override */
+/* Background overrides */
+.acct-main { background-color: #000000 !important; color: #e5e7eb !important; }
+.acct-main .bg-white { background-color: #1f2937 !important; }
+.acct-main .bg-gray-50 { background-color: #111827 !important; }
+.acct-main .bg-gray-100 { background-color: #1f2937 !important; }
+.acct-main .bg-background-light { background-color: #000000 !important; }
+
+/* Text color overrides */
+.acct-main .text-gray-900 { color: #ffffff !important; }
+.acct-main .text-gray-800 { color: #e5e7eb !important; }
+.acct-main .text-gray-700 { color: #d1d5db !important; }
+.acct-main .text-gray-600 { color: #9ca3af !important; }
+.acct-main .text-gray-500 { color: #9ca3af !important; }
+.acct-main .text-gray-400 { color: #6b7280 !important; }
+.acct-main .text-gray-300 { color: #6b7280 !important; }
+
+/* Border overrides */
+.acct-main .border-gray-200 { border-color: #374151 !important; }
+.acct-main .border-gray-100 { border-color: #374151 !important; }
+.acct-main .divide-gray-100 > * + * { border-color: #374151 !important; }
+.acct-main .divide-gray-200 > * + * { border-color: #374151 !important; }
+
+/* Input overrides */
+.acct-main input[type="text"],
+.acct-main input[type="email"],
+.acct-main input[type="tel"],
+.acct-main input[type="password"],
+.acct-main input[type="number"],
+.acct-main select,
+.acct-main textarea {
+    background-color: #111827 !important;
+    border-color: #374151 !important;
+    color: #ffffff !important;
+}
+.acct-main input::placeholder,
+.acct-main textarea::placeholder { color: #6b7280 !important; }
+
+/* Hover states */
+.acct-main .hover\:bg-gray-100:hover { background-color: #374151 !important; }
+.acct-main .hover\:bg-gray-50:hover { background-color: rgba(55,65,81,0.5) !important; }
+
+/* Card containers with borders */
+.acct-main [class*="rounded-2xl"][class*="border"] {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+}
+
+/* Tab styles - inactive tabs */
+.acct-main a[class*="rounded-full"][class*="border"][class*="bg-white"] {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #9ca3af !important;
+}
+.acct-main a[class*="rounded-full"][class*="border"][class*="bg-white"]:hover {
+    background-color: #374151 !important;
+}
+
+/* Table head */
+.acct-main thead .bg-gray-50,
+.acct-main thead[class*="bg-gray"] { background-color: rgba(55,65,81,0.5) !important; }
+.acct-main tr:hover { background-color: rgba(55,65,81,0.3) !important; }
+
+/* Misc overrides */
+.acct-main .bg-orange-100 { background-color: rgba(245,166,35,0.1) !important; }
+.acct-main .bg-red-100 { background-color: rgba(239,68,68,0.1) !important; }
+.acct-main .text-orange-600 { color: #F5A623 !important; }
+.acct-main .text-red-600 { color: #ef4444 !important; }
+
+/* Secondary button style */
+.acct-main a[class*="bg-gray-50"][class*="rounded-lg"],
+.acct-main button[class*="bg-gray-50"][class*="rounded-lg"] {
+    background-color: rgba(55,65,81,0.5) !important;
+    color: #d1d5db !important;
+    border-color: #4b5563 !important;
+}
+.acct-main a[class*="bg-gray-50"][class*="rounded-lg"]:hover {
+    background-color: #374151 !important;
+}
+
+/* Logout button */
+.acct-main a[class*="border"][class*="rounded-lg"][class*="text-gray-700"] {
+    border-color: #374151 !important;
+    color: #d1d5db !important;
+}
+.acct-main a[class*="border"][class*="rounded-lg"][class*="text-gray-700"]:hover {
+    background-color: #1f2937 !important;
+}
+
+/* Help section */
+.acct-main [class*="bg-primary\/5"] { background-color: rgba(245,166,35,0.1) !important; }
+
+/* Success/Error messages */
+.acct-main .bg-green-50 { background-color: rgba(34,197,94,0.1) !important; }
+.acct-main .bg-red-50 { background-color: rgba(239,68,68,0.1) !important; }
+.acct-main .text-green-700 { color: #4ade80 !important; }
+.acct-main .text-red-700 { color: #f87171 !important; }
+</style>
+
+<main class="acct-main flex-grow min-h-screen pb-20 lg:pb-12" style="background-color: #000000;">
     <div class="container mx-auto px-4 py-8 lg:px-6 max-w-6xl">
         
         <!-- Welcome Section -->
