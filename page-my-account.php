@@ -92,6 +92,42 @@ get_header();
 
 <!-- Force Dark Mode for this page -->
 <style>
+    /* Force dark mode on header */
+    header.sticky {
+        background-color: #000000 !important;
+        border-color: #333333 !important;
+    }
+    header.sticky * {
+        border-color: #333333 !important;
+    }
+    header.sticky input {
+        background-color: #1a1a1a !important;
+        border-color: #444444 !important;
+        color: #ffffff !important;
+    }
+    header.sticky input::placeholder {
+        color: #888888 !important;
+    }
+    header.sticky a,
+    header.sticky button,
+    header.sticky span {
+        color: #ffffff !important;
+    }
+    header.sticky .material-symbols-outlined {
+        color: #cccccc !important;
+    }
+    
+    /* Force dark mode on footer/nav */
+    nav.fixed,
+    nav.fixed * {
+        background-color: #000000 !important;
+        border-color: #333333 !important;
+    }
+    nav.fixed a,
+    nav.fixed span {
+        color: #ffffff !important;
+    }
+    
     /* Force dark mode styles */
     .my-account-page {
         background-color: #000000 !important;
