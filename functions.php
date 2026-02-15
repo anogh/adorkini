@@ -45,49 +45,8 @@ function warafy_enqueue_scripts() {
         ));
     }
     
-    // Add dark mode styles to WooCommerce account pages
-    add_action('wp_head', function() {
-        if (is_account_page() || is_page('my-account')) {
-            ?>
-            <style>
-                /* Force dark mode on all account pages */
-                html, body, .woocommerce-account, .woocommerce-account * {
-                    background-color: #000000 !important;
-                    color: #ffffff !important;
-                }
-                
-                h1, h2, h3, h4, h5, h6 {
-                    color: #ffffff !important;
-                }
-                
-                a {
-                    color: #F5A623 !important;
-                }
-                
-                .woocommerce-MyAccount-navigation-link.is-active a {
-                    color: #F5A623 !important;
-                    background-color: #1a1a1a !important;
-                }
-                
-                button, .button, input[type="submit"] {
-                    background-color: #F5A623 !important;
-                    color: #ffffff !important;
-                }
-                
-                input, textarea, select {
-                    background-color: #1a1a1a !important;
-                    border-color: #333333 !important;
-                    color: #ffffff !important;
-                }
-                
-                table, th, td {
-                    border-color: #333333 !important;
-                    background-color: #000000 !important;
-                }
-            </style>
-            <?php
-        }
-    });
+    // Dark mode for account pages is handled by the custom template
+    // (page-my-account-simple.php) which uses Tailwind dark: classes
 
 // Add hash handler for my-account page
     if (is_page('my-account') || is_account_page()) {
@@ -3642,3 +3601,52 @@ function warafy_get_youtube_thumbnail($url, $quality = 'maxresdefault') {
     return false;
 }
 
+// Force custom My Account template for WooCommerce account page
+add_filter('template_include', function($template) {
+    if (function_exists('is_account_page') && is_account_page()) {
+        $custom = get_stylesheet_directory() . '/page-my-account-simple.php';
+        if (file_exists($custom)) {
+            return $custom;
+        }
+    }
+    return $template;
+}, 999);
+
+// Handle password change via AJAX
+add_action('wp_ajax_warafy_change_password', 'warafy_change_password_handler');
+function warafy_change_password_handler() {
+    check_ajax_referer('warafy_change_password', 'nonce');
+    
+    if (!is_user_logged_in()) {
+        wp_send_json_error(['message' => 'Not logged in']);
+    }
+    
+    $user = wp_get_current_user();
+    $current_password = isset($_POST['current_password']) ? $_POST['current_password'] : '';
+    $new_password = isset($_POST['new_password']) ? $_POST['new_password'] : '';
+    $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+    
+    if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
+        wp_send_json_error(['message' => 'All fields are required']);
+    }
+    
+    if (!wp_check_password($current_password, $user->data->user_pass, $user->ID)) {
+        wp_send_json_error(['message' => 'Current password is incorrect']);
+    }
+    
+    if ($new_password !== $confirm_password) {
+        wp_send_json_error(['message' => 'New passwords do not match']);
+    }
+    
+    if (strlen($new_password) < 6) {
+        wp_send_json_error(['message' => 'Password must be at least 6 characters']);
+    }
+    
+    wp_set_password($new_password, $user->ID);
+    
+    // Re-login the user
+    wp_set_current_user($user->ID);
+    wp_set_auth_cookie($user->ID);
+    
+    wp_send_json_success(['message' => 'Password changed successfully']);
+}

@@ -1,7 +1,6 @@
 <?php
 /*
 Template Name: My Account Simple
-DEPLOYED: Nov 27, 2025 7:11 PM - Simple Fix
 */
 
 // Redirect if not logged in
@@ -12,13 +11,12 @@ if (!is_user_logged_in()) {
 
 $current_user = wp_get_current_user();
 $user_id = get_current_user_id();
-$account_url = home_url('/my-account');
+$view = isset($_GET['view']) ? sanitize_text_field($_GET['view']) : 'dashboard';
 
-// Handle form submissions
+// Handle form submissions for non-AJAX actions
 $message = '';
 $message_type = '';
 
-// Handle Personal Info Update
 if (isset($_POST['save_account_details']) && wp_verify_nonce($_POST['update_account_nonce'], 'update_account_details')) {
     $email = sanitize_email($_POST['email']);
     
@@ -43,7 +41,6 @@ if (isset($_POST['save_account_details']) && wp_verify_nonce($_POST['update_acco
     }
 }
 
-// Handle Address Update
 if (isset($_POST['save_address']) && wp_verify_nonce($_POST['update_address_nonce'], 'update_address')) {
     if (class_exists('WC_Customer')) {
         $customer = new WC_Customer($user_id);
@@ -53,28 +50,32 @@ if (isset($_POST['save_address']) && wp_verify_nonce($_POST['update_address_nonc
         $customer->set_billing_state(sanitize_text_field($_POST['billing_state']));
         $customer->set_billing_postcode(sanitize_text_field($_POST['billing_postcode']));
         $customer->set_billing_country(sanitize_text_field($_POST['billing_country']));
+        
         $customer->set_shipping_address_1(sanitize_text_field($_POST['shipping_address_1']));
         $customer->set_shipping_address_2(sanitize_text_field($_POST['shipping_address_2']));
         $customer->set_shipping_city(sanitize_text_field($_POST['shipping_city']));
         $customer->set_shipping_state(sanitize_text_field($_POST['shipping_state']));
         $customer->set_shipping_postcode(sanitize_text_field($_POST['shipping_postcode']));
         $customer->set_shipping_country(sanitize_text_field($_POST['shipping_country']));
+        
         $customer->save();
         $message = 'Addresses updated successfully.';
         $message_type = 'success';
     }
 }
 
-// Get orders
+// Get Data for Dashboard
 $customer_orders = array();
 if (function_exists('wc_get_orders')) {
     $customer_orders = wc_get_orders(array(
         'customer_id' => $user_id,
-        'limit' => 10,
-        'orderby' => 'date',
-        'order' => 'DESC',
+        'limit' => -1,
     ));
 }
+$order_count = count($customer_orders);
+$total_spent = function_exists('wc_price') ? wc_price(array_reduce($customer_orders, function($carry, $order) {
+    return $carry + ($order->get_status() === 'completed' ? (float)$order->get_total() : 0);
+}, 0)) : '0';
 
 $display_name = $current_user->display_name ?: ($current_user->first_name . ' ' . $current_user->last_name);
 if (trim($display_name) === '') {
@@ -83,272 +84,397 @@ if (trim($display_name) === '') {
 
 get_header(); ?>
 
-<!-- Mobile Header -->
-<header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
-    <div class="container mx-auto px-4">
-        <div class="flex h-16 items-center justify-between">
-            <button onclick="history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
-                <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
-            </button>
-            <h1 class="text-lg font-bold text-gray-900 dark:text-white">My Account</h1>
-            <div class="w-10"></div>
+<main class="flex-grow bg-background-light dark:bg-background-dark min-h-screen pb-20 lg:pb-12">
+    <div class="container mx-auto px-4 py-8 lg:px-6 max-w-6xl">
+        
+        <!-- Welcome Section -->
+        <div class="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white"><?php echo __t('Welcome back'); ?>, <?php echo esc_html($display_name); ?>!</h1>
+                <p class="text-gray-500 dark:text-gray-400 mt-1"><?php echo __t('Manage your account, orders, and addresses from here.'); ?></p>
+            </div>
+            <a href="<?php echo wp_logout_url(home_url()); ?>" class="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-fit">
+                <span class="material-symbols-outlined text-lg" data-icon="logout"></span>
+                <span><?php echo __t('Log Out'); ?></span>
+            </a>
         </div>
-    </div>
-</header>
 
-<main class="flex-grow">
-    <div class="container mx-auto px-4 py-6 lg:px-6 lg:py-8 max-w-5xl">
-        
-        <!-- Page Title (Desktop) -->
-        <h1 class="hidden lg:block text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-8">My Account</h1>
-        
-        <!-- Success/Error Messages -->
         <?php if ($message) : ?>
-            <div class="mb-6 p-4 rounded-lg <?php echo $message_type === 'success' ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800' : 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'; ?>">
+            <div class="mb-6 p-4 rounded-xl <?php echo $message_type === 'success' ? 'bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800' : 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'; ?>">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-xl" data-icon="<?php echo $message_type === 'success' ? 'check_circle' : 'error'; ?>"></span>
-                    <?php echo esc_html($message); ?>
+                    <p class="font-medium text-sm"><?php echo esc_html($message); ?></p>
                 </div>
             </div>
         <?php endif; ?>
 
-        <!-- Profile Card -->
-        <div class="bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-6 mb-6 text-white">
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-white/20 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-3xl lg:text-4xl" data-icon="person"></span>
+        <!-- Responsive Tab Navigation -->
+        <div class="flex overflow-x-auto pb-4 mb-8 lg:mb-12 scrollbar-none gap-2">
+            <?php
+            $tabs = [
+                'dashboard' => ['label' => __t('Dashboard'), 'icon' => 'dashboard'],
+                'orders' => ['label' => __t('Orders'), 'icon' => 'receipt_long'],
+                'addresses' => ['label' => __t('Addresses'), 'icon' => 'home'],
+                'personal-info' => ['label' => __t('Personal Info'), 'icon' => 'person'],
+                'password' => ['label' => __t('Security'), 'icon' => 'lock'],
+            ];
+            foreach ($tabs as $key => $tab) :
+                $active = ($view === $key);
+            ?>
+                <a href="<?php echo esc_url(add_query_arg('view', $key, home_url('/my-account'))); ?>" 
+                   class="flex items-center gap-2 px-4 py-2.5 rounded-full whitespace-nowrap transition-all text-sm font-bold <?php echo $active ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'; ?>">
+                    <span class="material-symbols-outlined text-lg" data-icon="<?php echo $tab['icon']; ?>"></span>
+                    <span><?php echo $tab['label']; ?></span>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- View Content -->
+        <div class="w-full">
+            <?php if ($view === 'dashboard') : ?>
+                <!-- Dashboard View -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Stats Card 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-2xl" data-icon="shopping_bag"></span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider"><?php echo __t('Total Orders'); ?></p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo $order_count; ?></h3>
+                        </div>
+                    </div>
+                    <!-- Stats Card 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                            <span class="material-symbols-outlined text-2xl" data-icon="payments"></span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider"><?php echo __t('Total Spent'); ?></p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo $total_spent; ?></h3>
+                        </div>
+                    </div>
+                    <!-- Stats Card 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-500/10 flex items-center justify-center text-red-600 dark:text-red-400">
+                            <span class="material-symbols-outlined text-2xl" data-icon="favorite"></span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider"><?php echo __t('Wishlist'); ?></p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white" id="dashboard-wishlist-count">0</h3>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <h2 class="text-xl lg:text-2xl font-bold"><?php echo esc_html($display_name); ?></h2>
-                    <p class="text-white/80 text-sm lg:text-base"><?php echo esc_html($current_user->user_email); ?></p>
-                    <?php if ($phone = get_user_meta($user_id, 'billing_phone', true)) : ?>
-                        <p class="text-white/70 text-sm"><?php echo esc_html($phone); ?></p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Recent Orders -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white"><?php echo __t('Recent Orders'); ?></h3>
+                            <a href="?view=orders" class="text-sm font-bold text-primary hover:underline"><?php echo __t('View All'); ?></a>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <?php if (!empty($customer_orders)) : ?>
+                                <div class="divide-y divide-gray-100 dark:divide-gray-700">
+                                    <?php 
+                                    $recent = array_slice($customer_orders, 0, 5);
+                                    foreach ($recent as $order) : 
+                                        $status = $order->get_status();
+                                    ?>
+                                        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex items-center justify-between">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400">
+                                                    <span class="material-symbols-outlined" data-icon="package_2"></span>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-bold text-gray-900 dark:text-white">#<?php echo $order->get_order_number(); ?></p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo date_i18n('M j, Y', strtotime($order->get_date_created())); ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="text-sm font-bold text-gray-900 dark:text-white"><?php echo $order->get_formatted_order_total(); ?></p>
+                                                <span class="text-[10px] font-bold uppercase tracking-widest text-primary"><?php echo ucfirst($status); ?></span>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else : ?>
+                                <div class="p-12 text-center">
+                                    <span class="block material-symbols-outlined text-4xl text-gray-300 dark:text-gray-600 mb-2" data-icon="shopping_basket"></span>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm"><?php echo __t('No orders found yet.'); ?></p>
+                                    <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>" class="mt-4 inline-block text-primary font-bold text-sm"><?php echo __t('Start Shopping'); ?></a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Side Cards -->
+                    <div class="space-y-6">
+                        <!-- Profile Quick Edit -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4"><?php echo __t('Profile Settings'); ?></h3>
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white">
+                                    <span class="material-symbols-outlined" data-icon="person"></span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-900 dark:text-white leading-none"><?php echo esc_html($display_name); ?></p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><?php echo esc_html($current_user->user_email); ?></p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 gap-2">
+                                <a href="?view=personal-info" class="w-full py-2 text-center text-sm font-bold bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-100 dark:border-gray-600"><?php echo __t('Account Details'); ?></a>
+                                <a href="?view=addresses" class="w-full py-2 text-center text-sm font-bold bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-100 dark:border-gray-600"><?php echo __t('Shipping Addresses'); ?></a>
+                            </div>
+                        </div>
+                        <!-- Need Help? -->
+                        <div class="bg-primary/5 dark:bg-primary/10 p-6 rounded-2xl border border-primary/20">
+                            <h4 class="font-bold text-gray-900 dark:text-white mb-2"><?php echo __t('Need Help?'); ?></h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4"><?php echo __t('Our support team is always here for you. We provide 24/7 assistance for all your queries.'); ?></p>
+                            <a href="#" class="text-sm font-bold text-primary hover:underline inline-flex items-center gap-1">
+                                <?php echo __t('Contact Support'); ?>
+                                <span class="material-symbols-outlined text-sm" data-icon="arrow_forward"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            <?php elseif ($view === 'orders') : ?>
+                <!-- Orders View -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <?php if (!empty($customer_orders)) : ?>
+                        <!-- Desktop Order Table -->
+                        <div class="hidden lg:block overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 dark:bg-gray-700/50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><?php echo __t('Order'); ?></th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><?php echo __t('Date'); ?></th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><?php echo __t('Status'); ?></th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"><?php echo __t('Total'); ?></th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right"><?php echo __t('Action'); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                    <?php foreach ($customer_orders as $order) : ?>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                            <td class="px-6 py-4 text-sm font-bold text-gray-900 dark:text-white">#<?php echo $order->get_order_number(); ?></td>
+                                            <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400"><?php echo date_i18n('M j, Y', strtotime($order->get_date_created())); ?></td>
+                                            <td class="px-6 py-4">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">
+                                                    <?php echo ucfirst($order->get_status()); ?>
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm font-bold text-gray-900 dark:text-white"><?php echo $order->get_formatted_order_total(); ?></td>
+                                            <td class="px-6 py-4 text-right">
+                                                <a href="<?php echo esc_url($order->get_view_order_url()); ?>" class="text-sm font-bold text-primary hover:underline"><?php echo __t('View Details'); ?></a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Mobile Order List -->
+                        <div class="lg:hidden divide-y divide-gray-100 dark:divide-gray-700">
+                             <?php foreach ($customer_orders as $order) : ?>
+                                <div class="p-4 space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-bold text-gray-900 dark:text-white">#<?php echo $order->get_order_number(); ?></p>
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary uppercase tracking-wider"> <?php echo ucfirst($order->get_status()); ?></span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                                        <p><?php echo date_i18n('M j, Y', strtotime($order->get_date_created())); ?></p>
+                                        <p class="font-bold text-gray-900 dark:text-white"><?php echo $order->get_formatted_order_total(); ?></p>
+                                    </div>
+                                    <a href="<?php echo esc_url($order->get_view_order_url()); ?>" class="block w-full py-2 text-center text-xs font-bold bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-lg"><?php echo __t('View Details'); ?></a>
+                                </div>
+                             <?php endforeach; ?>
+                        </div>
+                    <?php else : ?>
+                        <div class="p-12 text-center">
+                            <span class="block material-symbols-outlined text-4xl text-gray-300 dark:text-gray-600 mb-2" data-icon="shopping_basket"></span>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm"><?php echo __t('You haven\'t placed any orders yet.'); ?></p>
+                        </div>
                     <?php endif; ?>
                 </div>
-                <a href="<?php echo wp_logout_url(home_url()); ?>" class="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors">
-                    <span class="material-symbols-outlined text-xl" data-icon="logout"></span>
-                    <span class="font-medium">Logout</span>
-                </a>
-            </div>
-        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            <!-- Personal Information Section -->
-            <div class="bg-white rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-background-dark overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary" data-icon="person"></span>
-                        <h3 class="font-bold text-gray-900 dark:text-white">Personal Information</h3>
-                    </div>
-                </div>
-                <form method="post" class="p-6">
-                    <?php wp_nonce_field('update_account_details', 'update_account_nonce'); ?>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
-                                <input type="text" name="first_name" value="<?php echo esc_attr($current_user->first_name); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
-                                <input type="text" name="last_name" value="<?php echo esc_attr($current_user->last_name); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Display Name</label>
-                            <input type="text" name="display_name" value="<?php echo esc_attr($current_user->display_name); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-                            <input type="email" name="email" value="<?php echo esc_attr($current_user->user_email); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
-                            <input type="tel" name="phone" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_phone', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                        </div>
-                        <button type="submit" name="save_account_details" class="w-full px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium text-sm">
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Addresses Section -->
-            <div class="bg-white rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-background-dark overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary" data-icon="home"></span>
-                        <h3 class="font-bold text-gray-900 dark:text-white">Addresses</h3>
-                    </div>
-                </div>
-                <form method="post" class="p-6">
+            <?php elseif ($view === 'addresses') : ?>
+                <!-- Addresses View -->
+                <form method="post">
                     <?php wp_nonce_field('update_address', 'update_address_nonce'); ?>
-                    <div class="space-y-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Billing Address -->
-                        <div>
-                            <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                                <span class="material-symbols-outlined text-base" data-icon="receipt"></span>
-                                Billing Address
-                            </h4>
-                            <div class="space-y-3">
-                                <input type="text" name="billing_address_1" placeholder="Street Address" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_address_1', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                <input type="text" name="billing_address_2" placeholder="Apartment, suite, etc." value="<?php echo esc_attr(get_user_meta($user_id, 'billing_address_2', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <input type="text" name="billing_city" placeholder="City" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_city', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                    <input type="text" name="billing_postcode" placeholder="Postal Code" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_postcode', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 space-y-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-4"><?php echo __t('Billing Address'); ?></h3>
+                            <div class="grid grid-cols-1 gap-4">
+                                <input type="text" name="billing_address_1" placeholder="<?php echo __t('Street Address'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_address_1', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-gray-900 dark:text-white">
+                                <input type="text" name="billing_address_2" placeholder="<?php echo __t('Apartment, suite, etc.'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_address_2', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-gray-900 dark:text-white">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" name="billing_city" placeholder="<?php echo __t('City'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_city', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
+                                    <input type="text" name="billing_postcode" placeholder="<?php echo __t('Zip Code'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_postcode', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
                                 </div>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <input type="text" name="billing_state" placeholder="State/Province" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_state', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                    <input type="text" name="billing_country" placeholder="Country" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_country', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" name="billing_state" placeholder="<?php echo __t('State'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_state', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
+                                    <input type="text" name="billing_country" placeholder="<?php echo __t('Country'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_country', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
                                 </div>
                             </div>
                         </div>
-                        
                         <!-- Shipping Address -->
-                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                                <span class="material-symbols-outlined text-base" data-icon="local_shipping"></span>
-                                Shipping Address
-                            </h4>
-                            <div class="space-y-3">
-                                <input type="text" name="shipping_address_1" placeholder="Street Address" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_address_1', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                <input type="text" name="shipping_address_2" placeholder="Apartment, suite, etc." value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_address_2', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <input type="text" name="shipping_city" placeholder="City" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_city', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                    <input type="text" name="shipping_postcode" placeholder="Postal Code" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_postcode', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 space-y-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-4"><?php echo __t('Shipping Address'); ?></h3>
+                            <div class="grid grid-cols-1 gap-4">
+                                <input type="text" name="shipping_address_1" placeholder="<?php echo __t('Street Address'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_address_1', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
+                                <input type="text" name="shipping_address_2" placeholder="<?php echo __t('Apartment, suite, etc.'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_address_2', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" name="shipping_city" placeholder="<?php echo __t('City'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_city', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
+                                    <input type="text" name="shipping_postcode" placeholder="<?php echo __t('Zip Code'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_postcode', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
                                 </div>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <input type="text" name="shipping_state" placeholder="State/Province" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_state', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
-                                    <input type="text" name="shipping_country" placeholder="Country" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_country', true)); ?>" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" name="shipping_state" placeholder="<?php echo __t('State'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_state', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
+                                    <input type="text" name="shipping_country" placeholder="<?php echo __t('Country'); ?>" value="<?php echo esc_attr(get_user_meta($user_id, 'shipping_country', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm">
                                 </div>
                             </div>
                         </div>
-                        
-                        <button type="submit" name="save_address" class="w-full px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium text-sm">
-                            Save Addresses
+                    </div>
+                    <div class="mt-8">
+                        <button type="submit" name="save_address" class="w-full lg:w-fit px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/30">
+                            <?php echo __t('Update Addresses'); ?>
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
 
-        <!-- Order History Section -->
-        <div class="mt-6 bg-white rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-background-dark overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary" data-icon="receipt_long"></span>
-                        <h3 class="font-bold text-gray-900 dark:text-white">Order History</h3>
-                    </div>
-                    <span class="text-sm text-gray-500 dark:text-gray-400"><?php echo count($customer_orders); ?> orders</span>
-                </div>
-            </div>
-            
-            <?php if ($customer_orders) : ?>
-                <!-- Mobile Order Cards -->
-                <div class="lg:hidden divide-y divide-gray-200 dark:divide-gray-700">
-                    <?php foreach ($customer_orders as $order) : 
-                        $status = $order->get_status();
-                        $status_colors = array(
-                            'completed' => 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
-                            'processing' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
-                            'on-hold' => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400',
-                            'pending' => 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
-                            'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
-                            'refunded' => 'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-400',
-                            'failed' => 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
-                        );
-                        $status_class = isset($status_colors[$status]) ? $status_colors[$status] : 'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-400';
-                    ?>
-                        <div class="p-4">
-                            <div class="flex items-start justify-between mb-3">
-                                <div>
-                                    <div class="font-semibold text-gray-900 dark:text-white">#<?php echo $order->get_order_number(); ?></div>
-                                    <div class="text-sm text-gray-500 dark:text-gray-400"><?php echo date_i18n('M j, Y', strtotime($order->get_date_created())); ?></div>
-                                </div>
-                                <span class="inline-flex items-center rounded-full <?php echo $status_class; ?> px-2.5 py-1 text-xs font-medium"><?php echo ucfirst($status); ?></span>
+            <?php elseif ($view === 'personal-info') : ?>
+                <!-- Personal Info View -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8 max-w-2xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><?php echo __t('Personal Details'); ?></h3>
+                    <form method="post" class="space-y-6">
+                        <?php wp_nonce_field('update_account_details', 'update_account_nonce'); ?>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('First Name'); ?></label>
+                                <input type="text" name="first_name" value="<?php echo esc_attr($current_user->first_name); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-gray-900 dark:text-white" required>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <div class="font-semibold text-gray-900 dark:text-white"><?php echo $order->get_formatted_order_total(); ?></div>
-                                <a href="<?php echo esc_url($order->get_view_order_url()); ?>" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-primary hover:text-primary/80">
-                                    View Details
-                                    <span class="material-symbols-outlined text-base" data-icon="chevron_right"></span>
-                                </a>
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('Last Name'); ?></label>
+                                <input type="text" name="last_name" value="<?php echo esc_attr($current_user->last_name); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-gray-900 dark:text-white" required>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('Display Name'); ?></label>
+                            <input type="text" name="display_name" value="<?php echo esc_attr($current_user->display_name); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-gray-900 dark:text-white" required>
+                            <p class="text-[10px] text-gray-500 italic mt-1"><?php echo __t('This name will be displayed in the account section and in reviews.'); ?></p>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('Email Address'); ?></label>
+                            <input type="email" name="email" value="<?php echo esc_attr($current_user->user_email); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-gray-900 dark:text-white" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('Phone Number'); ?></label>
+                            <input type="tel" name="phone" value="<?php echo esc_attr(get_user_meta($user_id, 'billing_phone', true)); ?>" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-gray-900 dark:text-white">
+                        </div>
+                        <div class="pt-4">
+                            <button type="submit" name="save_account_details" class="w-full lg:w-fit px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                                <?php echo __t('Save Changes'); ?>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                
-                <!-- Desktop Order Table -->
-                <div class="hidden lg:block overflow-x-auto">
-                    <table class="min-w-full">
-                        <thead class="bg-gray-50 dark:bg-gray-800/30">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Order</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Items</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total</th>
-                                <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                            <?php foreach ($customer_orders as $order) : 
-                                $status = $order->get_status();
-                                $status_colors = array(
-                                    'completed' => 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
-                                    'processing' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
-                                    'on-hold' => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400',
-                                    'pending' => 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
-                                    'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
-                                    'refunded' => 'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-400',
-                                    'failed' => 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
-                                );
-                                $status_class = isset($status_colors[$status]) ? $status_colors[$status] : 'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-400';
-                                $item_count = $order->get_item_count();
-                            ?>
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-white">#<?php echo $order->get_order_number(); ?></td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400"><?php echo date_i18n('M j, Y', strtotime($order->get_date_created())); ?></td>
-                                    <td class="px-6 py-4"><span class="inline-flex items-center rounded-full <?php echo $status_class; ?> px-2.5 py-1 text-xs font-medium"><?php echo ucfirst($status); ?></span></td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400"><?php echo $item_count; ?> <?php echo $item_count === 1 ? 'item' : 'items'; ?></td>
-                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-white"><?php echo $order->get_formatted_order_total(); ?></td>
-                                    <td class="px-6 py-4 text-right">
-                                        <a href="<?php echo esc_url($order->get_view_order_url()); ?>" class="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 font-medium">
-                                            View
-                                            <span class="material-symbols-outlined text-base" data-icon="chevron_right"></span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else : ?>
-                <div class="p-12 text-center">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-3xl text-gray-400" data-icon="shopping_bag"></span>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No orders yet</h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6">You haven't placed any orders yet. Start shopping to see your orders here.</p>
-                    <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
-                        <span class="material-symbols-outlined" data-icon="shopping_bag"></span>
-                        Start Shopping
-                    </a>
+
+            <?php elseif ($view === 'password') : ?>
+                <!-- Security View -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 lg:p-8 max-w-xl">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><?php echo __t('Change Password'); ?></h3>
+                    <form id="warafy-change-password-form" class="space-y-6">
+                        <?php wp_nonce_field('warafy_change_password', 'nonce'); ?>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('Current Password'); ?></label>
+                            <input type="password" name="current_password" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none text-gray-900 dark:text-white" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('New Password'); ?></label>
+                            <input type="password" name="new_password" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none text-gray-900 dark:text-white" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-700 dark:text-gray-300"><?php echo __t('Confirm New Password'); ?></label>
+                            <input type="password" name="confirm_password" class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm outline-none text-gray-900 dark:text-white" required>
+                        </div>
+                        <div id="password-message" class="hidden text-sm font-medium"></div>
+                        <div class="pt-2">
+                             <button type="submit" class="w-full lg:w-fit px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                                <span class="spinner hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                <span><?php echo __t('Update Password'); ?></span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             <?php endif; ?>
         </div>
-
-        <!-- Mobile Logout Button -->
-        <div class="lg:hidden mt-6">
-            <a href="<?php echo wp_logout_url(home_url()); ?>" class="flex w-full items-center justify-center gap-2 rounded-xl h-12 px-6 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-bold hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
-                <span class="material-symbols-outlined" data-icon="logout"></span>
-                <span>Log Out</span>
-            </a>
-        </div>
-        
     </div>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password Change Form AJAX
+    const pwdForm = document.getElementById('warafy-change-password-form');
+    if (pwdForm) {
+        pwdForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = pwdForm.querySelector('button[type="submit"]');
+            const spinner = btn.querySelector('.spinner');
+            const messageDiv = document.getElementById('password-message');
+            
+            btn.disabled = true;
+            spinner.classList.remove('hidden');
+            messageDiv.classList.add('hidden');
+            
+            const formData = new FormData(pwdForm);
+            formData.append('action', 'warafy_change_password');
+            
+            fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                messageDiv.classList.remove('hidden');
+                messageDiv.textContent = data.data.message;
+                if (data.success) {
+                    messageDiv.className = 'text-green-600 dark:text-green-400 mt-2 font-bold';
+                    pwdForm.reset();
+                } else {
+                    messageDiv.className = 'text-red-600 dark:text-red-400 mt-2 font-bold';
+                }
+            })
+            .catch(err => {
+                messageDiv.classList.remove('hidden');
+                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.className = 'text-red-600 dark:text-red-400 mt-2 font-bold';
+            })
+            .finally(() => {
+                btn.disabled = false;
+                spinner.classList.add('hidden');
+            });
+        });
+    }
+
+    // Fetch Wishlist Items for Dashboard Card
+    if (document.getElementById('dashboard-wishlist-count')) {
+        const wishlist = JSON.parse(localStorage.getItem('warafy_wishlist') || '[]');
+        document.getElementById('dashboard-wishlist-count').textContent = wishlist.length;
+    }
+});
+</script>
+
+<style>
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-none {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+</style>
 
 <?php get_footer(); ?>
