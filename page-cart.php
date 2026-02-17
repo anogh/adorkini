@@ -100,3 +100,154 @@ $is_cart_empty = WC()->cart->is_empty();
 </main>
 
 <?php get_footer(); ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add to Cart functionality for New in Store section
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.add-to-cart-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const button = e.target.closest('.add-to-cart-btn');
+            const productId = button.dataset.productId;
+
+            // Prevent multiple clicks
+            if (button.classList.contains('adding')) return;
+
+            button.classList.add('adding');
+            button.disabled = true;
+
+            const addIcon = button.querySelector('.add-icon');
+            const addedIcon = button.querySelector('.added-icon');
+            const addText = button.querySelector('.add-text');
+            const addedText = button.querySelector('.added-text');
+
+            // Show loading state
+            if (addIcon) {
+                addIcon.innerHTML = '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.416" stroke-dashoffset="31.416"><animate attributeName="stroke-dashoffset" from="31.416" to="0" dur="1s" repeatCount="indefinite"/></circle>';
+            }
+            if (addText) addText.textContent = '<?php echo __t('Adding...'); ?>';
+
+            // Use WooCommerce's built-in AJAX
+            if (typeof wc_add_to_cart_params !== 'undefined' && typeof jQuery !== 'undefined') {
+                const data = {
+                    action: 'woocommerce_add_to_cart',
+                    product_id: productId,
+                    quantity: 1
+                };
+
+                jQuery.post(wc_add_to_cart_params.wc_ajax_url.toString().replace('%%endpoint%%', 'add_to_cart'), data, function(response) {
+                    if (response.error && response.product_url) {
+                        window.location = response.product_url;
+                        return;
+                    }
+
+                    if (!response.error) {
+                        // Show success state
+                        if (addIcon) addIcon.classList.add('hidden');
+                        if (addText) addText.classList.add('hidden');
+                        if (addedIcon) addedIcon.classList.remove('hidden');
+                        if (addedText) addedText.classList.remove('hidden');
+
+                        // Change button to green
+                        button.style.backgroundColor = '#16a34a';
+                        button.style.color = 'white';
+                        button.title = '<?php echo __t('Added to Cart'); ?>';
+
+                        // Update cart fragments
+                        jQuery('body').trigger('added_to_cart', [response.fragments, response.cart_hash]);
+
+                        // Update cart count
+                        const cartCountElements = document.querySelectorAll('.cart-count');
+                        if (cartCountElements.length > 0) {
+                            const currentCount = parseInt(cartCountElements[0].textContent || '0');
+                            const newCount = currentCount + 1;
+                            cartCountElements.forEach(el => {
+                                el.textContent = newCount;
+                                el.classList.remove('hidden');
+                            });
+                        }
+
+                        // Reset button after 2 seconds
+                        setTimeout(function() {
+                            button.classList.remove('adding');
+                            button.disabled = false;
+                            if (addIcon) addIcon.classList.remove('hidden');
+                            if (addText) addText.classList.remove('hidden');
+                            if (addedIcon) addedIcon.classList.add('hidden');
+                            if (addedText) addedText.classList.add('hidden');
+                            if (addText) addText.textContent = '<?php echo __t('Add'); ?>';
+                            button.style.backgroundColor = '';
+                            button.style.color = '';
+                        }, 2000);
+                    } else {
+                        // Error state
+                        button.classList.remove('adding');
+                        button.disabled = false;
+                        if (addText) addText.textContent = '<?php echo __t('Add'); ?>';
+                        alert('<?php echo __t('Error adding to cart. Please try again.'); ?>');
+                    }
+                }).fail(function() {
+                    button.classList.remove('adding');
+                    button.disabled = false;
+                    if (addText) addText.textContent = '<?php echo __t('Add'); ?>';
+                    alert('<?php echo __t('Error adding to cart. Please try again.'); ?>');
+                });
+            } else {
+                // Fallback: redirect to product page
+                window.location.href = button.closest('.warafy-new-in-store')?.querySelector('a[href*="product"]')?.href || '/';
+            }
+        }
+    });
+
+    // Wishlist functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.warafy-wishlist-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const button = e.target.closest('.warafy-wishlist-btn');
+            const productId = button.dataset.productId;
+
+            // Toggle wishlist
+            if (button.classList.contains('in-wishlist')) {
+                // Remove from wishlist
+                button.classList.remove('in-wishlist');
+                button.style.backgroundColor = '';
+                button.style.color = '';
+                button.querySelector('svg')?.setAttribute('fill', 'none');
+            } else {
+                // Add to wishlist
+                button.classList.add('in-wishlist');
+                button.style.backgroundColor = '#ef4444';
+                button.style.color = 'white';
+                button.querySelector('svg')?.setAttribute('fill', 'currentColor');
+            }
+
+            // AJAX call to update wishlist
+            if (typeof jQuery !== 'undefined') {
+                jQuery.ajax({
+                    url: warafy_ajax.ajax_url,
+                    type: 'POST',
+                    data: {
+                        action: 'warafy_toggle_wishlist',
+                        product_id: productId,
+                        nonce: warafy_ajax.nonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Update wishlist count
+                            const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+                            wishlistCountElements.forEach(el => {
+                                el.textContent = response.data.count;
+                                el.classList.toggle('hidden', response.data.count === 0);
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    });
+});
+</script>
