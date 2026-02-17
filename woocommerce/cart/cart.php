@@ -16,20 +16,29 @@ defined('ABSPATH') || exit;
                 <div class="mb-6">
                     <span class="material-symbols-outlined text-8xl lg:text-9xl text-gray-300" style="font-size: 6rem;" data-icon="shopping_cart"></span>
                 </div>
-                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3">Your cart is empty</h2>
-                <p class="text-gray-600 dark:text-gray-400 mb-8">Looks like you haven't added anything to your cart yet.</p>
-                <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>" 
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3"><?php echo __t('Your cart is empty'); ?></h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-8"><?php echo __t("Looks like you haven't added anything to your cart yet."); ?></p>
+                <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>"
                    class="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-gray-800 transition-all shadow-lg">
                     <span class="material-symbols-outlined" data-icon="storefront"></span>
-                    Continue Shopping
+                    <?php echo __t('Continue Shopping'); ?>
                 </a>
             </div>
         <?php else : ?>
             
             <!-- Desktop: Page Title (Hidden on Mobile) -->
             <div class="mb-6 hidden lg:block">
-                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Your Shopping Cart</h1>
-                <p class="mt-1 text-gray-500 dark:text-gray-400">You have <?php echo WC()->cart->get_cart_contents_count(); ?> item<?php echo WC()->cart->get_cart_contents_count() > 1 ? 's' : ''; ?> in your cart.</p>
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white"><?php echo __t('Your Shopping Cart'); ?></h1>
+                <p class="mt-1 text-gray-500 dark:text-gray-400">
+                    <?php
+                    $item_count = WC()->cart->get_cart_contents_count();
+                    if ($item_count > 1) {
+                        echo sprintf(__t('You have %d items in your cart.'), $item_count);
+                    } else {
+                        echo sprintf(__t('You have %d item in your cart.'), $item_count);
+                    }
+                    ?>
+                </p>
             </div>
 
             <!-- Desktop & Mobile Layout -->
@@ -83,7 +92,7 @@ defined('ABSPATH') || exit;
                                                     </p>
                                                 <?php endif; ?>
                                                 <p class="mt-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                    <?php echo $_product->is_in_stock() ? 'In Stock' : 'Out of Stock'; ?>
+                                                    <?php echo $_product->is_in_stock() ? __t('In Stock') : __t('Out of Stock'); ?>
                                                 </p>
                                             </div>
                                             <div class="flex items-center justify-between gap-4">
@@ -119,10 +128,10 @@ defined('ABSPATH') || exit;
                                                 <p class="w-20 text-right text-lg font-semibold text-gray-900 dark:text-white">
                                                     <?php echo apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key); ?>
                                                 </p>
-                                                <button type="button" 
+                                                <button type="button"
                                                         class="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
                                                         onclick="window.location.href='<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>'"
-                                                        title="Remove">
+                                                        title="<?php echo __t('Remove'); ?>">
                                                     <span class="material-symbols-outlined" data-icon="delete"></span>
                                                 </button>
                                             </div>
@@ -175,10 +184,10 @@ defined('ABSPATH') || exit;
                                                             }
                                                             ?>
                                                         </h3>
-                                                        <button type="button" 
+                                                        <button type="button"
                                                                 class="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
                                                                 onclick="window.location.href='<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>'"
-                                                                title="Remove">
+                                                                title="<?php echo __t('Remove'); ?>">
                                                             <span class="material-symbols-outlined text-xl" data-icon="delete"></span>
                                                         </button>
                                                     </div>
@@ -241,17 +250,17 @@ defined('ABSPATH') || exit;
 
                     <!-- Continue Shopping Link (Desktop Only) -->
                     <div class="mt-4 text-right hidden lg:block">
-                        <a class="text-sm font-medium text-primary hover:underline" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">Continue Shopping</a>
+                        <a class="text-sm font-medium text-primary hover:underline" href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"><?php echo __t('Continue Shopping'); ?></a>
                     </div>
                 </div>
 
                 <!-- Order Summary Sidebar (Desktop Only) -->
                 <aside class="hidden lg:block w-full lg:w-80 lg:flex-shrink-0">
                     <div class="sticky top-24 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-background-dark">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Order Summary</h3>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white"><?php echo __t('Order Summary'); ?></h3>
                         <div class="mt-6 space-y-4">
                             <div class="flex items-center justify-between">
-                                <p class="text-sm text-gray-600 dark:text-gray-300">Subtotal</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-300"><?php echo __t('Subtotal'); ?></p>
                                 <p class="font-semibold text-gray-900 dark:text-white"><?php echo WC()->cart->get_cart_subtotal(); ?></p>
                             </div>
                             <?php if (WC()->cart->needs_shipping() && WC()->cart->show_shipping()) : ?>
@@ -260,8 +269,8 @@ defined('ABSPATH') || exit;
                                 <?php do_action('woocommerce_cart_totals_after_shipping'); ?>
                             <?php elseif (WC()->cart->needs_shipping() && 'yes' === get_option('woocommerce_enable_shipping_calc')) : ?>
                                 <div class="flex items-center justify-between">
-                                    <p class="text-sm text-gray-600 dark:text-gray-300">Shipping</p>
-                                    <p class="font-semibold text-gray-900 dark:text-white">Calculated at checkout</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300"><?php echo __t('Shipping'); ?></p>
+                                    <p class="font-semibold text-gray-900 dark:text-white"><?php echo __t('Calculated at checkout'); ?></p>
                                 </div>
                             <?php endif; ?>
                             
@@ -290,14 +299,14 @@ defined('ABSPATH') || exit;
                         </div>
                         <div class="my-6 h-px w-full bg-gray-200 dark:bg-gray-700"></div>
                         <div class="flex items-center justify-between">
-                            <p class="text-lg font-bold text-gray-900 dark:text-white">Total</p>
+                            <p class="text-lg font-bold text-gray-900 dark:text-white"><?php echo __t('Total'); ?></p>
                             <p class="text-lg font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
                         </div>
-                        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" 
+                        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>"
                            class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-black text-white text-base font-bold shadow-lg hover:bg-gray-800">
-                            <span>Proceed to Checkout</span>
+                            <span><?php echo __t('Proceed to Checkout'); ?></span>
                         </a>
-                        <p class="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">Shipping and taxes calculated at checkout.</p>
+                        <p class="mt-4 text-center text-xs text-gray-500 dark:text-gray-400"><?php echo __t('Shipping and taxes calculated at checkout.'); ?></p>
                     </div>
                 </aside>
             </div>
@@ -313,12 +322,12 @@ defined('ABSPATH') || exit;
     <div class="container mx-auto">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Total Price</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400"><?php echo __t('Total Price'); ?></p>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
             </div>
-            <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" 
+            <a href="<?php echo esc_url(wc_get_checkout_url()); ?>"
                class="flex w-auto cursor-pointer items-center justify-center gap-2 rounded-full h-12 px-6 bg-black text-white text-base font-bold shadow-lg hover:bg-gray-800">
-                <span>Checkout</span>
+                <span><?php echo __t('Checkout'); ?></span>
                 <span class="material-symbols-outlined" data-icon="arrow_forward"></span>
             </a>
         </div>
