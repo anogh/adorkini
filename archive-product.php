@@ -68,6 +68,11 @@
 
                                 if ( ! empty( $categories_to_show ) && ! is_wp_error( $categories_to_show ) ) {
                                     foreach ( $categories_to_show as $category ) {
+                                        // Skip "Uncategorized" category
+                                        if ( $category->slug === 'uncategorized' ) {
+                                            continue;
+                                        }
+
                                         if ( is_search() ) {
                                             // Refine search link
                                             $cat_link = add_query_arg( 'product_cat', $category->slug );
@@ -201,6 +206,11 @@
 
                                 if ( ! empty( $categories_to_show ) && ! is_wp_error( $categories_to_show ) ) {
                                     foreach ( $categories_to_show as $category ) {
+                                        // Skip "Uncategorized" category
+                                        if ( $category->slug === 'uncategorized' ) {
+                                            continue;
+                                        }
+
                                         if ( is_search() ) {
                                             $cat_link = add_query_arg( 'product_cat', $category->slug );
                                             $is_active = get_query_var( 'product_cat' ) === $category->slug;
