@@ -262,7 +262,7 @@ $is_facebook_webview = (
 <header class="hidden lg:block sticky top-0 z-50 w-full bg-white dark:bg-background-dark">
 <div class="border-b border-gray-200 dark:border-gray-700"></div>
 <div class="container mx-auto px-6">
-<div class="flex h-16 items-center justify-between">
+<div class="flex items-center justify-between py-3">
 <div class="flex items-center gap-8">
 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3">
 <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
