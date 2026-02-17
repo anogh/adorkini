@@ -94,23 +94,23 @@ defined('ABSPATH') || exit;
                                                         echo sprintf('<input type="hidden" name="cart[%s][qty]" value="1" />', $cart_item_key);
                                                     } else {
                                                         ?>
-                                                        <button type="button" 
+                                                        <button type="button"
                                                                 class="qty-minus flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 bg-gray-300 text-white hover:bg-gray-400 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                                                                 data-cart-key="<?php echo $cart_item_key; ?>">
-                                                            <span class="material-symbols-outlined text-base" data-icon="remove"></span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
                                                         </button>
-                                                        <input type="number" 
-                                                               name="cart[<?php echo $cart_item_key; ?>][qty]" 
-                                                               value="<?php echo $cart_item['quantity']; ?>" 
-                                                               min="0" 
-                                                               max="<?php echo $_product->get_max_purchase_quantity(); ?>" 
-                                                               class="qty-input w-8 text-center border-0 bg-transparent font-medium text-gray-900 dark:text-white focus:outline-none appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" 
+                                                        <input type="number"
+                                                               name="cart[<?php echo $cart_item_key; ?>][qty]"
+                                                               value="<?php echo $cart_item['quantity']; ?>"
+                                                               min="0"
+                                                               max="<?php echo $_product->get_max_purchase_quantity(); ?>"
+                                                               class="qty-input w-8 text-center border-0 bg-transparent font-medium text-gray-900 dark:text-white focus:outline-none appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                                                data-cart-key="<?php echo $cart_item_key; ?>" />
-                                                        <button type="button" 
+                                                        <button type="button"
                                                                 class="qty-plus flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 bg-gray-300 text-white hover:bg-gray-400 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                                                                 data-cart-key="<?php echo $cart_item_key; ?>"
                                                                 data-max="<?php echo $_product->get_max_purchase_quantity(); ?>">
-                                                            <span class="material-symbols-outlined text-base" data-icon="add"></span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                                                         </button>
                                                         <?php
                                                     }
@@ -202,23 +202,23 @@ defined('ABSPATH') || exit;
                                                         echo sprintf('<input type="hidden" name="cart[%s][qty]" value="1" />', $cart_item_key);
                                                     } else {
                                                         ?>
-                                                        <button type="button" 
+                                                        <button type="button"
                                                                 class="qty-minus flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-gray-300 text-white hover:bg-gray-400 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                                                                 data-cart-key="<?php echo $cart_item_key; ?>">
-                                                            <span class="material-symbols-outlined text-base" data-icon="remove"></span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
                                                         </button>
-                                                        <input type="number" 
-                                                               name="cart[<?php echo $cart_item_key; ?>][qty]" 
-                                                               value="<?php echo $cart_item['quantity']; ?>" 
-                                                               min="0" 
-                                                               max="<?php echo $_product->get_max_purchase_quantity(); ?>" 
-                                                               class="qty-input w-8 text-center font-medium border-0 bg-transparent p-0 focus:outline-none appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" 
+                                                        <input type="number"
+                                                               name="cart[<?php echo $cart_item_key; ?>][qty]"
+                                                               value="<?php echo $cart_item['quantity']; ?>"
+                                                               min="0"
+                                                               max="<?php echo $_product->get_max_purchase_quantity(); ?>"
+                                                               class="qty-input w-8 text-center font-medium border-0 bg-transparent p-0 focus:outline-none appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                                                data-cart-key="<?php echo $cart_item_key; ?>" />
-                                                        <button type="button" 
+                                                        <button type="button"
                                                                 class="qty-plus flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-gray-300 text-white hover:bg-gray-400 dark:border-gray-600 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500"
                                                                 data-cart-key="<?php echo $cart_item_key; ?>"
                                                                 data-max="<?php echo $_product->get_max_purchase_quantity(); ?>">
-                                                            <span class="material-symbols-outlined text-base" data-icon="add"></span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                                                         </button>
                                                         <?php
                                                     }
