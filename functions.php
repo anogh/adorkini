@@ -3714,56 +3714,95 @@ add_filter('lostpassword_url', function($lostpassword_url, $redirect) {
     return home_url('/forgot-password/') . ($redirect ? '?redirect_to=' . urlencode($redirect) : '');
 }, 999, 2);
 
+// Remove all product recommendation sections from cart and add custom one
+add_action('init', 'warafy_remove_cart_product_sections', 999);
+function warafy_remove_cart_product_sections() {
+    if (!is_cart()) return;
+    
+    // Remove WooCommerce cross-sells
+    remove_action('woocommerce_cart_collaterals', 'woocommerce_cross_sell_display');
+    remove_action('woocommerce_after_cart', 'woocommerce_cross_sell_display', 10);
+    
+    // Remove any custom hooks that might add products
+    remove_all_actions('woocommerce_after_cart', 10);
+    remove_all_actions('woocommerce_cart_collaterals', 10);
+}
+
 // Add custom "New in Store" section to empty cart page and hide the old one
-add_action('wp_head', 'warafy_cart_custom_styles', 100);
+add_action('wp_head', 'warafy_cart_custom_styles', 999);
 function warafy_cart_custom_styles() {
     if (!is_cart()) return;
     
-    // CSS to ensure our custom section is visible
+    // CSS to hide old sections and show only our custom one
     echo '<style>
+        /* Hide all product sections except our custom one */
+        .woocommerce-cart .cross-sells,
+        .woocommerce-cart .related,
+        .woocommerce-cart .upsells,
+        .woocommerce-cart .wc-block-grid,
+        .woocommerce-cart .products,
+        .woocommerce-cart [class*="cross-sell"],
+        .woocommerce-cart [class*="related-products"],
+        .woocommerce-cart [class*="product-recommendations"] {
+            display: none !important;
+        }
+        
         /* Ensure our custom section is always visible */
         .warafy-new-in-store {
             display: block !important;
         }
     </style>';
     
-    // JavaScript to hide only the old/default New in store section
+    // JavaScript with MutationObserver to catch dynamically added sections
     echo '<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Find the empty cart container
-        var emptyCart = document.querySelector(".empty-cart-container");
-        if (!emptyCart) return;
-        
-        // Get all sibling elements after the empty cart
-        var siblings = [];
-        var nextEl = emptyCart.nextElementSibling;
-        while (nextEl) {
-            siblings.push(nextEl);
-            nextEl = nextEl.nextElementSibling;
-        }
-        
-        // Find sections that contain "New in store" heading
-        siblings.forEach(function(el) {
-            // Check if this element has a heading with "New in store"
-            var headings = el.querySelectorAll("h2, h3, h4, h5, h6");
-            var hasNewInStore = false;
-            headings.forEach(function(h) {
-                if (h.textContent.toLowerCase().includes("new in store")) {
-                    hasNewInStore = true;
+    (function() {
+        function hideOldSections() {
+            // Find all elements on the page
+            var allDivs = document.querySelectorAll("div, section, article, aside");
+            
+            allDivs.forEach(function(el) {
+                // Skip our custom section
+                if (el.classList.contains("warafy-new-in-store") || el.closest(".warafy-new-in-store")) {
+                    return;
+                }
+                
+                // Check if this element contains "New in store" text
+                var text = el.textContent || "";
+                if (text.toLowerCase().indexOf("new in store") !== -1) {
+                    // Check if it contains product elements (images, buttons, prices)
+                    var hasProducts = el.querySelector("img[src*=\"wp-content\"], img[src*=\"uploads\"], .product, .wc-block-grid__product, button, .price, .amount");
+                    
+                    if (hasProducts) {
+                        // This is likely the old section, hide it
+                        el.style.display = "none";
+                        el.setAttribute("data-hidden-by-warafy", "true");
+                    }
                 }
             });
-            
-            // Also check the element itself if it has text
-            if (el.textContent.toLowerCase().includes("new in store") && !el.classList.contains("warafy-new-in-store")) {
-                hasNewInStore = true;
-            }
-            
-            // If it has "New in store" and is NOT our custom section, hide it
-            if (hasNewInStore && !el.classList.contains("warafy-new-in-store")) {
-                el.style.display = "none";
-            }
+        }
+        
+        // Run on DOM ready
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", hideOldSections);
+        } else {
+            hideOldSections();
+        }
+        
+        // Also run after a short delay to catch dynamically loaded content
+        setTimeout(hideOldSections, 100);
+        setTimeout(hideOldSections, 500);
+        setTimeout(hideOldSections, 1000);
+        
+        // Use MutationObserver to catch dynamically added content
+        var observer = new MutationObserver(function(mutations) {
+            hideOldSections();
         });
-    });
+        
+        observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
+    })();
     </script>';
 }
 
