@@ -64,6 +64,9 @@
             'home-garden' => 'home',
             'sports-outdoors' => 'sports',
             'toys-games' => 'toys',
+            'laundry-cleaning' => 'cleaning',
+            'mother-baby' => 'baby',
+            'tools' => 'tools',
             'default' => 'category'
         ];
         return isset($icons[$slug]) ? $icons[$slug] : $icons['default'];
