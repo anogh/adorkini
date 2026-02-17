@@ -3767,28 +3767,69 @@ add_action( 'woocommerce_before_shop_loop', 'warafy_woocommerce_catalog_ordering
 // Add inline styles to ensure dropdown text is black
 function warafy_add_sort_dropdown_inline_styles() {
     echo '<style>
+        /* Aggressive styles to force sort dropdown text to be black */
+        html body .woocommerce-ordering select,
+        html body select[name="orderby"],
         .woocommerce-ordering select,
-        body .woocommerce-ordering select,
-        select[name="orderby"] {
+        select[name="orderby"],
+        select.orderby {
             color: #000000 !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
         }
+        
+        html body .woocommerce-ordering select option,
+        html body select[name="orderby"] option,
         .woocommerce-ordering select option,
-        body .woocommerce-ordering select option,
-        select[name="orderby"] option {
+        select[name="orderby"] option,
+        select.orderby option {
             color: #000000 !important;
             background-color: #ffffff !important;
         }
+        
+        /* Dark mode styles */
+        html body.dark .woocommerce-ordering select,
+        html body.dark select[name="orderby"],
+        body.dark .woocommerce-ordering select,
+        body.dark select[name="orderby"],
         .dark .woocommerce-ordering select,
-        .dark body .woocommerce-ordering select,
         .dark select[name="orderby"] {
             color: #d1d5db !important;
         }
+        
+        html body.dark .woocommerce-ordering select option,
+        html body.dark select[name="orderby"] option,
+        body.dark .woocommerce-ordering select option,
+        body.dark select[name="orderby"] option,
         .dark .woocommerce-ordering select option,
-        .dark body .woocommerce-ordering select option,
         .dark select[name="orderby"] option {
+            color: #d1d5db !important;
+            background-color: #1f2937 !important;
+        }
+        
+        /* Override any WooCommerce styles */
+        .woocommerce .woocommerce-ordering select,
+        .woocommerce-page .woocommerce-ordering select {
+            color: #000000 !important;
+        }
+        
+        .woocommerce .woocommerce-ordering select option,
+        .woocommerce-page .woocommerce-ordering select option {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+        }
+        
+        .dark .woocommerce .woocommerce-ordering select,
+        .dark .woocommerce-page .woocommerce-ordering select {
+            color: #d1d5db !important;
+        }
+        
+        .dark .woocommerce .woocommerce-ordering select option,
+        .dark .woocommerce-page .woocommerce-ordering select option {
             color: #d1d5db !important;
             background-color: #1f2937 !important;
         }
     </style>';
 }
-add_action( 'wp_head', 'warafy_add_sort_dropdown_inline_styles' );
+add_action( 'wp_head', 'warafy_add_sort_dropdown_inline_styles', 9999 );
