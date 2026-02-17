@@ -3775,64 +3775,82 @@ function warafy_cart_page_customizations() {
         // Output JavaScript to remove existing section and add custom one
         echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Find and remove the existing "New in store" section
-            // Look for sections with "New in store" heading
-            var headings = document.querySelectorAll("h2, h3, h4, .section-title, .widget-title");
-            headings.forEach(function(heading) {
-                if (heading.textContent.toLowerCase().includes("new in store") || 
-                    heading.textContent.toLowerCase().includes("new in")) {
-                    // Find the parent container (usually a section, div, or widget)
-                    var parent = heading.parentElement;
-                    while (parent && !parent.classList.contains("woocommerce") && parent.tagName !== "BODY") {
-                        // Check if this parent contains product elements
-                        if (parent.querySelector(".product, .wc-block-grid__product, [class*=\'product\']")) {
-                            parent.style.display = "none";
-                            parent.remove();
-                            return;
+            // Remove ALL existing product sections on cart page (except our custom one)
+            // First, find all elements that contain "New in store" text
+            var allElements = document.querySelectorAll("*");
+            var sectionsToRemove = [];
+            
+            allElements.forEach(function(el) {
+                // Check if element directly contains "New in store" text
+                if (el.children.length === 0 && el.textContent.toLowerCase().includes("new in store")) {
+                    // Find the parent section/container
+                    var parent = el.parentElement;
+                    for (var i = 0; i < 5; i++) { // Go up max 5 levels
+                        if (!parent || parent.classList.contains("warafy-new-in-store")) break;
+                        
+                        // Check if this parent contains product images or add to cart buttons
+                        if (parent.querySelector("img, .product, .add_to_cart_button, [class*=\'product\'], button[class*=\'cart\']")) {
+                            sectionsToRemove.push(parent);
+                            break;
                         }
                         parent = parent.parentElement;
                     }
-                    // If no product container found, hide the heading and its siblings
-                    var section = heading.closest("section, .widget, .wp-block-group, div[class*=\'products\'], div[class*=\'store\']");
-                    if (section) {
-                        section.style.display = "none";
-                        section.remove();
+                }
+            });
+            
+            // Remove duplicate sections (keep only unique parents)
+            var uniqueSections = [];
+            sectionsToRemove.forEach(function(section) {
+                var isDuplicate = uniqueSections.some(function(s) {
+                    return s === section || s.contains(section) || section.contains(s);
+                });
+                if (!isDuplicate) {
+                    uniqueSections.push(section);
+                }
+            });
+            
+            // Remove the sections (keep the last one if multiple found, remove others)
+            if (uniqueSections.length > 1) {
+                // Remove all but the last one
+                for (var i = 0; i < uniqueSections.length - 1; i++) {
+                    uniqueSections[i].style.display = "none";
+                    uniqueSections[i].remove();
+                }
+            } else if (uniqueSections.length === 1) {
+                // If only one found, remove it and we will add our custom one
+                uniqueSections[0].style.display = "none";
+                uniqueSections[0].remove();
+            }
+            
+            // Also try to find by looking for product grids
+            var productContainers = document.querySelectorAll("[class*=\'products\'], [class*=\'product-grid\'], .wc-block-grid, .related, .upsells, .cross-sells");
+            productContainers.forEach(function(container) {
+                // Check if this is not our custom section
+                if (!container.classList.contains("warafy-new-in-store") && !container.closest(".warafy-new-in-store")) {
+                    // Check if it has product elements
+                    if (container.querySelector("img, .product, button, .add_to_cart")) {
+                        container.style.display = "none";
+                        container.remove();
                     }
                 }
             });
             
-            // Also look for specific WooCommerce blocks or shortcodes
-            var productGrids = document.querySelectorAll(".wc-block-grid, .products, .woocommerce-products-header ~ .products, [class*=\'cross-sells\'], [class*=\'related\']");
-            productGrids.forEach(function(grid) {
-                // Check if it comes after the empty cart message
-                var emptyCart = document.querySelector(".cart-empty, .empty-cart-container");
-                if (emptyCart && grid.compareDocumentPosition(emptyCart) & Node.DOCUMENT_POSITION_PRECEDING) {
-                    // This grid comes after the empty cart
-                    var prevSibling = grid.previousElementSibling;
-                    if (prevSibling && (prevSibling.textContent.toLowerCase().includes("new in") || 
-                                       prevSibling.querySelector("h2, h3")?.textContent.toLowerCase().includes("new in"))) {
-                        grid.style.display = "none";
-                        grid.remove();
-                        if (prevSibling) {
-                            prevSibling.style.display = "none";
-                            prevSibling.remove();
-                        }
-                    }
+            // Check if our custom section already exists
+            var existingCustom = document.querySelector(".warafy-new-in-store");
+            if (!existingCustom) {
+                // Add our custom section
+                var container = document.querySelector(".woocommerce");
+                if (container) {
+                    var customSection = document.createElement("div");
+                    customSection.className = "warafy-new-in-store mt-12 pt-8 border-t border-gray-200 dark:border-gray-700";
+                    customSection.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">' . __t('New in store') . '</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            ' . $products_html . '
+                        </div>
+                    `;
+                    container.appendChild(customSection);
                 }
-            });
-            
-            // Add our custom section
-            var container = document.querySelector(".woocommerce");
-            if (container) {
-                var customSection = document.createElement("div");
-                customSection.className = "warafy-new-in-store mt-12 pt-8 border-t border-gray-200 dark:border-gray-700";
-                customSection.innerHTML = `
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">' . __t('New in store') . '</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        ' . $products_html . '
-                    </div>
-                `;
-                container.appendChild(customSection);
             }
         });
         </script>';
