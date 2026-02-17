@@ -441,7 +441,7 @@ $is_facebook_webview = (
         </div>
 
         <!-- Search Bar -->
-        <div class="px-4 pb-3 w-full">
+        <div class="px-4 pb-3 mb-4 w-full">
             <form role="search" method="get" class="relative w-full" action="<?php echo esc_url( home_url( '/' ) ); ?>">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" data-icon="search"></span>
                 <input class="warafy-search-input w-full rounded-lg border-gray-200 bg-gray-50 pl-10 pr-4 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white" placeholder="<?php echo __t('Search for products...'); ?>" type="search" name="s" value="<?php echo get_search_query(); ?>" autocomplete="off"/>
