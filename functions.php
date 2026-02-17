@@ -3719,23 +3719,52 @@ add_action('wp_head', 'warafy_cart_custom_styles', 100);
 function warafy_cart_custom_styles() {
     if (!is_cart()) return;
     
-    // CSS to hide the first "New in store" section and show only our custom one
+    // CSS to ensure our custom section is visible
     echo '<style>
-        /* Hide the first/default New in store section */
-        .page-cart .woocommerce .cart-empty ~ *:not(.warafy-new-in-store):not(.empty-cart-container):not(.cart-empty):not(.woocommerce-cart-form):not(.cart-collaterals):not(.woocommerce-message):not(.woocommerce-error):not(.woocommerce-info) {
-            display: none !important;
-        }
-        
-        /* Alternative: hide sections that come after empty cart message */
-        .woocommerce-cart .empty-cart-container ~ div:not(.warafy-new-in-store) {
-            display: none !important;
-        }
-        
-        /* Show our custom section */
+        /* Ensure our custom section is always visible */
         .warafy-new-in-store {
             display: block !important;
         }
     </style>';
+    
+    // JavaScript to hide only the old/default New in store section
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Find the empty cart container
+        var emptyCart = document.querySelector(".empty-cart-container");
+        if (!emptyCart) return;
+        
+        // Get all sibling elements after the empty cart
+        var siblings = [];
+        var nextEl = emptyCart.nextElementSibling;
+        while (nextEl) {
+            siblings.push(nextEl);
+            nextEl = nextEl.nextElementSibling;
+        }
+        
+        // Find sections that contain "New in store" heading
+        siblings.forEach(function(el) {
+            // Check if this element has a heading with "New in store"
+            var headings = el.querySelectorAll("h2, h3, h4, h5, h6");
+            var hasNewInStore = false;
+            headings.forEach(function(h) {
+                if (h.textContent.toLowerCase().includes("new in store")) {
+                    hasNewInStore = true;
+                }
+            });
+            
+            // Also check the element itself if it has text
+            if (el.textContent.toLowerCase().includes("new in store") && !el.classList.contains("warafy-new-in-store")) {
+                hasNewInStore = true;
+            }
+            
+            // If it has "New in store" and is NOT our custom section, hide it
+            if (hasNewInStore && !el.classList.contains("warafy-new-in-store")) {
+                el.style.display = "none";
+            }
+        });
+    });
+    </script>';
 }
 
 // Add custom "New in Store" section via woocommerce_after_cart hook
