@@ -201,6 +201,9 @@ Text Domain: adorkini
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .add-to-cart-btn:hover {
@@ -208,9 +211,24 @@ Text Domain: adorkini
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.warafy-wishlist-btn {
+    background-color: rgb(254 226 226) !important;
+    color: rgb(239 68 68) !important;
+}
+
 .warafy-wishlist-btn:hover {
+    background-color: rgb(252 165 165) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.dark .warafy-wishlist-btn {
+    background-color: rgba(127, 29, 29, 0.3) !important;
+    color: rgb(248 113 113) !important;
+}
+
+.dark .warafy-wishlist-btn:hover {
+    background-color: rgba(127, 29, 29, 0.5) !important;
 }
 
 /* See Full Ranking button */
