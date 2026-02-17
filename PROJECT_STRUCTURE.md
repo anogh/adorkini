@@ -15,7 +15,7 @@ This project is a custom WordPress WooCommerce theme named "Ador Kini". It featu
   - **Mobile Header**: Dynamic header that changes based on the page (Cart, My Love, or Default with Logo/Search).
 - **footer.php**: 
   - **Desktop Footer**: 4-column layout (Shop, Support, About, Newsletter) and copyright bar.
-  - **Mobile Bottom Nav**: Fixed bottom navigation bar with Home, Categories, Cart, My Love, and Profile icons.
+  - **Mobile Bottom Nav**: Fixed bottom navigation bar with Home, Categories, Cart, My Love, and Profile icons. Features an "Avant-Garde" active state with a glowing primary background for the active item and a clean outline for inactive items. Uses PHP logic (`is_front_page`, `is_cart`, etc.) to determine the active state.
 - **functions.php**: Main theme logic, including enqueueing scripts, custom post types, WooCommerce hooks, and helper functions.
 
 ### Page Templates
