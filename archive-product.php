@@ -135,11 +135,11 @@
 
         <div class="container mx-auto px-6 py-8">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><?php woocommerce_page_title(); ?></h1>
-                
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><?php echo __t( woocommerce_page_title(false) ); ?></h1>
+
                 <!-- Desktop Sorting -->
                 <div class="flex items-center gap-2">
-                    <?php woocommerce_catalog_ordering(); ?>
+                    <?php warafy_woocommerce_catalog_ordering(); ?>
                 </div>
             </div>
             
