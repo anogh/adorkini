@@ -50,56 +50,49 @@
             <div class="flex flex-col gap-8 lg:flex-row">
                 <aside class="w-full lg:w-64 xl:w-72 flex-shrink-0">
                     <div class="sticky top-24 space-y-6">
-                        <!-- Shop Sidebar Widget Area -->
-                        <?php if ( is_active_sidebar( 'shop-sidebar' ) ) : ?>
-                            <div class="shop-sidebar-widgets space-y-8">
-                                <?php dynamic_sidebar( 'shop-sidebar' ); ?>
-                            </div>
-                        <?php else : ?>
-                            <!-- Fallback if no widgets -->
-                            <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark">
-                                <h3 class="text-base font-bold text-gray-900 dark:text-white">Categories</h3>
-                                <div class="mt-4 space-y-2">
-                                    <?php
-                                    if ( is_search() ) {
-                                        $categories_to_show = $filtered_categories;
-                                        
-                                        // "All Categories" link for search results
-                                        $all_link = remove_query_arg( 'product_cat' );
-                                        $is_all_active = ! get_query_var( 'product_cat' );
-                                        echo '<a class="block text-sm ' . ( $is_all_active ? 'font-bold text-primary' : 'text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary' ) . '" href="' . esc_url( $all_link ) . '">All Categories</a>';
-                                    } else {
-                                        $categories_to_show = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => false] );
-                                    }
+                        <!-- Categories Sidebar -->
+                        <div class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark">
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white">Categories</h3>
+                            <div class="mt-4 space-y-2">
+                                <?php
+                                if ( is_search() ) {
+                                    $categories_to_show = $filtered_categories;
+                                    
+                                    // "All Categories" link for search results
+                                    $all_link = remove_query_arg( 'product_cat' );
+                                    $is_all_active = ! get_query_var( 'product_cat' );
+                                    echo '<a class="block text-sm ' . ( $is_all_active ? 'font-bold text-primary' : 'text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary' ) . '" href="' . esc_url( $all_link ) . '">All Categories</a>';
+                                } else {
+                                    $categories_to_show = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => false] );
+                                }
 
-                                    if ( ! empty( $categories_to_show ) && ! is_wp_error( $categories_to_show ) ) {
-                                        foreach ( $categories_to_show as $category ) {
-                                            if ( is_search() ) {
-                                                // Refine search link
-                                                $cat_link = add_query_arg( 'product_cat', $category->slug );
-                                                $is_active = get_query_var( 'product_cat' ) === $category->slug;
-                                            } else {
-                                                // Standard category link
-                                                $cat_link = get_term_link( $category );
-                                                $is_active = is_product_category() && get_queried_object_id() === $category->term_id;
-                                            }
-
-                                            $class = $is_active ? 'font-bold text-primary' : 'text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary';
-                                            
-                                            $count_html = '';
-                                            if ( is_search() && isset( $category->filtered_count ) ) {
-                                                $count_html = ' <span class="text-xs text-gray-400">(' . $category->filtered_count . ')</span>';
-                                            }
-                                            
-                                            echo '<a class="block text-sm ' . esc_attr( $class ) . '" href="' . esc_url( $cat_link ) . '">' . esc_html( $category->name ) . $count_html . '</a>';
+                                if ( ! empty( $categories_to_show ) && ! is_wp_error( $categories_to_show ) ) {
+                                    foreach ( $categories_to_show as $category ) {
+                                        if ( is_search() ) {
+                                            // Refine search link
+                                            $cat_link = add_query_arg( 'product_cat', $category->slug );
+                                            $is_active = get_query_var( 'product_cat' ) === $category->slug;
+                                        } else {
+                                            // Standard category link
+                                            $cat_link = get_term_link( $category );
+                                            $is_active = is_product_category() && get_queried_object_id() === $category->term_id;
                                         }
-                                    } elseif ( is_search() ) {
-                                        echo '<p class="text-sm text-gray-500">No categories found.</p>';
+
+                                        $class = $is_active ? 'font-bold text-primary' : 'text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary';
+                                        
+                                        $count_html = '';
+                                        if ( is_search() && isset( $category->filtered_count ) ) {
+                                            $count_html = ' <span class="text-xs text-gray-400">(' . $category->filtered_count . ')</span>';
+                                        }
+                                        
+                                        echo '<a class="block text-sm ' . esc_attr( $class ) . '" href="' . esc_url( $cat_link ) . '">' . esc_html( $category->name ) . $count_html . '</a>';
                                     }
-                                    ?>
-                                </div>
+                                } elseif ( is_search() ) {
+                                    echo '<p class="text-sm text-gray-500">No categories found.</p>';
+                                }
+                                ?>
                             </div>
-                        <?php endif; ?>
+                        </div>
                     </div>
                 </aside>
                 <div class="w-full">
@@ -275,12 +268,7 @@
                         </div>
                     </div>
 
-                    <?php if ( is_active_sidebar( 'shop-sidebar' ) ) : ?>
-                        <div class="my-8 border-t border-gray-100 dark:border-slate-800"></div>
-                        <div class="shop-sidebar-widgets space-y-8">
-                            <?php dynamic_sidebar( 'shop-sidebar' ); ?>
-                        </div>
-                    <?php endif; ?>
+
                 </div>
             </div>
         </div>
