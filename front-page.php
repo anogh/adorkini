@@ -323,7 +323,7 @@ $random_products_query = new WP_Query([
                                         <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                                         <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                     </button>
-                                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center border border-gray-200 text-gray-600 rounded-lg hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all dark:border-gray-700 dark:text-gray-400" data-product-id="<?php echo $product->get_id(); ?>">
+                                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors dark:bg-red-900/20 dark:text-red-400" data-product-id="<?php echo $product->get_id(); ?>">
                                         <span class="material-symbols-outlined text-lg" data-icon="favorite_border"></span>
                                     </button>
                                 </div>
@@ -393,7 +393,7 @@ $random_products_query = new WP_Query([
                                                 <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                                                 <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                             </button>
-                                            <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center border border-gray-200 text-gray-600 rounded-lg hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all dark:border-gray-700 dark:text-gray-400" data-product-id="<?php echo $product->get_id(); ?>">
+                                            <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors dark:bg-red-900/20 dark:text-red-400" data-product-id="<?php echo $product->get_id(); ?>">
                                                 <span class="material-symbols-outlined text-lg" data-icon="favorite_border"></span>
                                             </button>
                                         </div>
@@ -692,7 +692,7 @@ $random_products_query = new WP_Query([
                                             <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                                             <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                         </button>
-                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center border border-gray-200 text-gray-600 rounded-lg hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all dark:border-gray-700 dark:text-gray-400" data-product-id="<?php echo $product->get_id(); ?>">
+                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors dark:bg-red-900/20 dark:text-red-400" data-product-id="<?php echo $product->get_id(); ?>">
                                             <span class="material-symbols-outlined text-lg" data-icon="favorite_border"></span>
                                         </button>
                                     </div>
@@ -766,7 +766,7 @@ $random_products_query = new WP_Query([
                                             <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                                             <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                         </button>
-                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center border border-gray-200 text-gray-600 rounded-lg hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all dark:border-gray-700 dark:text-gray-400" data-product-id="<?php echo $product->get_id(); ?>">
+                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors dark:bg-red-900/20 dark:text-red-400" data-product-id="<?php echo $product->get_id(); ?>">
                                             <span class="material-symbols-outlined text-lg" data-icon="favorite_border"></span>
                                         </button>
                                     </div>
