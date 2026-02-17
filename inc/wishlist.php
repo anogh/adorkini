@@ -208,7 +208,7 @@ function warafy_get_wishlist_products() {
                     <div class="divide-y divide-gray-200 dark:divide-gray-700">';
         } else {
             echo '<div class="lg:hidden bg-white dark:bg-background-dark">
-                    <div class="flex flex-col gap-4 p-4">';
+                    <div class="grid grid-cols-2 gap-4 p-4 mobile-grid-2">';
         }
         
         while ($loop->have_posts()) : $loop->the_post();
@@ -256,44 +256,33 @@ function warafy_get_wishlist_products() {
                 <?php
             } else {
                 ?>
-                <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark">
-                    <div class="flex items-start gap-4">
-                        <div class="w-24 flex-shrink-0">
-                            <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-md overflow-hidden">
-                                <a href="<?php the_permalink(); ?>">
-                                    <?php echo $product->get_image('woocommerce_thumbnail', array('class' => 'w-full h-full object-cover object-center')); ?>
-                                </a>
-                            </div>
+                <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm">
+                    <div class="relative">
+                        <a href="<?php the_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
+                        <button type="button" 
+                                class="warafy-wishlist-btn absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 text-red-500 hover:bg-red-50 shadow-sm"
+                                data-product-id="<?php echo $product->get_id(); ?>">
+                            <span class="material-symbols-outlined text-lg" data-icon="close"></span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between gap-4">
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                                <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php the_title(); ?></a>
+                            </h3>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                         </div>
-                        <div class="flex flex-1 flex-col justify-between self-stretch">
-                            <div>
-                                <div class="flex items-start justify-between">
-                                    <h3 class="font-semibold text-gray-900 dark:text-white pr-2">
-                                        <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors"><?php the_title(); ?></a>
-                                    </h3>
-                                    <button type="button" 
-                                            class="warafy-wishlist-btn text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
-                                            data-product-id="<?php echo $product->get_id(); ?>">
-                                        <span class="material-symbols-outlined text-xl" data-icon="close"></span>
-                                    </button>
-                                </div>
-                                <p class="mt-2 text-lg font-bold text-gray-900 dark:text-white">
-                                    <?php echo $product->get_price_html(); ?>
-                                </p>
-                            </div>
-                            <div class="mt-3 flex flex-col gap-2">
-                                <a href="?add-to-cart=<?php echo $product->get_id(); ?>" 
-                                   class="flex w-full items-center justify-center gap-2 rounded-full h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors">
-                                    <span class="material-symbols-outlined text-base" data-icon="add_shopping_cart"></span>
-                                    Add to Cart
-                                </a>
-                                <button type="button" 
-                                        class="warafy-wishlist-btn flex w-full items-center justify-center gap-2 rounded-full h-10 px-4 border border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 transition-colors"
-                                        data-product-id="<?php echo $product->get_id(); ?>">
-                                    <span class="material-symbols-outlined text-base" data-icon="close"></span>
-                                    Remove from Loved List
-                                </button>
-                            </div>
+                        <div class="flex gap-2">
+                            <a href="?add-to-cart=<?php echo $product->get_id(); ?>" 
+                               class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+                                <span class="material-symbols-outlined text-sm mr-2" data-icon="add_shopping_cart"></span>
+                                <span class="truncate">Add</span>
+                            </a>
+                            <button type="button" 
+                                    class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 transition-colors"
+                                    data-product-id="<?php echo $product->get_id(); ?>">
+                                <span class="material-symbols-outlined text-lg" data-icon="delete"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
