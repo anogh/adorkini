@@ -2751,7 +2751,9 @@ html {
    ============================================ */
 
 /* Desktop Sorting Dropdown */
-.woocommerce-ordering select {
+.woocommerce-ordering select,
+body .woocommerce-ordering select,
+select[name="orderby"] {
     appearance: none;
     background-color: transparent;
     border: 1px solid #e5e7eb;
@@ -2759,7 +2761,7 @@ html {
     padding: 0.5rem 2.5rem 0.5rem 1rem;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    color: #000000;
+    color: #000000 !important;
     cursor: pointer;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 0.5rem center;
@@ -2767,20 +2769,26 @@ html {
     background-size: 1.5em 1.5em;
 }
 
-.woocommerce-ordering select option {
-    color: #000000;
-    background-color: #ffffff;
+.woocommerce-ordering select option,
+body .woocommerce-ordering select option,
+select[name="orderby"] option {
+    color: #000000 !important;
+    background-color: #ffffff !important;
 }
 
-.dark .woocommerce-ordering select {
+.dark .woocommerce-ordering select,
+.dark body .woocommerce-ordering select,
+.dark select[name="orderby"] {
     border-color: #374151;
-    color: #d1d5db;
+    color: #d1d5db !important;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
 }
 
-.dark .woocommerce-ordering select option {
-    color: #d1d5db;
-    background-color: #1f2937;
+.dark .woocommerce-ordering select option,
+.dark body .woocommerce-ordering select option,
+.dark select[name="orderby"] option {
+    color: #d1d5db !important;
+    background-color: #1f2937 !important;
 }
 
 .woocommerce-ordering select:focus {
