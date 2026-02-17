@@ -3714,39 +3714,12 @@ add_filter('lostpassword_url', function($lostpassword_url, $redirect) {
     return home_url('/forgot-password/') . ($redirect ? '?redirect_to=' . urlencode($redirect) : '');
 }, 999, 2);
 
-// Remove any existing "New in Store" sections from plugins
-add_action('wp_head', 'warafy_remove_existing_cart_sections', 100);
-function warafy_remove_existing_cart_sections() {
-    if (is_cart()) {
-        // Remove common plugin hooks that add product sections to cart
-        remove_all_actions('woocommerce_after_cart', 10);
-        remove_all_actions('woocommerce_cart_is_empty', 10);
-        
-        // Add custom CSS to hide any existing sections
-        echo '<style>
-            /* Hide existing New in Store sections from plugins */
-            .woocommerce-cart .cart-empty + .woocommerce-new-in-store,
-            .woocommerce-cart .cart-empty ~ .new-in-store,
-            .woocommerce-cart .cart-empty ~ .recent-products,
-            .woocommerce-cart .cart-empty ~ .related-products,
-            .woocommerce-cart .cart-empty ~ [class*="new-in"],
-            .woocommerce-cart .cart-empty ~ [class*="recent"],
-            .woocommerce-cart .cart-empty ~ div:not(.empty-cart-container):not(.cart-empty):not(.woocommerce-cart-form):not(.cart-collaterals):not(.woocommerce-message) {
-                display: none !important;
-            }
-        </style>';
-    }
-}
-
-// Add custom "New in Store" section to empty cart page
-add_action('woocommerce_after_cart', 'warafy_empty_cart_new_arrivals', 5);
-function warafy_empty_cart_new_arrivals() {
-    // Only show on empty cart
-    if (!WC()->cart->is_empty()) {
-        return;
-    }
+// Remove any existing "New in Store" sections from plugins and add custom one
+add_action('wp_footer', 'warafy_cart_page_customizations', 100);
+function warafy_cart_page_customizations() {
+    if (!is_cart()) return;
     
-    // Get 4 random products for "New in Store" section
+    // Get products for the custom section
     $args = array(
         'post_type' => 'product',
         'posts_per_page' => 4,
@@ -3764,46 +3737,104 @@ function warafy_empty_cart_new_arrivals() {
     $products_query = new WP_Query($args);
     
     if ($products_query->have_posts()) {
-        echo '<div class="warafy-new-in-store mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">';
-        echo '<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">' . __t('New in store') . '</h3>';
-        echo '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
+        $products_html = '';
         
         while ($products_query->have_posts()) {
             $products_query->the_post();
             global $product;
-            ?>
-            <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm">
-                <div class="relative">
-                    <a href="<?php echo get_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
-                    <?php if ($product->is_on_sale()) : ?>
-                        <span class="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">SALE</span>
-                    <?php endif; ?>
-                </div>
-                <div class="flex flex-col flex-1 justify-between gap-4">
-                    <div>
-                        <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                            <a href="<?php echo get_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php echo get_the_title(); ?></a>
-                        </h3>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                            <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                            <span class="add-text truncate"><?php echo __t('Add'); ?></span>
-                            <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                            <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                        </button>
-                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <?php
+            
+            $sale_badge = $product->is_on_sale() ? '<span class="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">SALE</span>' : '';
+            
+            $products_html .= '<div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm">';
+            $products_html .= '<div class="relative">';
+            $products_html .= '<a href="' . get_permalink() . '" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style="background-image: url(\'' . get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail') . '\');"></a>';
+            $products_html .= $sale_badge;
+            $products_html .= '</div>';
+            $products_html .= '<div class="flex flex-col flex-1 justify-between gap-4">';
+            $products_html .= '<div>';
+            $products_html .= '<h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1"><a href="' . get_permalink() . '" class="hover:text-primary transition-colors line-clamp-1">' . get_the_title() . '</a></h3>';
+            $products_html .= '<p class="text-sm font-medium text-gray-500 dark:text-gray-400">' . $product->get_price_html() . '</p>';
+            $products_html .= '</div>';
+            $products_html .= '<div class="flex gap-2">';
+            $products_html .= '<button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="' . $product->get_id() . '">';
+            $products_html .= '<span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>';
+            $products_html .= '<span class="add-text truncate">' . __t('Add') . '</span>';
+            $products_html .= '<span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>';
+            $products_html .= '<span class="added-text hidden truncate">' . __t('Added') . '</span>';
+            $products_html .= '</button>';
+            $products_html .= '<button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="' . $product->get_id() . '">';
+            $products_html .= '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>';
+            $products_html .= '</button>';
+            $products_html .= '</div>';
+            $products_html .= '</div>';
+            $products_html .= '</div>';
         }
         
-        echo '</div>';
-        echo '</div>';
         wp_reset_postdata();
+        
+        // Output JavaScript to remove existing section and add custom one
+        echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Find and remove the existing "New in store" section
+            // Look for sections with "New in store" heading
+            var headings = document.querySelectorAll("h2, h3, h4, .section-title, .widget-title");
+            headings.forEach(function(heading) {
+                if (heading.textContent.toLowerCase().includes("new in store") || 
+                    heading.textContent.toLowerCase().includes("new in")) {
+                    // Find the parent container (usually a section, div, or widget)
+                    var parent = heading.parentElement;
+                    while (parent && !parent.classList.contains("woocommerce") && parent.tagName !== "BODY") {
+                        // Check if this parent contains product elements
+                        if (parent.querySelector(".product, .wc-block-grid__product, [class*=\'product\']")) {
+                            parent.style.display = "none";
+                            parent.remove();
+                            return;
+                        }
+                        parent = parent.parentElement;
+                    }
+                    // If no product container found, hide the heading and its siblings
+                    var section = heading.closest("section, .widget, .wp-block-group, div[class*=\'products\'], div[class*=\'store\']");
+                    if (section) {
+                        section.style.display = "none";
+                        section.remove();
+                    }
+                }
+            });
+            
+            // Also look for specific WooCommerce blocks or shortcodes
+            var productGrids = document.querySelectorAll(".wc-block-grid, .products, .woocommerce-products-header ~ .products, [class*=\'cross-sells\'], [class*=\'related\']");
+            productGrids.forEach(function(grid) {
+                // Check if it comes after the empty cart message
+                var emptyCart = document.querySelector(".cart-empty, .empty-cart-container");
+                if (emptyCart && grid.compareDocumentPosition(emptyCart) & Node.DOCUMENT_POSITION_PRECEDING) {
+                    // This grid comes after the empty cart
+                    var prevSibling = grid.previousElementSibling;
+                    if (prevSibling && (prevSibling.textContent.toLowerCase().includes("new in") || 
+                                       prevSibling.querySelector("h2, h3")?.textContent.toLowerCase().includes("new in"))) {
+                        grid.style.display = "none";
+                        grid.remove();
+                        if (prevSibling) {
+                            prevSibling.style.display = "none";
+                            prevSibling.remove();
+                        }
+                    }
+                }
+            });
+            
+            // Add our custom section
+            var container = document.querySelector(".woocommerce");
+            if (container) {
+                var customSection = document.createElement("div");
+                customSection.className = "warafy-new-in-store mt-12 pt-8 border-t border-gray-200 dark:border-gray-700";
+                customSection.innerHTML = `
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">' . __t('New in store') . '</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        ' . $products_html . '
+                    </div>
+                `;
+                container.appendChild(customSection);
+            }
+        });
+        </script>';
     }
 }
