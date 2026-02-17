@@ -70,7 +70,7 @@ function warafy_wishlist_scripts() {
             
             const btnText = btn.querySelector('.btn-text');
             if(btnText) {
-                btnText.textContent = 'Loved!';
+                btnText.textContent = '<?php echo __t('Loved!'); ?>';
             }
             
             if(btn.querySelector('.material-symbols-outlined')) {

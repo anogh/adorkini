@@ -21,10 +21,10 @@ if (isset($_POST['save_account_details']) && wp_verify_nonce($_POST['update_acco
     $email = sanitize_email($_POST['email']);
     
     if (!is_email($email)) {
-        $message = 'Invalid email address.';
+        $message = __t('Invalid email address.');
         $message_type = 'error';
     } elseif (email_exists($email) && $email !== $current_user->user_email) {
-        $message = 'Email already in use.';
+        $message = __t('Email already in use.');
         $message_type = 'error';
     } else {
         wp_update_user(array(
@@ -35,7 +35,7 @@ if (isset($_POST['save_account_details']) && wp_verify_nonce($_POST['update_acco
             'display_name' => sanitize_text_field($_POST['display_name'])
         ));
         update_user_meta($user_id, 'billing_phone', sanitize_text_field($_POST['phone']));
-        $message = 'Personal details updated successfully.';
+        $message = __t('Personal details updated successfully.');
         $message_type = 'success';
         $current_user = wp_get_current_user();
     }
@@ -59,7 +59,7 @@ if (isset($_POST['save_address']) && wp_verify_nonce($_POST['update_address_nonc
         $customer->set_shipping_country(sanitize_text_field($_POST['shipping_country']));
         
         $customer->save();
-        $message = 'Addresses updated successfully.';
+        $message = __t('Addresses updated successfully.');
         $message_type = 'success';
     }
 }
@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(err => {
                 messageDiv.classList.remove('hidden');
-                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.textContent = '<?php echo __t('An error occurred. Please try again.'); ?>';
                 messageDiv.className = 'text-red-600 dark:text-red-400 mt-2 font-bold';
             })
             .finally(() => {
