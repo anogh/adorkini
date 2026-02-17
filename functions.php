@@ -3753,30 +3753,58 @@ function warafy_cart_custom_styles() {
         }
     </style>';
     
-    // JavaScript with MutationObserver to catch dynamically added sections
+    // JavaScript to hide only the specific old "New in store" section
     echo '<script>
     (function() {
         function hideOldSections() {
-            // Find all elements on the page
-            var allDivs = document.querySelectorAll("div, section, article, aside");
+            // Find all headings that contain "New in store"
+            var headings = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+            var newInStoreHeadings = [];
             
-            allDivs.forEach(function(el) {
-                // Skip our custom section
-                if (el.classList.contains("warafy-new-in-store") || el.closest(".warafy-new-in-store")) {
-                    return;
-                }
-                
-                // Check if this element contains "New in store" text
-                var text = el.textContent || "";
-                if (text.toLowerCase().indexOf("new in store") !== -1) {
-                    // Check if it contains product elements (images, buttons, prices)
-                    var hasProducts = el.querySelector("img[src*=\"wp-content\"], img[src*=\"uploads\"], .product, .wc-block-grid__product, button, .price, .amount");
-                    
-                    if (hasProducts) {
-                        // This is likely the old section, hide it
-                        el.style.display = "none";
-                        el.setAttribute("data-hidden-by-warafy", "true");
+            headings.forEach(function(h) {
+                var text = (h.textContent || "").trim().toLowerCase();
+                if (text === "new in store" || text.indexOf("new in store") !== -1) {
+                    // Check if this heading is NOT inside our custom section
+                    if (!h.closest(".warafy-new-in-store")) {
+                        newInStoreHeadings.push(h);
                     }
+                }
+            });
+            
+            // For each "New in store" heading found, find and hide its container
+            newInStoreHeadings.forEach(function(heading) {
+                // Find the closest container that has product elements
+                var container = heading.parentElement;
+                var maxLevels = 10;
+                var levels = 0;
+                
+                while (container && levels < maxLevels) {
+                    levels++;
+                    
+                    // Skip if this is our custom section or body/html
+                    if (container.classList.contains("warafy-new-in-store") || 
+                        container.tagName === "BODY" || 
+                        container.tagName === "HTML") {
+                        break;
+                    }
+                    
+                    // Check if this container has product images (at least 2)
+                    var images = container.querySelectorAll("img");
+                    var productImages = 0;
+                    images.forEach(function(img) {
+                        if (img.src && (img.src.indexOf("wp-content") !== -1 || img.src.indexOf("uploads") !== -1)) {
+                            productImages++;
+                        }
+                    });
+                    
+                    // If container has product images, this is likely the section to hide
+                    if (productImages >= 2) {
+                        container.style.display = "none";
+                        container.setAttribute("data-hidden-by-warafy", "true");
+                        break;
+                    }
+                    
+                    container = container.parentElement;
                 }
             });
         }
@@ -3788,20 +3816,9 @@ function warafy_cart_custom_styles() {
             hideOldSections();
         }
         
-        // Also run after a short delay to catch dynamically loaded content
+        // Also run after delays to catch dynamically loaded content
         setTimeout(hideOldSections, 100);
         setTimeout(hideOldSections, 500);
-        setTimeout(hideOldSections, 1000);
-        
-        // Use MutationObserver to catch dynamically added content
-        var observer = new MutationObserver(function(mutations) {
-            hideOldSections();
-        });
-        
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true
-        });
     })();
     </script>';
 }
