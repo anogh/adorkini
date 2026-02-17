@@ -3723,12 +3723,12 @@ function warafy_woocommerce_catalog_ordering() {
     $orderby                 = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby'] ) ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
     $show_default_orderby    = 'menu_order' === apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
     $catalog_orderby_options = apply_filters( 'woocommerce_catalog_orderby', array(
-        'menu_order' => __( 'Default sorting', 'woocommerce' ),
-        'popularity' => __( 'Sort by popularity', 'woocommerce' ),
-        'rating'     => __( 'Sort by average rating', 'woocommerce' ),
-        'date'       => __( 'Sort by latest', 'woocommerce' ),
-        'price'      => __( 'Sort by price: low to high', 'woocommerce' ),
-        'price-desc' => __( 'Sort by price: high to low', 'woocommerce' ),
+        'menu_order' => __t( 'Default sorting' ),
+        'popularity' => __t( 'Sort by popularity' ),
+        'rating'     => __t( 'Sort by average rating' ),
+        'date'       => __t( 'Sort by latest' ),
+        'price'      => __t( 'Sort by price: low to high' ),
+        'price-desc' => __t( 'Sort by price: high to low' ),
     ) );
 
     $default_orderby = wc_get_loop_prop( 'is_search' ) ? 'relevance' : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
@@ -3833,3 +3833,111 @@ function warafy_add_sort_dropdown_inline_styles() {
     </style>';
 }
 add_action( 'wp_head', 'warafy_add_sort_dropdown_inline_styles', 9999 );
+
+// Add to Cart AJAX Handler for Shop Page
+function warafy_add_to_cart_script() {
+    if ( ! is_shop() && ! is_product_category() && ! is_product() ) {
+        return;
+    }
+    ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle Add to Cart button clicks
+        document.body.addEventListener('click', function(e) {
+            const btn = e.target.closest('.add-to-cart-btn');
+            if (!btn) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const productId = btn.dataset.productId;
+            if (!productId) return;
+            
+            // Prevent multiple clicks
+            if (btn.classList.contains('adding')) return;
+            btn.classList.add('adding');
+            btn.disabled = true;
+            
+            const addIcon = btn.querySelector('.add-icon');
+            const addedIcon = btn.querySelector('.added-icon');
+            const addText = btn.querySelector('.add-text');
+            const addedText = btn.querySelector('.added-text');
+            
+            // Show loading state
+            if (addIcon) addIcon.classList.add('hidden');
+            if (addText) addText.textContent = '<?php echo __t('Adding...'); ?>';
+            
+            // Use WooCommerce's built-in AJAX
+            if (typeof wc_add_to_cart_params !== 'undefined' && typeof jQuery !== 'undefined') {
+                const data = {
+                    action: 'woocommerce_add_to_cart',
+                    product_id: productId,
+                    quantity: 1
+                };
+                
+                jQuery.post(wc_add_to_cart_params.wc_ajax_url.toString().replace('%%endpoint%%', 'add_to_cart'), data, function(response) {
+                    if (response.error && response.product_url) {
+                        window.location = response.product_url;
+                        return;
+                    }
+                    
+                    if (!response.error) {
+                        // Show success state
+                        if (addIcon) addIcon.classList.add('hidden');
+                        if (addText) addText.classList.add('hidden');
+                        if (addedIcon) addedIcon.classList.remove('hidden');
+                        if (addedText) addedText.classList.remove('hidden');
+                        
+                        // Change button to green
+                        btn.style.backgroundColor = '#16a34a';
+                        btn.style.color = 'white';
+                        
+                        // Update cart fragments
+                        jQuery('body').trigger('added_to_cart', [response.fragments, response.cart_hash]);
+                        
+                        // Update cart count
+                        const cartCountElements = document.querySelectorAll('.cart-count');
+                        if (cartCountElements.length > 0) {
+                            const currentCount = parseInt(cartCountElements[0].textContent || '0');
+                            const newCount = currentCount + 1;
+                            cartCountElements.forEach(el => {
+                                el.textContent = newCount;
+                                el.classList.remove('hidden');
+                            });
+                        }
+                        
+                        // Reset button after 2 seconds
+                        setTimeout(function() {
+                            btn.classList.remove('adding');
+                            btn.disabled = false;
+                            if (addIcon) addIcon.classList.remove('hidden');
+                            if (addText) addText.classList.remove('hidden');
+                            if (addedIcon) addedIcon.classList.add('hidden');
+                            if (addedText) addedText.classList.add('hidden');
+                            if (addText) addText.textContent = '<?php echo __t('Add'); ?>';
+                            btn.style.backgroundColor = '';
+                            btn.style.color = '';
+                        }, 2000);
+                    } else {
+                        // Error state
+                        btn.classList.remove('adding');
+                        btn.disabled = false;
+                        if (addText) addText.textContent = '<?php echo __t('Add'); ?>';
+                        alert('<?php echo __t('Error adding to cart. Please try again.'); ?>');
+                    }
+                }).fail(function() {
+                    btn.classList.remove('adding');
+                    btn.disabled = false;
+                    if (addText) addText.textContent = '<?php echo __t('Add'); ?>';
+                    alert('<?php echo __t('Error adding to cart. Please try again.'); ?>');
+                });
+            } else {
+                // Fallback: redirect to product page with add to cart
+                window.location.href = '?add-to-cart=' + productId;
+            }
+        });
+    });
+    </script>
+    <?php
+}
+add_action( 'wp_footer', 'warafy_add_to_cart_script', 100 );

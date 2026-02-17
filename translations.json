@@ -161,5 +161,13 @@
     "Min": "কম",
     "Max": "বেশি",
     "Apply Filter": "ফিল্টার প্রয়োগ করুন",
-    "No products found": "কোনো পণ্য পাওয়া যায়নি"
+    "No products found": "কোনো পণ্য পাওয়া যায়নি",
+    "Default sorting": "ডিফল্ট সর্টিং",
+    "Sort by popularity": "জনপ্রিয়তা অনুসারে সর্ট",
+    "Sort by average rating": "গড় রেটিং অনুসারে সর্ট",
+    "Sort by latest": "সর্বশেষ অনুসারে সর্ট",
+    "Sort by price: low to high": "দাম: কম থেকে বেশি",
+    "Sort by price: high to low": "দাম: বেশি থেকে কম",
+    "Adding...": "যোগ করা হচ্ছে...",
+    "Error adding to cart. Please try again.": "কার্টে যোগ করতে ত্রুটি। অনুগ্রহ করে আবার চেষ্টা করুন।"
 }
