@@ -3772,75 +3772,60 @@ function warafy_cart_page_customizations() {
         
         wp_reset_postdata();
         
-        // Output JavaScript to remove existing section and add custom one
+        // Output JavaScript to hide first section and ensure only custom one shows
         echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Remove ALL existing product sections on cart page (except our custom one)
-            // First, find all elements that contain "New in store" text
-            var allElements = document.querySelectorAll("*");
-            var sectionsToRemove = [];
+            // Find all h3 elements with "New in store" text
+            var headings = document.querySelectorAll("h3");
+            var newInStoreHeadings = [];
             
-            allElements.forEach(function(el) {
-                // Check if element directly contains "New in store" text
-                if (el.children.length === 0 && el.textContent.toLowerCase().includes("new in store")) {
-                    // Find the parent section/container
-                    var parent = el.parentElement;
-                    for (var i = 0; i < 5; i++) { // Go up max 5 levels
-                        if (!parent || parent.classList.contains("warafy-new-in-store")) break;
+            headings.forEach(function(heading) {
+                if (heading.textContent.trim() === "New in store" || heading.textContent.trim().toLowerCase() === "new in store") {
+                    newInStoreHeadings.push(heading);
+                }
+            });
+            
+            // If we found multiple "New in store" sections, hide the first one
+            if (newInStoreHeadings.length >= 2) {
+                // Get the first heading
+                var firstHeading = newInStoreHeadings[0];
+                
+                // Find its container - look for a section, div with products, or widget
+                var container = firstHeading.closest("section, .widget, .wp-block-group, div[class*=\"products\"], div[class*=\"store\"]");
+                
+                // If no specific container found, try to find a parent with product images
+                if (!container) {
+                    var parent = firstHeading.parentElement;
+                    while (parent && parent.tagName !== "BODY") {
+                        // Check if this parent has product images
+                        var images = parent.querySelectorAll("img");
+                        var hasProductImages = false;
+                        images.forEach(function(img) {
+                            if (img.src && (img.src.includes("wp-content") || img.src.includes("uploads"))) {
+                                hasProductImages = true;
+                            }
+                        });
                         
-                        // Check if this parent contains product images or add to cart buttons
-                        if (parent.querySelector("img, .product, .add_to_cart_button, [class*=\'product\'], button[class*=\'cart\']")) {
-                            sectionsToRemove.push(parent);
+                        if (hasProductImages && images.length >= 4) {
+                            container = parent;
                             break;
                         }
                         parent = parent.parentElement;
                     }
                 }
-            });
-            
-            // Remove duplicate sections (keep only unique parents)
-            var uniqueSections = [];
-            sectionsToRemove.forEach(function(section) {
-                var isDuplicate = uniqueSections.some(function(s) {
-                    return s === section || s.contains(section) || section.contains(s);
-                });
-                if (!isDuplicate) {
-                    uniqueSections.push(section);
+                
+                // Hide the first section
+                if (container) {
+                    container.style.display = "none";
                 }
-            });
-            
-            // Remove the sections (keep the last one if multiple found, remove others)
-            if (uniqueSections.length > 1) {
-                // Remove all but the last one
-                for (var i = 0; i < uniqueSections.length - 1; i++) {
-                    uniqueSections[i].style.display = "none";
-                    uniqueSections[i].remove();
-                }
-            } else if (uniqueSections.length === 1) {
-                // If only one found, remove it and we will add our custom one
-                uniqueSections[0].style.display = "none";
-                uniqueSections[0].remove();
             }
-            
-            // Also try to find by looking for product grids
-            var productContainers = document.querySelectorAll("[class*=\'products\'], [class*=\'product-grid\'], .wc-block-grid, .related, .upsells, .cross-sells");
-            productContainers.forEach(function(container) {
-                // Check if this is not our custom section
-                if (!container.classList.contains("warafy-new-in-store") && !container.closest(".warafy-new-in-store")) {
-                    // Check if it has product elements
-                    if (container.querySelector("img, .product, button, .add_to_cart")) {
-                        container.style.display = "none";
-                        container.remove();
-                    }
-                }
-            });
             
             // Check if our custom section already exists
             var existingCustom = document.querySelector(".warafy-new-in-store");
             if (!existingCustom) {
                 // Add our custom section
-                var container = document.querySelector(".woocommerce");
-                if (container) {
+                var woocommerceContainer = document.querySelector(".woocommerce");
+                if (woocommerceContainer) {
                     var customSection = document.createElement("div");
                     customSection.className = "warafy-new-in-store mt-12 pt-8 border-t border-gray-200 dark:border-gray-700";
                     customSection.innerHTML = `
@@ -3849,7 +3834,7 @@ function warafy_cart_page_customizations() {
                             ' . $products_html . '
                         </div>
                     `;
-                    container.appendChild(customSection);
+                    woocommerceContainer.appendChild(customSection);
                 }
             }
         });
