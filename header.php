@@ -268,7 +268,7 @@ $is_facebook_webview = (
 <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
 </a>
 </div>
-<div class="hidden flex-1 justify-center lg:flex">
+<div class="hidden flex-1 justify-center lg:flex mr-6">
 <form role="search" method="get" class="relative w-full max-w-lg" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" data-icon="search"></span>
 <input class="warafy-search-input form-input h-10 w-full rounded-lg border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 pl-10 pr-4 text-sm font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-primary focus:ring-primary" placeholder="<?php echo __t('Search for products...'); ?>" type="search" name="s" value="<?php echo get_search_query(); ?>" autocomplete="off"/>
