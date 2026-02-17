@@ -310,19 +310,24 @@ $random_products_query = new WP_Query([
                             <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark hover:shadow-lg transition-all">
                                 <a href="<?php echo get_permalink(); ?>" class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
                                 <div class="flex flex-col flex-1 justify-between gap-4">
-                                    <div>
-                                        <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                                            <a href="<?php echo get_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php echo get_the_title(); ?></a>
-                                        </h3>
-                                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
-                                    </div>
-                                    <button class="add-to-cart-btn flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                                <div>
+                                    <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                                        <a href="<?php echo get_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php echo get_the_title(); ?></a>
+                                    </h3>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
                                         <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
                                         <span class="add-text truncate"><?php echo __t('Add to Cart'); ?></span>
                                         <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                                         <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                     </button>
+                                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center border border-gray-200 text-gray-600 rounded-lg hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all dark:border-gray-700 dark:text-gray-400" data-product-id="<?php echo $product->get_id(); ?>">
+                                        <span class="material-symbols-outlined text-lg" data-icon="favorite_border"></span>
+                                    </button>
                                 </div>
+                            </div>
                             </div>
                             <?php
                         }
@@ -381,12 +386,17 @@ $random_products_query = new WP_Query([
                                             </h3>
                                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                                         </div>
-                                        <button class="add-to-cart-btn flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                            <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text truncate"><?php echo __t('Add to Cart'); ?></span>
-                                            <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                            <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                                        </button>
+                                        <div class="flex gap-2">
+                                            <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                                                <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                                <span class="add-text truncate"><?php echo __t('Add to Cart'); ?></span>
+                                                <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                                <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
+                                            </button>
+                                            <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center border border-gray-200 text-gray-600 rounded-lg hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all dark:border-gray-700 dark:text-gray-400" data-product-id="<?php echo $product->get_id(); ?>">
+                                                <span class="material-symbols-outlined text-lg" data-icon="favorite_border"></span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <?php
