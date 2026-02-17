@@ -95,7 +95,7 @@
                     echo '<div class="w-14 h-14 rounded-xl flex items-center justify-center ' . ( $is_all_active ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary/10' ) . ' transition-colors">';
                     echo '<span class="material-symbols-outlined text-2xl" data-icon="apps"></span>';
                     echo '</div>';
-                    echo '<span class="text-xs font-medium text-center whitespace-nowrap">All</span>';
+                    echo '<span class="text-xs font-medium text-center whitespace-nowrap">' . __t('All') . '</span>';
                     echo '</a>';
 
                     if ( ! empty( $ribbon_categories ) && ! is_wp_error( $ribbon_categories ) ) {
@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="flex gap-2">
                                     <button type="button" class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30" data-product-id="<?php echo $product->get_id(); ?>">
-                                        <span class="truncate">Add to Cart</span>
+                                        <span class="truncate"><?php echo __t('Add to Cart'); ?></span>
                                     </button>
                                     <button type="button" class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
@@ -170,7 +170,7 @@
                         <?php
                     }
                 } else {
-                    echo '<p>No products found</p>';
+                    echo '<p>' . __t('No products found') . '</p>';
                 }
                 ?>
             </div>
@@ -197,7 +197,7 @@
                 echo '<div class="w-12 h-12 rounded-xl flex items-center justify-center ' . ( $is_all_active ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800' ) . '">';
                 echo '<span class="material-symbols-outlined text-xl" data-icon="apps"></span>';
                 echo '</div>';
-                echo '<span class="text-[10px] font-medium text-center whitespace-nowrap">All</span>';
+                echo '<span class="text-[10px] font-medium text-center whitespace-nowrap">' . __t('All') . '</span>';
                 echo '</a>';
 
                 if ( ! empty( $ribbon_categories ) && ! is_wp_error( $ribbon_categories ) ) {
@@ -233,11 +233,11 @@
         <div class="flex gap-3 overflow-x-auto border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 p-4 backdrop-blur-sm">
             <button id="mobile-filter-btn" class="flex h-10 flex-1 items-center justify-center gap-x-2 rounded-lg bg-slate-100 dark:bg-slate-800 px-4">
                 <span class="material-symbols-outlined text-lg text-slate-800 dark:text-slate-200" data-icon="tune"></span>
-                <p class="text-sm font-medium text-slate-800 dark:text-slate-200">Filters</p>
+                <p class="text-sm font-medium text-slate-800 dark:text-slate-200"><?php echo __t('Filters'); ?></p>
             </button>
             <button id="mobile-sort-btn" class="flex h-10 flex-1 items-center justify-center gap-x-2 rounded-lg bg-slate-100 dark:bg-slate-800 px-4">
                 <span class="material-symbols-outlined text-lg text-slate-800 dark:text-slate-200" data-icon="swap_vert"></span>
-                <p class="text-sm font-medium text-slate-800 dark:text-slate-200">Sort</p>
+                <p class="text-sm font-medium text-slate-800 dark:text-slate-200"><?php echo __t('Sort'); ?></p>
             </button>
         </div>
         
@@ -246,7 +246,7 @@
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="mobile-filter-overlay"></div>
             <div class="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white dark:bg-background-dark shadow-xl transform transition-transform duration-300 translate-x-full" id="mobile-filter-content">
                 <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Filters</h3>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white"><?php echo __t('Filters'); ?></h3>
                     <button id="close-filter-drawer" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <span class="material-symbols-outlined" data-icon="close"></span>
                     </button>
@@ -256,7 +256,7 @@
                     <div class="space-y-8">
                         <!-- Price Range Filter -->
                         <div>
-                            <h4 class="text-base font-bold text-gray-900 dark:text-white mb-3">Price Range</h4>
+                            <h4 class="text-base font-bold text-gray-900 dark:text-white mb-3"><?php echo __t('Price Range'); ?></h4>
                             <?php
                             $filter_action = $shop_page_url;
                             if ( is_product_category() ) {
@@ -269,12 +269,12 @@
                                 <div class="flex items-center gap-3 mb-4">
                                     <div class="relative w-1/2">
                                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                        <input type="number" name="min_price" placeholder="Min" value="<?php echo isset($_GET['min_price']) ? esc_attr($_GET['min_price']) : ''; ?>" class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary" min="0" step="any">
+                                        <input type="number" name="min_price" placeholder="<?php echo __t('Min'); ?>" value="<?php echo isset($_GET['min_price']) ? esc_attr($_GET['min_price']) : ''; ?>" class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary" min="0" step="any">
                                     </div>
                                     <span class="text-gray-400 font-medium">-</span>
                                     <div class="relative w-1/2">
                                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"><?php echo get_woocommerce_currency_symbol(); ?></span>
-                                        <input type="number" name="max_price" placeholder="Max" value="<?php echo isset($_GET['max_price']) ? esc_attr($_GET['max_price']) : ''; ?>" class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary" min="0" step="any">
+                                        <input type="number" name="max_price" placeholder="<?php echo __t('Max'); ?>" value="<?php echo isset($_GET['max_price']) ? esc_attr($_GET['max_price']) : ''; ?>" class="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary" min="0" step="any">
                                     </div>
                                 </div>
                                 
@@ -294,7 +294,7 @@
                                 ?>
                                 
                                 <button type="submit" class="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm">
-                                    Apply Filter
+                                    <?php echo __t('Apply Filter'); ?>
                                 </button>
                             </form>
                         </div>
@@ -308,7 +308,7 @@
             <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="mobile-sort-overlay"></div>
             <div class="absolute bottom-0 left-0 right-0 bg-white dark:bg-background-dark rounded-t-2xl shadow-xl transform transition-transform duration-300 translate-y-full" id="mobile-sort-content">
                 <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Sort By</h3>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white"><?php echo __t('Sort By'); ?></h3>
                     <button id="close-sort-sheet" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <span class="material-symbols-outlined" data-icon="close"></span>
                     </button>
@@ -362,9 +362,9 @@
                             <div class="flex gap-2">
                                 <button type="button" class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
                                     <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                    <span class="add-text truncate">Add</span>
+                                    <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                                     <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                    <span class="added-text hidden truncate">Added</span>
+                                    <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                 </button>
                                 <button type="button" class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>

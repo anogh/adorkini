@@ -152,5 +152,14 @@
     "Email already in use.": "ইমেল ইতিমধ্যে ব্যবহার করা হয়েছে।",
     "Personal details updated successfully.": "ব্যক্তিগত তথ্য সফলভাবে আপডেট হয়েছে।",
     "Addresses updated successfully.": "ঠিকানা সফলভাবে আপডেট হয়েছে।",
-    "An error occurred. Please try again.": "একটি ত্রুটি হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।"
+    "An error occurred. Please try again.": "একটি ত্রুটি হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "All": "সব",
+    "Filters": "ফিল্টার",
+    "Sort": "সর্ট",
+    "Sort By": "সর্ট অনুসারে",
+    "Price Range": "দামের পরিসীমা",
+    "Min": "কম",
+    "Max": "বেশি",
+    "Apply Filter": "ফিল্টার প্রয়োগ করুন",
+    "No products found": "কোনো পণ্য পাওয়া যায়নি"
 }
