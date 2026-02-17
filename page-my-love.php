@@ -27,38 +27,8 @@ get_header(); ?>
 </main>
 
 <!-- Mobile Content -->
-<main class="lg:hidden flex-grow bg-white dark:bg-background-dark" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1 !important;">
-    <div class="container mx-auto px-4 py-4" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1 !important;">
-        <style>
-            /* Override any CSS that might be hiding mobile content */
-            @media (max-width: 1023px) {
-                main.lg\:hidden,
-                main.lg\:hidden > div,
-                main.lg\:hidden .woocommerce,
-                main.lg\:hidden .container {
-                    display: block !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    position: relative !important;
-                    z-index: 1 !important;
-                    width: 100% !important;
-                    height: auto !important;
-                    max-width: none !important;
-                    min-width: auto !important;
-                    overflow: visible !important;
-                    margin: 0 !important;
-                    padding: inherit !important;
-                }
-                /* Ensure mobile footer is visible */
-                footer.lg\:hidden {
-                    display: block !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    position: relative !important;
-                    z-index: 40 !important;
-                }
-            }
-        </style>
+<main class="lg:hidden flex-grow bg-white dark:bg-background-dark">
+    <div class="container mx-auto px-4 py-4">
         <div class="woocommerce">
             <!-- Wishlist Content -->
             <div id="warafy-wishlist-container-mobile" class="bg-white dark:bg-background-dark">
