@@ -3714,9 +3714,38 @@ add_filter('lostpassword_url', function($lostpassword_url, $redirect) {
     return home_url('/forgot-password/') . ($redirect ? '?redirect_to=' . urlencode($redirect) : '');
 }, 999, 2);
 
+// Remove any existing "New in Store" sections from plugins
+add_action('wp_head', 'warafy_remove_existing_cart_sections', 100);
+function warafy_remove_existing_cart_sections() {
+    if (is_cart()) {
+        // Remove common plugin hooks that add product sections to cart
+        remove_all_actions('woocommerce_after_cart', 10);
+        remove_all_actions('woocommerce_cart_is_empty', 10);
+        
+        // Add custom CSS to hide any existing sections
+        echo '<style>
+            /* Hide existing New in Store sections from plugins */
+            .woocommerce-cart .cart-empty + .woocommerce-new-in-store,
+            .woocommerce-cart .cart-empty ~ .new-in-store,
+            .woocommerce-cart .cart-empty ~ .recent-products,
+            .woocommerce-cart .cart-empty ~ .related-products,
+            .woocommerce-cart .cart-empty ~ [class*="new-in"],
+            .woocommerce-cart .cart-empty ~ [class*="recent"],
+            .woocommerce-cart .cart-empty ~ div:not(.empty-cart-container):not(.cart-empty):not(.woocommerce-cart-form):not(.cart-collaterals):not(.woocommerce-message) {
+                display: none !important;
+            }
+        </style>';
+    }
+}
+
 // Add custom "New in Store" section to empty cart page
-add_action('woocommerce_cart_is_empty', 'warafy_empty_cart_new_arrivals', 20);
+add_action('woocommerce_after_cart', 'warafy_empty_cart_new_arrivals', 5);
 function warafy_empty_cart_new_arrivals() {
+    // Only show on empty cart
+    if (!WC()->cart->is_empty()) {
+        return;
+    }
+    
     // Get 4 random products for "New in Store" section
     $args = array(
         'post_type' => 'product',
@@ -3735,7 +3764,7 @@ function warafy_empty_cart_new_arrivals() {
     $products_query = new WP_Query($args);
     
     if ($products_query->have_posts()) {
-        echo '<div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">';
+        echo '<div class="warafy-new-in-store mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">';
         echo '<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">' . __t('New in store') . '</h3>';
         echo '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
         
