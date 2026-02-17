@@ -77,38 +77,34 @@ get_header(); ?>
                             $category_slugs[] = $cat->slug;
                         }
                         ?>
-                        <div class="product-card bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer" data-categories="<?php echo esc_attr(implode(',', $category_slugs)); ?>">
-                            <a href="<?php the_permalink(); ?>" class="block aspect-square overflow-hidden bg-gray-100 dark:bg-gray-700 group-hover:opacity-90 transition-opacity">
-                                <?php if (has_post_thumbnail()) : ?>
-                                    <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
-                                <?php else : ?>
-                                    <img src="https://via.placeholder.com/300" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover">
-                                <?php endif; ?>
-                            </a>
-                            <div class="p-3">
-                                <a href="<?php the_permalink(); ?>" class="block">
-                                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"><?php the_title(); ?></h3>
-                                </a>
-                                <div class="mt-2">
-                                    <p class="text-lg font-bold text-primary dark:text-primary mb-2"><?php echo $product->get_price_html(); ?></p>
-                                    <div class="flex gap-2">
-                                        <?php if ($product->is_in_stock()) : ?>
-                                            <button class="add-to-cart-btn flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
-                                                <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>
-                                                <span class="add-text truncate">Add to cart</span>
-                                                <span class="material-symbols-outlined text-sm added-icon hidden" data-icon="check"></span>
-                                                <span class="added-text hidden truncate">Added</span>
-                                            </button>
-                                        <?php else : ?>
-                                            <button class="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed" disabled title="Out of Stock">
-                                                <span class="material-symbols-outlined text-sm" data-icon="remove_shopping_cart"></span>
-                                                <span class="truncate">Out of Stock</span>
-                                            </button>
-                                        <?php endif; ?>
-                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm" data-categories="<?php echo esc_attr(implode(',', $category_slugs)); ?>">
+                            <div class="relative">
+                                <a href="<?php the_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'woocommerce_thumbnail') : 'https://via.placeholder.com/300'; ?>");'></a>
+                            </div>
+                            <div class="flex flex-col flex-1 justify-between gap-4">
+                                <div>
+                                    <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                                        <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php the_title(); ?></a>
+                                    </h3>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <?php if ($product->is_in_stock()) : ?>
+                                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
+                                            <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                            <span class="add-text truncate">Add</span>
+                                            <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                            <span class="added-text hidden truncate">Added</span>
                                         </button>
-                                    </div>
+                                    <?php else : ?>
+                                        <button class="flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed" disabled title="Out of Stock">
+                                            <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
+                                            <span class="truncate">Out of Stock</span>
+                                        </button>
+                                    <?php endif; ?>
+                                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -211,38 +207,34 @@ get_header(); ?>
                                 $category_slugs[] = $cat->slug;
                             }
                             ?>
-                            <div class="product-card bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden group cursor-pointer" data-categories="<?php echo esc_attr(implode(',', $category_slugs)); ?>">
-                                <a href="<?php the_permalink(); ?>" class="block aspect-square overflow-hidden bg-gray-100 dark:bg-gray-700 group-hover:opacity-90 transition-opacity">
-                                    <?php if (has_post_thumbnail()) : ?>
-                                        <?php the_post_thumbnail('medium', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300']); ?>
-                                    <?php else : ?>
-                                        <img src="https://via.placeholder.com/300" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover">
-                                    <?php endif; ?>
-                                </a>
-                                <div class="p-3">
-                                    <a href="<?php the_permalink(); ?>" class="block">
-                                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"><?php the_title(); ?></h3>
-                                    </a>
-                                    <div class="mt-2">
-                                        <p class="text-lg font-bold text-primary dark:text-primary mb-2"><?php echo $product->get_price_html(); ?></p>
-                                        <div class="flex gap-2">
-                                            <?php if ($product->is_in_stock()) : ?>
-                                                <button class="add-to-cart-btn flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
-                                                    <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>
-                                                    <span class="add-text truncate">Add to cart</span>
-                                                    <span class="material-symbols-outlined text-sm added-icon hidden" data-icon="check"></span>
-                                                    <span class="added-text hidden truncate">Added</span>
-                                                </button>
-                                            <?php else : ?>
-                                                <button class="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed" disabled title="Out of Stock">
-                                                    <span class="material-symbols-outlined text-sm" data-icon="remove_shopping_cart"></span>
-                                                    <span class="truncate">Out of Stock</span>
-                                                </button>
-                                            <?php endif; ?>
-                                            <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                            <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm" data-categories="<?php echo esc_attr(implode(',', $category_slugs)); ?>">
+                                <div class="relative">
+                                    <a href="<?php the_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'woocommerce_thumbnail') : 'https://via.placeholder.com/300'; ?>");'></a>
+                                </div>
+                                <div class="flex flex-col flex-1 justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                                            <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php the_title(); ?></a>
+                                        </h3>
+                                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <?php if ($product->is_in_stock()) : ?>
+                                            <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
+                                                <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                                <span class="add-text truncate">Add</span>
+                                                <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                                <span class="added-text hidden truncate">Added</span>
                                             </button>
-                                        </div>
+                                        <?php else : ?>
+                                            <button class="flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed" disabled title="Out of Stock">
+                                                <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
+                                                <span class="truncate">Out of Stock</span>
+                                            </button>
+                                        <?php endif; ?>
+                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
