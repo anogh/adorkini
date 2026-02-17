@@ -410,7 +410,7 @@ $is_facebook_webview = (
     <!-- Default Mobile Header -->
     <header class="lg:hidden sticky top-0 z-20 flex flex-col bg-white dark:bg-background-dark">
         <div class="border-b border-solid border-slate-200 dark:border-slate-800"></div>
-        <div class="relative flex items-center justify-between px-4 py-3 w-full mb-2">
+        <div class="relative flex items-center justify-between px-4 py-3 w-full mb-4">
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center">
                 <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
