@@ -3733,20 +3733,8 @@ add_action('wp_head', 'warafy_cart_custom_styles', 999);
 function warafy_cart_custom_styles() {
     if (!is_cart()) return;
     
-    // CSS to hide old sections and show only our custom one
+    // Only CSS to ensure our custom section is visible
     echo '<style>
-        /* Hide all product sections except our custom one */
-        .woocommerce-cart .cross-sells,
-        .woocommerce-cart .related,
-        .woocommerce-cart .upsells,
-        .woocommerce-cart .wc-block-grid,
-        .woocommerce-cart .products,
-        .woocommerce-cart [class*="cross-sell"],
-        .woocommerce-cart [class*="related-products"],
-        .woocommerce-cart [class*="product-recommendations"] {
-            display: none !important;
-        }
-        
         /* Ensure our custom section is always visible */
         .warafy-new-in-store {
             display: block !important;
@@ -3784,7 +3772,9 @@ function warafy_cart_custom_styles() {
                     // Skip if this is our custom section or body/html
                     if (container.classList.contains("warafy-new-in-store") || 
                         container.tagName === "BODY" || 
-                        container.tagName === "HTML") {
+                        container.tagName === "HTML" ||
+                        container.classList.contains("woocommerce") ||
+                        container.classList.contains("container")) {
                         break;
                     }
                     
