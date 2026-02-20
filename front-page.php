@@ -276,6 +276,7 @@ $random_products_query = new WP_Query([
         </section>
 
     </div>
+    </div> <!-- Close desktop container -->
 
     <!-- Mobile Content -->
     <div class="block lg:hidden relative mobile-content-wrapper bg-[#f5f5f5] pb-4">
