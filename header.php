@@ -278,7 +278,6 @@ $is_facebook_webview = (
 <input type="hidden" name="post_type" value="product" />
 </form>
 </div>
-</div>
 <div class="flex items-center justify-end gap-4">
 <nav class="hidden items-center gap-6 lg:flex">
 <a class="text-sm font-medium text-gray-200 hover:text-primary" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"><?php echo __t('Shop'); ?></a>
