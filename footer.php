@@ -1,48 +1,48 @@
 
 <!-- Desktop Footer -->
-<footer class="hidden lg:block bg-white dark:bg-background-dark border-t border-gray-200 dark:border-gray-700">
+<footer class="hidden lg:block bg-black border-t border-gray-800">
 <div class="container mx-auto px-6 py-12">
 <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
 <div>
-<h4 class="font-bold text-gray-900 dark:text-white"><?php echo __t('Shop'); ?></h4>
+<h4 class="font-bold text-white"><?php echo __t('Shop'); ?></h4>
 <nav class="mt-4 flex flex-col gap-2">
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('New Arrivals'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Best Sellers'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Deals'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('All Categories'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('New Arrivals'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Best Sellers'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Deals'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('All Categories'); ?></a>
 </nav>
 </div>
 <div>
-<h4 class="font-bold text-gray-900 dark:text-white"><?php echo __t('Customer Service'); ?></h4>
+<h4 class="font-bold text-white"><?php echo __t('Customer Service'); ?></h4>
 <nav class="mt-4 flex flex-col gap-2">
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Contact Us'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Help & FAQ'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Shipping'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Returns'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Contact Us'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Help & FAQ'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Shipping'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Returns'); ?></a>
 </nav>
 </div>
 <div>
-<h4 class="font-bold text-gray-900 dark:text-white"><?php echo __t('About Us'); ?></h4>
+<h4 class="font-bold text-white"><?php echo __t('About Us'); ?></h4>
 <nav class="mt-4 flex flex-col gap-2">
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Our Story'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Careers'); ?></a>
-<a class="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary" href="#"><?php echo __t('Press'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Our Story'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Careers'); ?></a>
+<a class="text-sm text-gray-400 hover:text-[#FFB800]" href="#"><?php echo __t('Press'); ?></a>
 </nav>
 </div>
 <div>
-<h4 class="font-bold text-gray-900 dark:text-white"><?php echo __t('Stay Connected'); ?></h4>
-<p class="mt-4 text-sm text-gray-500 dark:text-gray-400"><?php echo __t('Join our newsletter for the latest deals and updates.'); ?></p>
+<h4 class="font-bold text-white"><?php echo __t('Stay Connected'); ?></h4>
+<p class="mt-4 text-sm text-gray-400"><?php echo __t('Join our newsletter for the latest deals and updates.'); ?></p>
 <form class="mt-4 flex gap-2">
-<input class="form-input flex-1 rounded-lg border-gray-200 bg-background-light text-sm focus:border-primary focus:ring-primary dark:border-gray-700 dark:bg-gray-800" placeholder="<?php echo __t('Enter your email'); ?>" type="email"/>
-<button class="flex h-10 cursor-pointer items-center justify-center rounded-lg px-4 bg-primary text-sm font-bold text-white hover:bg-primary/90">
+<input class="form-input flex-1 rounded-lg border-gray-700 bg-gray-900 text-sm text-white focus:border-[#FFB800] focus:ring-[#FFB800]" placeholder="<?php echo __t('Enter your email'); ?>" type="email"/>
+<button class="flex h-10 cursor-pointer items-center justify-center rounded-lg px-4 bg-[#FFB800] text-sm font-bold text-black hover:bg-[#FFB800]/90">
 <span><?php echo __t('Sign Up'); ?></span>
 </button>
 </form>
 </div>
 </div>
-<div class="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+<div class="mt-12 border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
 <p>© 2026 Ador Kini. <?php echo __t('All Rights Reserved.'); ?></p>
-<p class="text-xs mt-2"><?php echo __t('Version'); ?> 3.4.0</p>
+<p class="text-xs mt-2"><?php echo __t('Version'); ?> 3.4.1</p>
 <p class="text-xs mt-2">Last edit: <?php echo esc_html( current_time( 'M j, Y g:i A' ) ); ?></p>
 </div>
 </div>
