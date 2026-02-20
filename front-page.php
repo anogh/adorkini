@@ -410,7 +410,6 @@ $random_products_query = new WP_Query([
                 color: #000;
                 font-size: 14px;
             }
-            .
             .mobile-compact-price .amount {
                 display: inline-block;
             }
@@ -419,7 +418,6 @@ $random_products_query = new WP_Query([
                 color: #000;
                 font-size: 14px;
             }
-            .
             .add-to-cart-btn.adding {
                 background-color: #d1d5db !important;
                 color: #4b5563 !important;
