@@ -528,336 +528,163 @@ $random_products_query = new WP_Query([
                 <button class="mobile-slider-dot h-2 w-2 rounded-full bg-white/50 shadow-sm transition-all duration-300" data-index="3"></button>
             </div>
         </div>
-        <!-- Category Section -->
-        <div class="py-6 mobile-categories-section" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
-            <h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight px-4 pb-3"><?php echo __t('Categories'); ?></h2>
-            <div class="flex overflow-x-auto px-4 gap-4 mobile-scroll-container categories-horizontal-scroll" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                <?php
-                // Reuse the category logic from desktop
-                if (!empty($categories) && !is_wp_error($categories)) {
-                    foreach ($categories as $category) {
-                        // Get the icon for this category
-                        $category_slug = strtolower($category->slug);
-                        $category_name_lower = strtolower($category->name);
-                        
-                        // Try to match icon by slug or name
-                        $icon = 'category'; // default icon
-                        foreach ($category_icons as $key => $icon_name) {
-                            if (strpos($category_slug, $key) !== false || strpos($category_name_lower, $key) !== false) {
-                                $icon = $icon_name;
-                                break;
-                            }
-                        }
-                        ?>
-                        <a class="flex flex-col items-center justify-center gap-2 flex-shrink-0 w-20 mobile-scroll-item" href="<?php echo esc_url(get_term_link($category)); ?>">
-                            <div class="flex items-center justify-center rounded-full size-16 bg-gray-800 hover:bg-primary transition-colors border border-gray-700">
-                                <?php echo warafy_get_icon_svg($icon, 'w-8 h-8'); ?>
-                            </div>
-                            <p class="text-slate-800 dark:text-slate-200 text-xs font-bold text-center line-clamp-1"><?php echo esc_html($category->name); ?></p>
-                        </a>
-                        <?php
-                    }
-                } else {
-                    echo '<div class="px-4 py-8 text-center w-full"><p class="text-sm text-gray-500 dark:text-gray-400">' . __t('No categories found') . '</p></div>';
-                }
-                ?>
-            </div>
-        </div>
-
-        <!-- Best Sellers Ranking Section -->
-        <div class="px-4 py-4" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight"><?php echo __t('Top 10 Best Sellers'); ?></h2>
-            </div>
-            <div class="space-y-3">
-                <?php
-                $homepage_rankings = warafy_get_ranked_products('homepage', 10);
-                if (!empty($homepage_rankings)) {
-                    $args = array(
-                        'post_type' => 'product',
-                        'post__in' => $homepage_rankings,
-                        'orderby' => 'post__in'
-                    );
-                    $loop = new WP_Query($args);
-                    if ($loop->have_posts()) {
-                        $rank = 1;
-                        $products = [];
-                        while ($loop->have_posts()) : $loop->the_post();
-                            global $product;
-                            $products[] = [
-                                'rank' => $rank,
-                                'product' => $product,
-                                'title' => get_the_title(),
-                                'permalink' => get_permalink(),
-                                'thumbnail' => get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'),
-                                'price_html' => $product->get_price_html()
-                            ];
-                            $rank++;
-                        endwhile;
-                        wp_reset_postdata();
-                        
-                        // Display all products in single column for mobile
-                        foreach ($products as $item) {
-                            $rank_class = $item['rank'] == 1 ? 'gold' : ($item['rank'] == 2 ? 'silver' : ($item['rank'] == 3 ? 'bronze' : 'default'));
-                            $border_class = $item['rank'] == 1 ? 'border-yellow-400' : ($item['rank'] == 2 ? 'border-gray-400' : ($item['rank'] == 3 ? 'border-orange-600' : 'border-gray-200'));
-                            $bg_class = $item['rank'] == 1 ? 'bg-gradient-to-r from-yellow-50 to-transparent' : ($item['rank'] == 2 ? 'bg-gradient-to-r from-gray-50 to-transparent' : ($item['rank'] == 3 ? 'bg-gradient-to-r from-orange-50 to-transparent' : 'bg-white'));
-                            ?>
-                            <div class="flex items-center gap-3 p-3 rounded-xl border-2 <?php echo $border_class; ?> <?php echo $bg_class; ?> dark:border-gray-700 dark:bg-background-dark hover:shadow-lg transition-all ranking-item relative overflow-hidden">
-                                <?php if ($item['rank'] <= 3): ?>
-                                    <div class="absolute top-0 right-0 w-12 h-12 opacity-10">
-                                        <span class="material-symbols-outlined text-6xl <?php echo $item['rank'] == 1 ? 'text-yellow-500' : ($item['rank'] == 2 ? 'text-gray-400' : 'text-orange-600'); ?>" data-icon="emoji_events"></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <!-- Rank Number -->
-                                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full font-bold text-xs ranking-badge <?php echo $rank_class; ?>">
-                                    <?php echo $item['rank']; ?>
-                                </div>
-                                
-                                <!-- Product Image -->
-                                <a href="<?php echo $item['permalink']; ?>" class="flex-shrink-0 w-12 h-12 bg-center bg-no-repeat bg-cover rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600" style='background-image: url("<?php echo $item['thumbnail']; ?>");'></a>
-                                
-                                <!-- Product Info -->
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="text-sm font-medium text-slate-900 dark:text-white mb-1">
-                                        <a href="<?php echo $item['permalink']; ?>" class="hover:text-primary transition-colors line-clamp-1"><?php echo $item['title']; ?></a>
-                                    </h3>
-                                    <p class="text-sm font-bold text-slate-900 dark:text-white"><?php echo $item['price_html']; ?></p>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="flex items-center gap-2 mt-2">
-                                        <button class="add-to-cart-btn flex items-center gap-1.5 px-2 py-1.5 bg-primary text-white text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Cart">
-                                            <span class="material-symbols-outlined text-xs add-icon" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text">Add to Cart</span>
-                                            <span class="material-symbols-outlined text-xs added-icon hidden" data-icon="check"></span>
-                                            <span class="added-text hidden">Added</span>
-                                        </button>
-                                        <button class="warafy-wishlist-btn flex items-center gap-1.5 px-2 py-1.5 border border-gray-300 text-gray-600 text-xs font-medium rounded-lg hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Love">
-                                            <span class="material-symbols-outlined text-xs" data-icon="favorite_border"></span>
-                                            <span class="btn-text">Add to Love</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                        
-                    } else {
-                        echo '<div class="w-full text-center py-4"><p class="text-gray-500 text-sm">No ranked products found.</p></div>';
-                    }
-                } else {
-                    echo '<div class="w-full text-center py-4"><p class="text-gray-500 text-sm">No ranked products found.</p></div>';
-                }
-                ?>
-            </div>
-            
-            <!-- See Full Ranking Button -->
-            <div class="mt-6 text-center">
-                <a href="<?php echo home_url('/top-ranking'); ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white font-semibold rounded-lg hover:from-primary/90 hover:to-primary/70 transition-all transform hover:scale-105 shadow-lg text-sm">
-                    <span><?php echo __t('See Full Ranking'); ?></span>
-                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward"></span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Product Showcase Grid (New Arrivals) -->
-        <div class="px-4 py-4" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
-            <h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight pb-4"><?php echo __t('New Arrivals'); ?></h2>
-            <div class="grid grid-cols-2 gap-4 mobile-grid-2" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                <?php
-                // Rewind the loop to use the same random products
-                if (isset($random_products_query)) {
-                    $random_products_query->rewind_posts();
-                    
-                    if ($random_products_query->have_posts()) {
-                        while ($random_products_query->have_posts()) {
-                            $random_products_query->the_post();
-                            global $product;
-                            ?>
-                            <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm">
-                                <div class="relative">
-                                    <a href="<?php echo get_permalink(); ?>" class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
-                                </div>
-                                <div class="flex flex-col flex-1 justify-between gap-4">
-                                    <div>
-                                        <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                                            <a href="<?php echo get_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php echo get_the_title(); ?></a>
-                                        </h3>
-                                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                            <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text truncate"><?php echo __t('Add'); ?></span>
-                                            <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                            <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                                        </button>
-                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                        // Restore original post data logic after loop
-                        wp_reset_postdata();
-                    } else {
-                        echo '<p class="col-span-2 text-center text-gray-500 text-sm">' . __t('No products found.') . '</p>';
-                    }
-                }
-                ?>
-            </div>
-        </div>
-
         <?php
-        // Use the same data as desktop to ensure session consistency
-        if (!isset($homepage_data)) {
-            $homepage_data = Warafy_Session_Manager::instance()->get_homepage_data();
+        // Flash Sale Query
+        $flash_sale_query = new WP_Query([
+            'post_type' => 'product',
+            'post__in' => array_merge(array(0), wc_get_product_ids_on_sale()),
+            'posts_per_page' => 4,
+            'post_status' => 'publish',
+        ]);
+        
+        // Most Popular Query
+        $homepage_rankings = warafy_get_ranked_products('homepage', 4);
+        if (!empty($homepage_rankings)) {
+            $most_popular_query = new WP_Query([
+                'post_type' => 'product',
+                'post__in' => $homepage_rankings,
+                'orderby' => 'post__in',
+                'posts_per_page' => 4
+            ]);
+        } else {
+            $most_popular_query = new WP_Query([
+                'post_type' => 'product',
+                'posts_per_page' => 4,
+                'meta_key' => 'total_sales',
+                'orderby' => 'meta_value_num',
+                'post_status' => 'publish',
+            ]);
         }
-        $category_sections = $homepage_data['category_sections'];
+        
+        // New Arrivals Query
+        $new_arrivals_query = new WP_Query([
+            'post_type' => 'product',
+            'posts_per_page' => 4,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'post_status' => 'publish',
+        ]);
 
-        if (!empty($category_sections)) {
-            foreach ($category_sections as $section) {
-                 $cat = $section['term'];
-                 $product_ids = $section['product_ids'];
-                 
-                 if (empty($product_ids)) continue;
-
-                 // Query products by specific IDs
-                 $cat_products_query = new WP_Query([
-                    'post_type' => 'product',
-                    'post__in' => $product_ids,
-                    'orderby' => 'post__in',
-                    'posts_per_page' => 8,
-                    'post_status' => 'publish',
-                ]);
-                
-                if ($cat_products_query->have_posts()):
+        if (!function_exists('warafy_render_mobile_compact_product')) {
+            function warafy_render_mobile_compact_product($product) {
+                if (!$product) return;
                 ?>
-                <div class="px-4 py-4" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
-                    <div class="flex items-center justify-between pb-4">
-                        <h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight">
-                            <a href="<?php echo esc_url(get_term_link($cat)); ?>"><?php echo esc_html($cat->name); ?></a>
-                        </h2>
-                        <a href="<?php echo esc_url(get_term_link($cat)); ?>" class="text-sm font-medium text-primary"><?php echo __t('View All'); ?></a>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mobile-grid-2" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                        <?php
-                        while ($cat_products_query->have_posts()) {
-                            $cat_products_query->the_post();
-                            global $product;
-                            ?>
-                            <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm">
-                                <div class="relative">
-                                    <a href="<?php echo get_permalink(); ?>" class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
-                                </div>
-                                <div class="flex flex-col flex-1 justify-between gap-4">
-                                    <div>
-                                        <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                                            <a href="<?php echo get_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php echo get_the_title(); ?></a>
-                                        </h3>
-                                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                            <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text truncate"><?php echo __t('Add'); ?></span>
-                                            <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                            <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                                        </button>
-                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                        ?>
+                <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 flex flex-col p-2 h-full rounded-[2px] relative warafy-mobile-product-card">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-2 block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
+                    
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-[11px] font-medium text-black dark:text-gray-200 line-clamp-2 leading-[1.3] min-h-[29px] mb-2 hover:text-primary">
+                        <?php echo get_the_title($product->get_id()); ?>
+                    </a>
+                    
+                    <div class="w-full flex items-end justify-between mt-auto gap-1">
+                        <div class="flex items-center flex-wrap mobile-compact-price flex-1 min-w-0 pr-1">
+                            <?php echo $product->get_price_html(); ?>
+                        </div>
+                        
+                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
+                            <span class="add-text"><?php echo __t('Add to cart'); ?></span>
+                            <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
+                        </button>
                     </div>
                 </div>
                 <?php
-                endif;
-                wp_reset_postdata();
             }
         }
         ?>
 
-        <!-- Recommended for You Section (Mobile) -->
-        <div class="px-4 py-4 warafy-recommended-section-mobile" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
-            <h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight pb-4"><?php echo __t('Recommended for You'); ?></h2>
-            <div id="warafy-recommended-grid-mobile" class="grid grid-cols-2 gap-4 mobile-grid-2 warafy-recommended-grid" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                <!-- Products loaded via AJAX -->
-            </div>
-            <div id="warafy-loading-trigger-mobile" class="mt-8 flex justify-center warafy-loading-trigger">
-                <div class="loading-spinner hidden">
-                    <span class="material-symbols-outlined animate-spin text-primary text-3xl" data-icon="progress_activity"></span>
-                </div>
-            </div>
-        </div>
+        <style>
+            .warafy-mobile-product-card {
+                box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            }
+            .mobile-compact-price del {
+                color: #6b7280;
+                font-size: 11px;
+                font-weight: 500;
+                margin-right: 4px;
+                text-decoration: line-through;
+            }
+            .mobile-compact-price ins {
+                text-decoration: none;
+                font-weight: 800;
+                color: #000;
+                font-size: 14px;
+            }
+            .dark .mobile-compact-price ins {
+                color: #fff;
+            }
+            .mobile-compact-price .amount {
+                display: inline-block;
+            }
+            .mobile-compact-price > .amount {
+                font-weight: 800;
+                color: #000;
+                font-size: 14px;
+            }
+            .dark .mobile-compact-price > .amount {
+                color: #fff;
+            }
+            .add-to-cart-btn.adding {
+                background-color: #d1d5db !important;
+                color: #4b5563 !important;
+            }
+        </style>
 
-        <!-- Testimonials Section -->
-        <div class="px-4 py-8 bg-gray-50 dark:bg-white/5" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
-            <h2 class="text-2xl font-bold tracking-tight text-center text-gray-900 dark:text-white mb-6"><?php echo __t('Happy Customers'); ?></h2>
-            <div class="flex flex-col gap-6" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-background-dark shadow-sm">
-                    <div class="flex items-center gap-1 text-yellow-500 mb-3">
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 italic">"পণ্যের গুণমান খুবই ভালো। ডেলিভারিও খুব দ্রুত ছিল। আমি খুবই সন্তুষ্ট।"</p>
-                    <div class="mt-4 flex items-center gap-3">
-                        <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">মো</div>
-                        <p class="font-bold text-gray-900 dark:text-white text-sm">মোতালেব রহমান</p>
-                    </div>
-                </div>
-                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-background-dark shadow-sm">
-                    <div class="flex items-center gap-1 text-yellow-500 mb-3">
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 italic">"জামাটা আমার খুব পছন্দ হয়েছে। ছবির মতোই সুন্দর। আবার অর্ডার করব।"</p>
-                    <div class="mt-4 flex items-center gap-3">
-                        <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">ফা</div>
-                        <p class="font-bold text-gray-900 dark:text-white text-sm">ফাতেমা</p>
-                    </div>
-                </div>
-                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-background-dark shadow-sm">
-                    <div class="flex items-center gap-1 text-yellow-500 mb-3">
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;" data-icon="star"></span>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 italic">"কম দামে ভালো সার্ভিস। তাদের ব্যবহারও খুব ভালো। রিকমেন্ড করছি।"</p>
-                    <div class="mt-4 flex items-center gap-3">
-                        <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">র</div>
-                        <p class="font-bold text-gray-900 dark:text-white text-sm">রশিদ আলম</p>
-                    </div>
-                </div>
+        <!-- Flash Sale -->
+        <?php if ($flash_sale_query->have_posts()): ?>
+        <div class="bg-white dark:bg-background-dark w-full pt-1 pb-4">
+            <h2 class="text-black dark:text-white text-[16px] font-bold tracking-tight px-4 py-2 bg-white dark:bg-background-dark"><?php echo __t('Flash Sale'); ?></h2>
+            <div class="grid grid-cols-2 gap-[10px] px-3">
+                <?php
+                while ($flash_sale_query->have_posts()) {
+                    $flash_sale_query->the_post();
+                    global $product;
+                    warafy_render_mobile_compact_product($product);
+                }
+                wp_reset_postdata();
+                ?>
             </div>
         </div>
+        <?php endif; ?>
+
+        <!-- Most Popular -->
+        <?php if ($most_popular_query->have_posts()): ?>
+        <div class="bg-white dark:bg-background-dark w-full pt-1 pb-4">
+            <h2 class="text-black dark:text-white text-[16px] font-bold tracking-tight px-4 py-2 bg-white dark:bg-background-dark"><?php echo __t('Most Popular'); ?></h2>
+            <div class="grid grid-cols-2 gap-[10px] px-3">
+                <?php
+                while ($most_popular_query->have_posts()) {
+                    $most_popular_query->the_post();
+                    global $product;
+                    warafy_render_mobile_compact_product($product);
+                }
+                wp_reset_postdata();
+                ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- New Arrivals -->
+        <?php if ($new_arrivals_query->have_posts()): ?>
+        <div class="bg-white dark:bg-background-dark w-full pt-1 pb-4">
+            <h2 class="text-black dark:text-white text-[16px] font-bold tracking-tight px-4 py-2 bg-white dark:bg-background-dark"><?php echo __t('New Arrivals'); ?></h2>
+            <div class="grid grid-cols-2 gap-[10px] px-3">
+                <?php
+                while ($new_arrivals_query->have_posts()) {
+                    $new_arrivals_query->the_post();
+                    global $product;
+                    warafy_render_mobile_compact_product($product);
+                }
+                wp_reset_postdata();
+                ?>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <!-- Promotional Banner -->
-        <div class="px-4 py-4" style="width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
-            <div class="flex items-center justify-center rounded-xl bg-primary/20 dark:bg-primary/30 p-6 text-center" style="width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                <div class="flex flex-col items-center">
-                    <span class="material-symbols-outlined text-4xl text-primary dark:text-sky-300" data-icon="local_shipping"></span>
-                    <h3 class="mt-2 text-lg font-bold text-slate-900 dark:text-white"><?php echo __t('Free Shipping'); ?></h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-300"><?php echo __t('Free shipping over ৳ 2500'); ?></p>
-                </div>
-            </div>
+        <div class="w-full bg-[#E50914] text-white text-center py-2.5 text-[15px] font-medium tracking-wide">
+            <?php echo __t('Free Shipping over 2500'); ?>
         </div>
-
-    </div>
+\n    </div>
 
 </main>
 
