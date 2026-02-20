@@ -160,7 +160,7 @@ $random_products_query = new WP_Query([
             function warafy_render_desktop_compact_product($product) {
                 if (!$product) return;
                 ?>
-                <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 flex flex-col p-3 h-full rounded-md relative transition-shadow hover:shadow-lg warafy-desktop-product-card">
+                <div class="bg-white border border-gray-200 flex flex-col p-3 h-full rounded-md relative transition-shadow hover:shadow-lg warafy-desktop-product-card">
                     <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-3 block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
                     
                     <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-sm font-medium text-black dark:text-gray-200 line-clamp-2 leading-[1.3] min-h-[36px] mb-3 hover:text-primary">
@@ -278,9 +278,9 @@ $random_products_query = new WP_Query([
     </div>
 
     <!-- Mobile Content -->
-    <div class="block lg:hidden relative mobile-content-wrapper">
+    <div class="block lg:hidden relative mobile-content-wrapper bg-[#f5f5f5] pb-4">
         <!-- Hero Slider (Mobile) -->
-        <div class="relative w-full overflow-hidden mobile-hero-section" style="height: 400px; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
+        <div class="relative w-full overflow-hidden mobile-hero-section" style="height: 160px; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important;">
             <div class="relative h-full w-full">
                 <?php for ($i = 1; $i <= 3; $i++): 
                     $s = ($i == 1) ? '' : '_' . $i;
@@ -370,10 +370,10 @@ $random_products_query = new WP_Query([
             function warafy_render_mobile_compact_product($product) {
                 if (!$product) return;
                 ?>
-                <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 flex flex-col p-2 h-full rounded-[2px] relative warafy-mobile-product-card">
+                <div class="bg-white border border-gray-200 flex flex-col p-2 h-full rounded-[2px] relative warafy-mobile-product-card">
                     <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-2 block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
                     
-                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-[11px] font-medium text-black dark:text-gray-200 line-clamp-2 leading-[1.3] min-h-[29px] mb-2 hover:text-primary">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-[11px] font-medium text-black line-clamp-2 leading-[1.3] min-h-[29px] mb-2 hover:text-primary">
                         <?php echo get_the_title($product->get_id()); ?>
                     </a>
                     
@@ -410,9 +410,7 @@ $random_products_query = new WP_Query([
                 color: #000;
                 font-size: 14px;
             }
-            .dark .mobile-compact-price ins {
-                color: #fff;
-            }
+            .
             .mobile-compact-price .amount {
                 display: inline-block;
             }
@@ -421,9 +419,7 @@ $random_products_query = new WP_Query([
                 color: #000;
                 font-size: 14px;
             }
-            .dark .mobile-compact-price > .amount {
-                color: #fff;
-            }
+            .
             .add-to-cart-btn.adding {
                 background-color: #d1d5db !important;
                 color: #4b5563 !important;
@@ -432,8 +428,8 @@ $random_products_query = new WP_Query([
 
         <!-- Flash Sale -->
         <?php if ($flash_sale_query->have_posts()): ?>
-        <div class="bg-white dark:bg-background-dark w-full pt-1 pb-4">
-            <h2 class="text-black dark:text-white text-[16px] font-bold tracking-tight px-4 py-2 bg-white dark:bg-background-dark"><?php echo __t('Flash Sale'); ?></h2>
+        <div class="bg-white w-full pt-1 pb-4 mb-2 shadow-sm">
+            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white"><?php echo __t('Flash Sale'); ?></h2>
             <div class="grid grid-cols-2 gap-[10px] px-3">
                 <?php
                 while ($flash_sale_query->have_posts()) {
@@ -449,8 +445,8 @@ $random_products_query = new WP_Query([
 
         <!-- Most Popular -->
         <?php if ($most_popular_query->have_posts()): ?>
-        <div class="bg-white dark:bg-background-dark w-full pt-1 pb-4">
-            <h2 class="text-black dark:text-white text-[16px] font-bold tracking-tight px-4 py-2 bg-white dark:bg-background-dark"><?php echo __t('Most Popular'); ?></h2>
+        <div class="bg-white w-full pt-1 pb-4 mb-2 shadow-sm">
+            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white"><?php echo __t('Most Popular'); ?></h2>
             <div class="grid grid-cols-2 gap-[10px] px-3">
                 <?php
                 while ($most_popular_query->have_posts()) {
@@ -466,8 +462,8 @@ $random_products_query = new WP_Query([
 
         <!-- New Arrivals -->
         <?php if ($new_arrivals_query->have_posts()): ?>
-        <div class="bg-white dark:bg-background-dark w-full pt-1 pb-4">
-            <h2 class="text-black dark:text-white text-[16px] font-bold tracking-tight px-4 py-2 bg-white dark:bg-background-dark"><?php echo __t('New Arrivals'); ?></h2>
+        <div class="bg-white w-full pt-1 pb-4 mb-2 shadow-sm">
+            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white"><?php echo __t('New Arrivals'); ?></h2>
             <div class="grid grid-cols-2 gap-[10px] px-3">
                 <?php
                 while ($new_arrivals_query->have_posts()) {

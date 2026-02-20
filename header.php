@@ -413,7 +413,7 @@ $is_facebook_webview = (
         <div class="flex items-center justify-between w-full">
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex-shrink-0 mr-3">
-                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-[28px] w-auto">
+                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-[40px] w-auto">
             </a>
             
             <!-- Search Bar -->
