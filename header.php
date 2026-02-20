@@ -26,7 +26,7 @@ $is_facebook_webview = (
     (preg_match('/(iPhone|iPod|iPad).*AppleWebKit/i', $user_agent) && strpos($user_agent, 'Safari') === false)
 );
 ?>
-<html <?php language_attributes(); ?> class="dark">
+<html <?php language_attributes(); ?>>
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -135,7 +135,7 @@ $is_facebook_webview = (
         }
     </style>
 </head>
-<body <?php body_class('bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200'); ?>>
+<body <?php body_class('bg-white font-display text-gray-900'); ?>>
 <?php if (!$is_facebook_webview): ?>
 <!-- Preloader -->
 <div id="warafy-preloader">
@@ -413,7 +413,7 @@ $is_facebook_webview = (
         <div class="flex items-center justify-between w-full">
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex-shrink-0 mr-3">
-                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-[40px] w-auto">
+                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-[55px] w-auto max-w-[160px] object-contain">
             </a>
             
             <!-- Search Bar -->
