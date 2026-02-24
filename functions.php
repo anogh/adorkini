@@ -840,7 +840,7 @@ function warafy_language_switcher_script() {
     function warafy_updateLanguage(lang) {
         // Update language toggle button text
         document.querySelectorAll('.warafy-language-toggle .lang-text').forEach(element => {
-            element.textContent = lang === 'bn' ? 'বাং<>En' : 'En<>বাং';
+            element.textContent = lang === 'bn' ? 'বাং/En' : 'En/বাং';
         });
         
         // Update all translatable elements
