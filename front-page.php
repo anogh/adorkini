@@ -220,7 +220,7 @@ $random_products_query = new WP_Query([
         <!-- Flash Sale Desktop -->
         <?php if ($flash_sale_query_desktop->have_posts()): ?>
         <section class="mt-8">
-            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-4"><?php echo __t('Flash Sale'); ?></h2>
+            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 front-page-section-title"><?php echo __t('Flash Sale'); ?></h2>
             <div class="grid grid-cols-5 gap-4">
                 <?php
                 while ($flash_sale_query_desktop->have_posts()) {
@@ -237,7 +237,7 @@ $random_products_query = new WP_Query([
         <!-- Most Popular Desktop -->
         <?php if ($most_popular_query_desktop->have_posts()): ?>
         <section class="mt-8">
-            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-4"><?php echo __t('Most Popular'); ?></h2>
+            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 front-page-section-title"><?php echo __t('Most Popular'); ?></h2>
             <div class="grid grid-cols-5 gap-4">
                 <?php
                 while ($most_popular_query_desktop->have_posts()) {
@@ -254,7 +254,7 @@ $random_products_query = new WP_Query([
         <!-- New Arrivals Desktop -->
         <?php if ($new_arrivals_query_desktop->have_posts()): ?>
         <section class="mt-8">
-            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-4"><?php echo __t('New Arrivals'); ?></h2>
+            <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 front-page-section-title"><?php echo __t('New Arrivals'); ?></h2>
             <div class="grid grid-cols-5 gap-4">
                 <?php
                 while ($new_arrivals_query_desktop->have_posts()) {
@@ -428,7 +428,7 @@ $random_products_query = new WP_Query([
         <!-- Flash Sale -->
         <?php if ($flash_sale_query->have_posts()): ?>
         <div class="bg-white w-full pt-1 pb-4 mb-2 shadow-sm">
-            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white"><?php echo __t('Flash Sale'); ?></h2>
+            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white front-page-section-title"><?php echo __t('Flash Sale'); ?></h2>
             <div class="grid grid-cols-2 gap-[10px] px-3">
                 <?php
                 while ($flash_sale_query->have_posts()) {
@@ -445,7 +445,7 @@ $random_products_query = new WP_Query([
         <!-- Most Popular -->
         <?php if ($most_popular_query->have_posts()): ?>
         <div class="bg-white w-full pt-1 pb-4 mb-2 shadow-sm">
-            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white"><?php echo __t('Most Popular'); ?></h2>
+            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white front-page-section-title"><?php echo __t('Most Popular'); ?></h2>
             <div class="grid grid-cols-2 gap-[10px] px-3">
                 <?php
                 while ($most_popular_query->have_posts()) {
@@ -462,7 +462,7 @@ $random_products_query = new WP_Query([
         <!-- New Arrivals -->
         <?php if ($new_arrivals_query->have_posts()): ?>
         <div class="bg-white w-full pt-1 pb-4 mb-2 shadow-sm">
-            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white"><?php echo __t('New Arrivals'); ?></h2>
+            <h2 class="text-black text-[16px] font-bold tracking-tight px-4 py-2 bg-white front-page-section-title"><?php echo __t('New Arrivals'); ?></h2>
             <div class="grid grid-cols-2 gap-[10px] px-3">
                 <?php
                 while ($new_arrivals_query->have_posts()) {
