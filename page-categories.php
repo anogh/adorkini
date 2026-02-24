@@ -77,25 +77,37 @@ get_header(); ?>
                             $category_slugs[] = $cat->slug;
                         }
                         ?>
-                        <?php
-                        // Attributes for filtering
-                        $attributes = [
-                            'data-categories' => implode(',', $category_slugs),
-                            'class' => 'product-card' // Ensure product-card class is added for JS selection
-                        ];
-                        // Add product-card class to the wrapper div inside the function?
-                        // No, the function creates the wrapper div. I need to make sure the function adds 'product-card' class if I pass it?
-                        // My modified function adds attributes to the wrapper div. So I can pass class.
-                        // But wait, the function already has classes. 'class' attribute will overwrite or append?
-                        // It will overwrite if I'm not careful. My function does: $attr_string .= ' ' . esc_attr($key) . '="' . esc_attr($value) . '"';
-                        // And then <div class="... warafy-mobile-product-card"<?php echo $attr_string; ?>>
-                        // If I pass 'class' => 'product-card', it will result in class="..." class="product-card". HTML parsers usually take the first one or merge? No, duplicate attributes are invalid/unpredictable.
-                        // I should modify the function to merge classes.
-                        // Or I can change the JS selector in page-categories.php to use .warafy-mobile-product-card instead of .product-card.
-                        // Let's check page-categories.php JS: const productCards = document.querySelectorAll('.product-card');
-                        // I'll change the JS selector.
-                        warafy_render_mobile_compact_product($product, ['data-categories' => implode(',', $category_slugs)]);
-                        ?>
+                        <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm" data-categories="<?php echo esc_attr(implode(',', $category_slugs)); ?>">
+                            <div class="relative">
+                                <a href="<?php the_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'woocommerce_thumbnail') : 'https://via.placeholder.com/300'; ?>");'></a>
+                            </div>
+                            <div class="flex flex-col flex-1 justify-between gap-4">
+                                <div>
+                                    <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                                        <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php the_title(); ?></a>
+                                    </h3>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <?php if ($product->is_in_stock()) : ?>
+                                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
+                                            <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                            <span class="add-text truncate">Add</span>
+                                            <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                            <span class="added-text hidden truncate">Added</span>
+                                        </button>
+                                    <?php else : ?>
+                                        <button class="flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed" disabled title="Out of Stock">
+                                            <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
+                                            <span class="truncate">Out of Stock</span>
+                                        </button>
+                                    <?php endif; ?>
+                                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <?php
                     }
                     wp_reset_postdata();
@@ -195,7 +207,37 @@ get_header(); ?>
                                 $category_slugs[] = $cat->slug;
                             }
                             ?>
-                            <?php warafy_render_desktop_compact_product($product, ['data-categories' => implode(',', $category_slugs)]); ?>
+                            <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm" data-categories="<?php echo esc_attr(implode(',', $category_slugs)); ?>">
+                                <div class="relative">
+                                    <a href="<?php the_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'woocommerce_thumbnail') : 'https://via.placeholder.com/300'; ?>");'></a>
+                                </div>
+                                <div class="flex flex-col flex-1 justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                                            <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php the_title(); ?></a>
+                                        </h3>
+                                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <?php if ($product->is_in_stock()) : ?>
+                                            <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
+                                                <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                                <span class="add-text truncate">Add</span>
+                                                <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                                <span class="added-text hidden truncate">Added</span>
+                                            </button>
+                                        <?php else : ?>
+                                            <button class="flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed" disabled title="Out of Stock">
+                                                <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
+                                                <span class="truncate">Out of Stock</span>
+                                            </button>
+                                        <?php endif; ?>
+                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <?php
                         }
                         wp_reset_postdata();
@@ -232,8 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const categoriesContainer = document.getElementById('categoriesContainer');
     const productsGrid = document.getElementById('productsGrid');
     const categoryItems = document.querySelectorAll('.category-item');
-    // Updated selector to match global product card classes (both mobile and desktop)
-    const productCards = document.querySelectorAll('.warafy-mobile-product-card, .warafy-desktop-product-card');
+    const productCards = document.querySelectorAll('.product-card');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const pageNumbers = document.getElementById('pageNumbers');
@@ -266,6 +307,238 @@ document.addEventListener('DOMContentLoaded', function() {
             filterProducts();
         });
     });
+    
+    // Add to Cart functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.add-to-cart-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const button = e.target.closest('.add-to-cart-btn');
+            const productId = button.dataset.productId;
+            const addIcon = button.querySelector('.add-icon');
+            const addedIcon = button.querySelector('.added-icon');
+            const addText = button.querySelector('.add-text');
+            const addedText = button.querySelector('.added-text');
+            
+            // Prevent multiple clicks
+            if (button.classList.contains('adding')) return;
+            
+            button.classList.add('adding');
+            button.disabled = true;
+            
+            // Check if WooCommerce functions are available
+            if (typeof wc_add_to_cart_params !== 'undefined') {
+                // Use WooCommerce's built-in AJAX
+                const data = {
+                    action: 'woocommerce_add_to_cart',
+                    product_id: productId,
+                    quantity: 1
+                };
+                
+                jQuery.post(wc_add_to_cart_params.wc_ajax_url.toString().replace('%%endpoint%%', 'add_to_cart'), data, function(response) {
+                    console.log('WooCommerce add to cart response:', response);
+                    
+                    if (response.error && response.product_url) {
+                        window.location = response.product_url;
+                        return;
+                    }
+                    
+                    if (!response.error) {
+                        // Show success state
+                        addIcon.classList.add('hidden');
+                        addText.classList.add('hidden');
+                        addedIcon.classList.remove('hidden');
+                        addedText.classList.remove('hidden');
+                        button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                        button.classList.add('bg-green-600', 'hover:bg-green-700');
+                        button.title = 'Added to Cart';
+                        
+                        // Update cart fragments
+                        if (typeof jQuery !== 'undefined' && jQuery('body').trigger) {
+                            jQuery('body').trigger('added_to_cart', [response.fragments, response.cart_hash, button]);
+                        }
+                        
+                        // Update cart count instantly
+                        updateCartCount();
+                        
+                        // Refresh page briefly to ensure all states are updated
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        // Show error state
+                        console.error('Add to cart error:', response.error);
+                        button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                        button.classList.add('bg-red-600');
+                        button.title = response.error || 'Failed to add to cart';
+                        
+                        setTimeout(() => {
+                            button.classList.remove('bg-red-600');
+                            button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                            button.classList.remove('adding');
+                            button.disabled = false;
+                        }, 2000);
+                    }
+                });
+            } else {
+                // Fallback to custom AJAX if WooCommerce params not available
+                const formData = new FormData();
+                formData.append('action', 'woocommerce_add_to_cart');
+                formData.append('product_id', productId);
+                formData.append('quantity', 1);
+                
+                fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Custom add to cart response:', data);
+                    
+                    if (data.success && !data.error) {
+                        // Show success state
+                        addIcon.classList.add('hidden');
+                        addText.classList.add('hidden');
+                        addedIcon.classList.remove('hidden');
+                        addedText.classList.remove('hidden');
+                        button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                        button.classList.add('bg-green-600', 'hover:bg-green-700');
+                        button.title = 'Added to Cart';
+                        
+                        // Update cart count if cart widget exists
+                        updateCartCount();
+                        
+                        // Refresh page briefly to ensure all states are updated
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        // Show error state
+                        console.error('Add to cart error:', data.error);
+                        button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                        button.classList.add('bg-red-600');
+                        button.title = data.error || 'Failed to add to cart';
+                        
+                        setTimeout(() => {
+                            button.classList.remove('bg-red-600');
+                            button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                            button.classList.remove('adding');
+                            button.disabled = false;
+                        }, 2000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Add to cart error:', error);
+                    button.classList.remove('adding');
+                    button.disabled = false;
+                });
+            }
+        }
+    });
+    
+    // Update cart count function
+    function updateCartCount() {
+        console.log('Updating cart count...');
+        
+        // Method 1: Refresh cart fragments to update cart count
+        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+            method: 'POST',
+            body: new URLSearchParams({
+                'action': 'woocommerce_get_cart_fragments'
+            }),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Fragment refresh response:', data);
+            if (data.fragments) {
+                // Update cart fragments but skip .cart-count elements to preserve styling
+                Object.keys(data.fragments).forEach(key => {
+                    // Skip cart count elements to preserve our styling
+                    if (key.includes('.cart-count')) {
+                        console.log('Skipping cart count fragment to preserve styling:', key);
+                        return;
+                    }
+                    
+                    const elements = document.querySelectorAll(key);
+                    elements.forEach(element => {
+                        if (element) {
+                            element.outerHTML = data.fragments[key];
+                        }
+                    });
+                });
+            }
+        })
+        .catch(error => console.error('Fragment refresh error:', error));
+        
+        // Method 2: Direct cart count update - ONLY UPDATE TEXT, PRESERVE STYLING
+        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+            method: 'POST',
+            body: new URLSearchParams({
+                'action': 'warafy_get_cart'
+            }),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Cart data response:', data);
+            if (data.success && data.data && data.data.cart) {
+                const cartCount = data.data.cart.count;
+                console.log('New cart count:', cartCount);
+                
+                // Update ONLY the text content of cart count elements, preserve all styling
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                console.log('Found cart count elements:', cartCountElements.length);
+                
+                cartCountElements.forEach(element => {
+                    // Only update text content, preserve all styling and classes
+                    element.textContent = cartCount;
+                    console.log('Updated cart count text to:', cartCount, 'preserving styling');
+                });
+                
+                // Also update button states
+                updateButtonStates(data.data.cart);
+            }
+        })
+        .catch(error => console.error('Cart data fetch error:', error));
+    }
+    
+    // Update button states based on cart contents
+    function updateButtonStates(cartData) {
+        const cartItems = cartData.items || [];
+        const cartProductIds = cartItems.map(item => item.product_id.toString());
+        
+        // Update all add-to-cart buttons on the page
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            const productId = button.dataset.productId;
+            
+            if (cartProductIds.includes(productId)) {
+                // Product is in cart - show "Added to cart" state
+                const addIcon = button.querySelector('.add-icon');
+                const addedIcon = button.querySelector('.added-icon');
+                const addText = button.querySelector('.add-text');
+                const addedText = button.querySelector('.added-text');
+                
+                if (addIcon) addIcon.classList.add('hidden');
+                if (addText) addText.classList.add('hidden');
+                if (addedIcon) addedIcon.classList.remove('hidden');
+                if (addedText) addedText.classList.remove('hidden');
+                
+                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
+                button.title = 'Added to Cart';
+                button.disabled = true;
+            }
+        });
+    }
     
     function filterProducts() {
         productCards.forEach(card => {
@@ -332,6 +605,66 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize pagination
     updatePagination();
+    
+    // Check cart contents on page load and update button states
+    checkCartOnLoad();
+    
+    function checkCartOnLoad() {
+        console.log('Checking cart on page load...');
+        
+        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+            method: 'POST',
+            body: new URLSearchParams({
+                'action': 'warafy_get_cart'
+            }),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Cart check on load response:', data);
+            if (data.success && data.data && data.data.cart) {
+                // Update button states based on current cart contents
+                updateButtonStates(data.data.cart);
+                
+                // Update cart count display
+                const cartCount = data.data.cart.count;
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                cartCountElements.forEach(element => {
+                    element.textContent = cartCount;
+                });
+            }
+        })
+        .catch(error => console.error('Cart check on load error:', error));
+    }
+    
+    // Debug: Add test function to console
+    window.testAddToCartButton = function(productId) {
+        const button = document.querySelector(`[data-product-id="${productId}"]`);
+        if (button) {
+            console.log('Testing button:', button);
+            const addIcon = button.querySelector('.add-icon');
+            const addedIcon = button.querySelector('.added-icon');
+            const addText = button.querySelector('.add-text');
+            const addedText = button.querySelector('.added-text');
+            
+            // Simulate success state
+            addIcon.classList.add('hidden');
+            addText.classList.add('hidden');
+            addedIcon.classList.remove('hidden');
+            addedText.classList.remove('hidden');
+            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            button.classList.add('bg-green-600', 'hover:bg-green-700');
+            button.title = 'Added to Cart';
+            
+            console.log('Button state changed to success');
+        } else {
+            console.log('Button not found for product ID:', productId);
+        }
+    };
+    
+    console.log('Test function available: testAddToCartButton(productId)');
 });
 </script>
 

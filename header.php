@@ -325,29 +325,117 @@ $is_facebook_webview = (
 </header>
 
 <!-- Mobile Header -->
-<header class="lg:hidden sticky top-0 z-50 flex flex-col bg-black py-3 px-4">
-    <div class="flex items-center justify-between w-full">
-        <!-- Logo -->
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex-shrink-0 mr-3">
-            <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-[55px] w-auto max-w-[160px] object-contain">
-        </a>
-
-        <!-- Search Bar -->
-        <div class="flex-1">
-            <form role="search" method="get" class="relative w-full h-[32px] flex" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-                <input class="warafy-search-input w-full h-full rounded-full border-none bg-white pl-4 pr-[70px] text-[13px] outline-none text-black placeholder:text-gray-400" placeholder="<?php echo __t('Search products'); ?>" type="search" name="s" value="<?php echo get_search_query(); ?>" autocomplete="off"/>
-                <button type="submit" class="absolute right-[2px] top-[2px] bottom-[2px] bg-[#FFB800] text-black text-[11px] font-bold px-[14px] rounded-full flex items-center justify-center">
-                    <?php echo __t('Search'); ?>
-                </button>
-                <input type="hidden" name="post_type" value="product" />
-            </form>
+<?php if ( is_cart() ) : ?>
+    <!-- Custom Mobile Cart Header -->
+    <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="javascript:history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white"><?php echo __t('My Cart'); ?></h1>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="search"></span>
+                    </button>
+                    <button type="button" class="warafy-language-toggle flex items-center gap-1 px-2 py-1 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs font-bold text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary transition-all shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                        <span class="lang-text">En<>বাং</span>
+                    </button>
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
+                    </button>
+                </div>
+            </div>
         </div>
+    </header>
+<?php elseif ( is_page('my-love') ) : ?>
+    <!-- Custom Mobile My Love Header -->
+    <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="javascript:history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white"><?php echo __t('My Love'); ?></h1>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="search"></span>
+                    </button>
+                    <button type="button" class="warafy-language-toggle flex items-center gap-1 px-2 py-1 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs font-bold text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary transition-all shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                        <span class="lang-text">En<>বাং</span>
+                    </button>
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+<?php elseif ( (function_exists('is_account_page') && is_account_page()) || is_page('my-account') ) : ?>
+    <!-- Custom Mobile Account Header -->
+    <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white"><?php echo __t('My Account'); ?></h1>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="search"></span>
+                    </button>
+                    <button type="button" class="warafy-language-toggle flex items-center gap-1 px-2 py-1 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs font-bold text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary transition-all shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                        <span class="lang-text">En<>বাং</span>
+                    </button>
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+<?php else : ?>
+    <!-- Default Mobile Header -->
+    <!-- Default Mobile Header -->
+    <header class="lg:hidden sticky top-0 z-50 flex flex-col bg-black py-3 px-4">
+        <div class="flex items-center justify-between w-full">
+            <!-- Logo -->
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex-shrink-0 mr-3">
+                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-[55px] w-auto max-w-[160px] object-contain">
+            </a>
+            
+            <!-- Search Bar -->
+            <div class="flex-1">
+                <form role="search" method="get" class="relative w-full h-[32px] flex" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+                    <input class="warafy-search-input w-full h-full rounded-full border-none bg-white pl-4 pr-[70px] text-[13px] outline-none text-black placeholder:text-gray-400" placeholder="<?php echo __t('Search products'); ?>" type="search" name="s" value="<?php echo get_search_query(); ?>" autocomplete="off"/>
+                    <button type="submit" class="absolute right-[2px] top-[2px] bottom-[2px] bg-[#FFB800] text-black text-[11px] font-bold px-[14px] rounded-full flex items-center justify-center">
+                        <?php echo __t('Search'); ?>
+                    </button>
+                    <input type="hidden" name="post_type" value="product" />
+                </form>
+            </div>
 
-        <!-- Language Toggle -->
-        <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1] ml-3">
-            <span class="text-white text-[11px] font-medium whitespace-nowrap">বাংলা</span>
-            <span class="text-[#FFB800] text-[9px] font-medium whitespace-nowrap">English</span>
-        </button>
-    </div>
-</header>
+            <!-- Language Toggle -->
+            <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1] ml-3">
+                <span class="text-white text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+                <span class="text-[#FFB800] text-[9px] font-medium whitespace-nowrap">English</span>
+            </button>
+        </div>
+    </header>
+<?php endif; ?>
 
