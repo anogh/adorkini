@@ -3243,6 +3243,9 @@ function warafy_submit_comment() {
         wp_die();
     }
     
+    // Invalidate comment cache for this product
+    wp_cache_delete("warafy_comments_last_changed_{$product_id}", 'warafy_product_data');
+
     error_log('Warafy Comment: Success');
     wp_send_json_success(['message' => 'Comment posted successfully!']);
     wp_die();
@@ -3315,74 +3318,132 @@ function warafy_submit_review() {
         wp_send_json_error(['message' => 'Failed to submit review']);
     }
     
+    // Invalidate review cache for this product
+    wp_cache_delete("warafy_reviews_last_changed_{$product_id}", 'warafy_product_data');
+
     wp_send_json_success(['message' => 'Review submitted successfully']);
 }
 
 // Get comments for a product
 function warafy_get_product_comments($product_id, $limit = 10, $offset = 0) {
-    global $wpdb;
+    $last_changed = wp_cache_get("warafy_comments_last_changed_{$product_id}", 'warafy_product_data');
+    if (false === $last_changed) {
+        $last_changed = microtime(true);
+        wp_cache_set("warafy_comments_last_changed_{$product_id}", $last_changed, 'warafy_product_data');
+    }
     
-    $table = $wpdb->prefix . 'warafy_product_comments';
-    $comments = $wpdb->get_results($wpdb->prepare(
-        "SELECT * FROM $table WHERE product_id = %d AND status = 'approved' 
-         ORDER BY comment_date DESC LIMIT %d OFFSET %d",
-        $product_id, $limit, $offset
-    ));
+    $cache_key = "warafy_comments_{$product_id}_{$limit}_{$offset}_" . md5($last_changed);
+    $comments = wp_cache_get($cache_key, 'warafy_product_data');
+
+    if (false === $comments) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'warafy_product_comments';
+        $comments = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $table WHERE product_id = %d AND status = 'approved'
+             ORDER BY comment_date DESC LIMIT %d OFFSET %d",
+            $product_id, $limit, $offset
+        ));
+        wp_cache_set($cache_key, $comments, 'warafy_product_data', 3600);
+    }
     
     return $comments;
 }
 
 // Get reviews for a product
 function warafy_get_product_reviews($product_id, $limit = 10, $offset = 0) {
-    global $wpdb;
+    $last_changed = wp_cache_get("warafy_reviews_last_changed_{$product_id}", 'warafy_product_data');
+    if (false === $last_changed) {
+        $last_changed = microtime(true);
+        wp_cache_set("warafy_reviews_last_changed_{$product_id}", $last_changed, 'warafy_product_data');
+    }
     
-    $table = $wpdb->prefix . 'warafy_product_reviews';
-    $reviews = $wpdb->get_results($wpdb->prepare(
-        "SELECT r.*, u.display_name as user_name, u.user_email as user_email 
-         FROM $table r 
-         LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID 
-         WHERE r.product_id = %d AND r.status = 'approved' 
-         ORDER BY r.review_date DESC LIMIT %d OFFSET %d",
-        $product_id, $limit, $offset
-    ));
+    $cache_key = "warafy_reviews_{$product_id}_{$limit}_{$offset}_" . md5($last_changed);
+    $reviews = wp_cache_get($cache_key, 'warafy_product_data');
+
+    if (false === $reviews) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'warafy_product_reviews';
+        $reviews = $wpdb->get_results($wpdb->prepare(
+            "SELECT r.*, u.display_name as user_name, u.user_email as user_email
+             FROM $table r
+             LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
+             WHERE r.product_id = %d AND r.status = 'approved'
+             ORDER BY r.review_date DESC LIMIT %d OFFSET %d",
+            $product_id, $limit, $offset
+        ));
+        wp_cache_set($cache_key, $reviews, 'warafy_product_data', 3600);
+    }
     
     return $reviews;
 }
 
 // Get comment and review counts
 function warafy_get_comment_count($product_id) {
-    global $wpdb;
+    $last_changed = wp_cache_get("warafy_comments_last_changed_{$product_id}", 'warafy_product_data');
+    if (false === $last_changed) {
+        $last_changed = microtime(true);
+        wp_cache_set("warafy_comments_last_changed_{$product_id}", $last_changed, 'warafy_product_data');
+    }
     
-    $table = $wpdb->prefix . 'warafy_product_comments';
-    $count = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table WHERE product_id = %d AND status = 'approved'",
-        $product_id
-    ));
+    $cache_key = "warafy_comment_count_{$product_id}_" . md5($last_changed);
+    $count = wp_cache_get($cache_key, 'warafy_product_data');
+
+    if (false === $count) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'warafy_product_comments';
+        $count = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table WHERE product_id = %d AND status = 'approved'",
+            $product_id
+        ));
+        wp_cache_set($cache_key, $count, 'warafy_product_data', 3600);
+    }
     
     return intval($count);
 }
 
 function warafy_get_review_count($product_id) {
-    global $wpdb;
+    $last_changed = wp_cache_get("warafy_reviews_last_changed_{$product_id}", 'warafy_product_data');
+    if (false === $last_changed) {
+        $last_changed = microtime(true);
+        wp_cache_set("warafy_reviews_last_changed_{$product_id}", $last_changed, 'warafy_product_data');
+    }
     
-    $table = $wpdb->prefix . 'warafy_product_reviews';
-    $count = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table WHERE product_id = %d AND status = 'approved'",
-        $product_id
-    ));
+    $cache_key = "warafy_review_count_{$product_id}_" . md5($last_changed);
+    $count = wp_cache_get($cache_key, 'warafy_product_data');
+
+    if (false === $count) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'warafy_product_reviews';
+        $count = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table WHERE product_id = %d AND status = 'approved'",
+            $product_id
+        ));
+        wp_cache_set($cache_key, $count, 'warafy_product_data', 3600);
+    }
     
     return intval($count);
 }
 
 // Get average rating
 function warafy_get_average_rating($product_id) {
-    global $wpdb;
+    $last_changed = wp_cache_get("warafy_reviews_last_changed_{$product_id}", 'warafy_product_data');
+    if (false === $last_changed) {
+        $last_changed = microtime(true);
+        wp_cache_set("warafy_reviews_last_changed_{$product_id}", $last_changed, 'warafy_product_data');
+    }
     
-    $table = $wpdb->prefix . 'warafy_product_reviews';
-    $avg_rating = $wpdb->get_var($wpdb->prepare(
-        "SELECT AVG(rating) FROM $table WHERE product_id = %d AND status = 'approved'",
-        $product_id
-    ));
+    $cache_key = "warafy_avg_rating_{$product_id}_" . md5($last_changed);
+    $avg_rating = wp_cache_get($cache_key, 'warafy_product_data');
+
+    if (false === $avg_rating) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'warafy_product_reviews';
+        $avg_rating = $wpdb->get_var($wpdb->prepare(
+            "SELECT AVG(rating) FROM $table WHERE product_id = %d AND status = 'approved'",
+            $product_id
+        ));
+        wp_cache_set($cache_key, $avg_rating, 'warafy_product_data', 3600);
+    }
     
     return $avg_rating ? round($avg_rating, 1) : 0;
 }
