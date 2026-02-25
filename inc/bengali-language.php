@@ -148,8 +148,35 @@ function warafy_language_switcher_script() {
     }
     
     function warafy_updateLanguage(lang) {
-        document.querySelectorAll('.warafy-language-toggle .lang-text').forEach(element => {
-            element.textContent = lang === 'bn' ? 'বাং<>En' : 'En<>বাং';
+        document.querySelectorAll('.warafy-language-toggle').forEach(toggle => {
+            const theme = toggle.getAttribute('data-theme') || 'dark';
+            const bnSpan = toggle.querySelector('.warafy-lang-bn');
+            const enSpan = toggle.querySelector('.warafy-lang-en');
+
+            if (!bnSpan || !enSpan) return;
+
+            // Define active color
+            const activeClass = 'text-[#FFB800]';
+
+            // Define inactive classes based on theme
+            const inactiveClasses = theme === 'light'
+                ? ['text-gray-900', 'dark:text-white']
+                : ['text-white'];
+
+            // Reset both spans first
+            bnSpan.classList.remove(activeClass);
+            bnSpan.classList.remove(...inactiveClasses);
+            enSpan.classList.remove(activeClass);
+            enSpan.classList.remove(...inactiveClasses);
+
+            // Apply classes based on language
+            if (lang === 'bn') {
+                bnSpan.classList.add(activeClass);
+                enSpan.classList.add(...inactiveClasses);
+            } else {
+                bnSpan.classList.add(...inactiveClasses);
+                enSpan.classList.add(activeClass);
+            }
         });
         
         document.querySelectorAll('.warafy-translatable').forEach(element => {
