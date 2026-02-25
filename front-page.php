@@ -118,7 +118,7 @@ $random_products_query = new WP_Query([
                         
                         $title = get_option('warafy_hero_title'.$s, ($i == 1 ? 'Summer Styles Are Here' : ''));
                         $desc = get_option('warafy_hero_description'.$s, ($i == 1 ? 'Discover the hottest trends of the season and refresh your wardrobe.' : ''));
-                        $btn_text = get_option('warafy_hero_button_text'.$s, ($i == 1 ? 'Shop Collection' : 'Shop Now'));
+                        $btn_text = get_option('warafy_hero_button_text'.$s, ($i == 1 ? __t('Shop Collection') : __t('Shop Now')));
                         $btn_url = get_option('warafy_hero_button_url'.$s, ($i == 1 ? wc_get_page_permalink('shop') : ''));
                         
                         // Bengali Override
@@ -293,7 +293,7 @@ $random_products_query = new WP_Query([
                     
                     $title = get_option('warafy_hero_mobile_title'.$s, ($i == 1 ? 'Summer Styles' : ''));
                     $desc = get_option('warafy_hero_mobile_description'.$s, ($i == 1 ? 'Discover the latest trends for the season.' : ''));
-                    $btn_text = get_option('warafy_hero_mobile_button_text'.$s, ($i == 1 ? 'Shop Now' : 'Shop Now'));
+                    $btn_text = get_option('warafy_hero_mobile_button_text'.$s, ($i == 1 ? __t('Shop Now') : __t('Shop Now')));
                     $btn_url = get_option('warafy_hero_button_url'.$s, ($i == 1 ? wc_get_page_permalink('shop') : ''));
 
                     // Bengali Override
