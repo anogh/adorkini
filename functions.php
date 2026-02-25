@@ -302,7 +302,7 @@ function warafy_load_related_products_ajax() {
 
 function warafy_widgets_init() {
     register_sidebar( array(
-        'name'          => esc_html__( 'Shop Sidebar', 'warafy-modern' ),
+        'name'          => __t('Shop Sidebar'),
         'id'            => 'shop-sidebar',
         'description'   => esc_html__( 'Add widgets here to appear in your shop page sidebar.', 'warafy-modern' ),
         'before_widget' => '<div id="%1$s" class="widget %2$s mb-8">',
@@ -359,33 +359,33 @@ function warafy_custom_checkout_fields( $fields ) {
     
     // Configure the remaining fields
     // Name (required)
-    $fields['billing']['billing_first_name']['label'] = 'Name';
+    $fields['billing']['billing_first_name']['label'] = __t('Name');
     $fields['billing']['billing_first_name']['required'] = true;
     $fields['billing']['billing_first_name']['class'] = array('form-row-wide');
-    $fields['billing']['billing_first_name']['placeholder'] = 'Enter your full name';
+    $fields['billing']['billing_first_name']['placeholder'] = __t('Enter your full name');
     
     // Address (required)
-    $fields['billing']['billing_address_1']['label'] = 'Address';
+    $fields['billing']['billing_address_1']['label'] = __t('Address');
     $fields['billing']['billing_address_1']['required'] = true;
     $fields['billing']['billing_address_1']['class'] = array('form-row-wide');
-    $fields['billing']['billing_address_1']['placeholder'] = 'Street address, apartment, suite, etc.';
+    $fields['billing']['billing_address_1']['placeholder'] = __t('Street address, apartment, suite, etc.');
     
     // Mobile Number (required)
-    $fields['billing']['billing_phone']['label'] = 'Mobile Number';
+    $fields['billing']['billing_phone']['label'] = __t('Mobile Number');
     $fields['billing']['billing_phone']['required'] = true;
     $fields['billing']['billing_phone']['class'] = array('form-row-wide');
-    $fields['billing']['billing_phone']['placeholder'] = 'Enter your mobile number';
+    $fields['billing']['billing_phone']['placeholder'] = __t('Enter your mobile number');
     
     // Email (optional)
-    $fields['billing']['billing_email']['label'] = 'Email Address';
+    $fields['billing']['billing_email']['label'] = __t('Email Address');
     $fields['billing']['billing_email']['required'] = false;
     $fields['billing']['billing_email']['class'] = array('form-row-wide');
-    $fields['billing']['billing_email']['placeholder'] = 'Enter your email (optional)';
+    $fields['billing']['billing_email']['placeholder'] = __t('Enter your email (optional)');
     
     // Order Instructions (optional)
-    $fields['order']['order_comments']['label'] = 'Order Instructions';
+    $fields['order']['order_comments']['label'] = __t('Order Instructions');
     $fields['order']['order_comments']['required'] = false;
-    $fields['order']['order_comments']['placeholder'] = 'Any special instructions for your order...';
+    $fields['order']['order_comments']['placeholder'] = __t('Any special instructions for your order...');
 
     return $fields;
 }
@@ -394,7 +394,7 @@ add_filter('woocommerce_thankyou_order_received_text', 'warafy_custom_order_rece
 
 function warafy_custom_order_received_text($text, $order) {
     if ($order) {
-        return 'Your order has been received! Thank you for your purchase.';
+        return __t('Your order has been received! Thank you for your purchase.');
     }
     return $text;
 }
@@ -3283,7 +3283,7 @@ function warafy_submit_review() {
     
     // Check if user purchased the product
     if (!warafy_user_purchased_product($user_id, $product_id)) {
-        wp_send_json_error(['message' => 'You can only review products you have purchased']);
+        wp_send_json_error(['message' => __t('You can only review products you have purchased')]);
     }
     
     // Check if user already reviewed this product
@@ -3294,7 +3294,7 @@ function warafy_submit_review() {
     ));
     
     if ($existing) {
-        wp_send_json_error(['message' => 'You have already reviewed this product']);
+        wp_send_json_error(['message' => __t('You have already reviewed this product')]);
     }
     
     // Insert review
@@ -3312,10 +3312,10 @@ function warafy_submit_review() {
     );
     
     if ($result === false) {
-        wp_send_json_error(['message' => 'Failed to submit review']);
+        wp_send_json_error(['message' => __t('Failed to submit review')]);
     }
     
-    wp_send_json_success(['message' => 'Review submitted successfully']);
+    wp_send_json_success(['message' => __t('Review submitted successfully')]);
 }
 
 // Get comments for a product
