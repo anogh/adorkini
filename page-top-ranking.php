@@ -3,7 +3,36 @@
 Template Name: Top Ranking Page
 */
 
-get_header(); ?>
+get_header();
+
+// Fetch and process ranked products once for both desktop and mobile views
+$products = [];
+$full_rankings = warafy_get_ranked_products('full', 100);
+if (!empty($full_rankings)) {
+    $args = array(
+        'post_type' => 'product',
+        'post__in' => $full_rankings,
+        'orderby' => 'post__in'
+    );
+    $loop = new WP_Query($args);
+    if ($loop->have_posts()) {
+        $rank = 1;
+        while ($loop->have_posts()) : $loop->the_post();
+            global $product;
+            $products[] = [
+                'rank' => $rank,
+                'product' => $product,
+                'title' => get_the_title(),
+                'permalink' => get_permalink(),
+                'thumbnail' => get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'),
+                'price_html' => $product->get_price_html()
+            ];
+            $rank++;
+        endwhile;
+        wp_reset_postdata();
+    }
+}
+?>
 
 <main class="flex-grow pb-24 lg:pb-0">
     
@@ -27,31 +56,7 @@ get_header(); ?>
             <!-- Ranking Grid -->
             <section class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 <?php
-                $full_rankings = warafy_get_ranked_products('full', 100);
-                if (!empty($full_rankings)) {
-                    $args = array(
-                        'post_type' => 'product',
-                        'post__in' => $full_rankings,
-                        'orderby' => 'post__in'
-                    );
-                    $loop = new WP_Query($args);
-                    if ($loop->have_posts()) {
-                        $rank = 1;
-                        $products = [];
-                        while ($loop->have_posts()) : $loop->the_post();
-                            global $product;
-                            $products[] = [
-                                'rank' => $rank,
-                                'product' => $product,
-                                'title' => get_the_title(),
-                                'permalink' => get_permalink(),
-                                'thumbnail' => get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'),
-                                'price_html' => $product->get_price_html()
-                            ];
-                            $rank++;
-                        endwhile;
-                        wp_reset_postdata();
-                        
+                if (!empty($products)) {
                         // Display all products in grid layout
                         foreach ($products as $item) {
                             $rank_class = $item['rank'] == 1 ? 'gold' : ($item['rank'] == 2 ? 'silver' : ($item['rank'] == 3 ? 'bronze' : 'default'));
@@ -98,9 +103,6 @@ get_header(); ?>
                             <?php
                         }
                         
-                    } else {
-                        echo '<div class="col-span-full"><p class="text-gray-500 dark:text-gray-400 text-center py-12">No ranked products found. Please select products in the <a href="' . admin_url('themes.php?page=warafy-product-ranking') . '" class="text-primary hover:underline">Product Ranking admin page</a>.</p></div>';
-                    }
                 } else {
                     echo '<div class="col-span-full"><p class="text-gray-500 dark:text-gray-400 text-center py-12">No ranked products found. Please select products in the <a href="' . admin_url('themes.php?page=warafy-product-ranking') . '" class="text-primary hover:underline">Product Ranking admin page</a>.</p></div>';
                 }
@@ -126,31 +128,7 @@ get_header(); ?>
             <!-- Ranking List -->
             <section class="space-y-3">
                 <?php
-                $full_rankings = warafy_get_ranked_products('full', 100);
-                if (!empty($full_rankings)) {
-                    $args = array(
-                        'post_type' => 'product',
-                        'post__in' => $full_rankings,
-                        'orderby' => 'post__in'
-                    );
-                    $loop = new WP_Query($args);
-                    if ($loop->have_posts()) {
-                        $rank = 1;
-                        $products = [];
-                        while ($loop->have_posts()) : $loop->the_post();
-                            global $product;
-                            $products[] = [
-                                'rank' => $rank,
-                                'product' => $product,
-                                'title' => get_the_title(),
-                                'permalink' => get_permalink(),
-                                'thumbnail' => get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'),
-                                'price_html' => $product->get_price_html()
-                            ];
-                            $rank++;
-                        endwhile;
-                        wp_reset_postdata();
-                        
+                if (!empty($products)) {
                         // Display all products in single column for mobile
                         foreach ($products as $item) {
                             $rank_class = $item['rank'] == 1 ? 'gold' : ($item['rank'] == 2 ? 'silver' : ($item['rank'] == 3 ? 'bronze' : 'default'));
@@ -197,9 +175,6 @@ get_header(); ?>
                             <?php
                         }
                         
-                    } else {
-                        echo '<div class="text-center py-8"><p class="text-gray-500 text-sm">No ranked products found.</p></div>';
-                    }
                 } else {
                     echo '<div class="text-center py-8"><p class="text-gray-500 text-sm">No ranked products found.</p></div>';
                 }
