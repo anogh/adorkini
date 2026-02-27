@@ -89,9 +89,9 @@ if (!empty($full_rankings)) {
                                     <!-- Action Buttons -->
                                     <div class="flex items-start gap-2 mt-3">
                                         <div class="flex flex-col gap-2">
-                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $item['product']->get_id() ); ?>" class="flex items-center gap-2 px-3 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors justify-center" title="Buy Now">
+                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $item['product']->get_id() ); ?>" class="flex items-center gap-2 px-3 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors justify-center" title="<?php echo __t('Buy Now'); ?>">
                                                 <span class="material-symbols-outlined text-sm" data-icon="bolt"></span>
-                                                <span>Buy Now</span>
+                                                <span><?php echo __t('Buy Now'); ?></span>
                                             </a>
                                             <button class="add-to-cart-btn flex items-center gap-2 px-3 py-2 bg-primary/10 text-primary text-sm font-bold rounded-lg hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors justify-center" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Cart">
                                                 <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>
@@ -167,9 +167,9 @@ if (!empty($full_rankings)) {
                                     <!-- Action Buttons -->
                                     <div class="flex items-start gap-2 mt-2">
                                         <div class="flex flex-col gap-2">
-                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $item['product']->get_id() ); ?>" class="flex items-center gap-1.5 px-3 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors justify-center" title="Buy Now">
+                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $item['product']->get_id() ); ?>" class="flex items-center gap-1.5 px-3 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors justify-center" title="<?php echo __t('Buy Now'); ?>">
                                                 <span class="material-symbols-outlined text-sm" data-icon="bolt"></span>
-                                                <span>Buy Now</span>
+                                                <span><?php echo __t('Buy Now'); ?></span>
                                             </a>
                                             <button class="add-to-cart-btn flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary text-sm font-bold rounded-lg hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors justify-center" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Cart">
                                                 <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>

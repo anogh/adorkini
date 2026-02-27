@@ -143,7 +143,7 @@
                         <div class="flex flex-col gap-3">
                             <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:bg-primary/90">
                                 <span class="material-symbols-outlined" data-icon="bolt"></span>
-                                <span>Buy Now</span>
+                                <span><?php echo __t('Buy Now'); ?></span>
                             </a>
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary/10 text-primary text-base font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30">
                                 <span class="material-symbols-outlined" data-icon="add_shopping_cart"></span>
@@ -443,7 +443,7 @@
                         <div class="flex-1 flex flex-col gap-2">
                             <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg">
                                 <span class="material-symbols-outlined" data-icon="bolt"></span>
-                                Buy Now
+                                <?php echo __t('Buy Now'); ?>
                             </a>
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="bg-primary/10 hover:bg-primary/20 text-primary font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg w-full">
                                 <span class="material-symbols-outlined" data-icon="shopping_bag"></span>

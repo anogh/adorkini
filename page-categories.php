@@ -91,8 +91,8 @@ get_header(); ?>
                                 <div class="flex gap-2">
                                     <div class="flex-1 flex flex-col gap-2">
                                         <?php if ($product->is_in_stock()) : ?>
-                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="Buy Now">
-                                                <span class="truncate">Buy Now</span>
+                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="<?php echo __t('Buy Now'); ?>">
+                                                <span class="truncate"><?php echo __t('Buy Now'); ?></span>
                                             </a>
                                             <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
                                                 <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
@@ -226,8 +226,8 @@ get_header(); ?>
                                     <div class="flex gap-2">
                                         <div class="flex-1 flex flex-col gap-2">
                                             <?php if ($product->is_in_stock()) : ?>
-                                                <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="Buy Now">
-                                                    <span class="truncate">Buy Now</span>
+                                                <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="<?php echo __t('Buy Now'); ?>">
+                                                    <span class="truncate"><?php echo __t('Buy Now'); ?></span>
                                                 </a>
                                                 <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
                                                     <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
