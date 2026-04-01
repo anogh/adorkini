@@ -3,7 +3,36 @@
 Template Name: Top Ranking Page
 */
 
-get_header(); ?>
+get_header();
+
+// Fetch and process ranked products once for both desktop and mobile views
+$products = [];
+$full_rankings = warafy_get_ranked_products('full', 100);
+if (!empty($full_rankings)) {
+    $args = array(
+        'post_type' => 'product',
+        'post__in' => $full_rankings,
+        'orderby' => 'post__in'
+    );
+    $loop = new WP_Query($args);
+    if ($loop->have_posts()) {
+        $rank = 1;
+        while ($loop->have_posts()) : $loop->the_post();
+            global $product;
+            $products[] = [
+                'rank' => $rank,
+                'product' => $product,
+                'title' => get_the_title(),
+                'permalink' => get_permalink(),
+                'thumbnail' => get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'),
+                'price_html' => $product->get_price_html()
+            ];
+            $rank++;
+        endwhile;
+        wp_reset_postdata();
+    }
+}
+?>
 
 <main class="flex-grow pb-24 lg:pb-0">
     
@@ -27,31 +56,7 @@ get_header(); ?>
             <!-- Ranking Grid -->
             <section class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 <?php
-                $full_rankings = warafy_get_ranked_products('full', 100);
-                if (!empty($full_rankings)) {
-                    $args = array(
-                        'post_type' => 'product',
-                        'post__in' => $full_rankings,
-                        'orderby' => 'post__in'
-                    );
-                    $loop = new WP_Query($args);
-                    if ($loop->have_posts()) {
-                        $rank = 1;
-                        $products = [];
-                        while ($loop->have_posts()) : $loop->the_post();
-                            global $product;
-                            $products[] = [
-                                'rank' => $rank,
-                                'product' => $product,
-                                'title' => get_the_title(),
-                                'permalink' => get_permalink(),
-                                'thumbnail' => get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'),
-                                'price_html' => $product->get_price_html()
-                            ];
-                            $rank++;
-                        endwhile;
-                        wp_reset_postdata();
-                        
+                if (!empty($products)) {
                         // Display all products in grid layout
                         foreach ($products as $item) {
                             $rank_class = $item['rank'] == 1 ? 'gold' : ($item['rank'] == 2 ? 'silver' : ($item['rank'] == 3 ? 'bronze' : 'default'));
@@ -82,13 +87,19 @@ get_header(); ?>
                                     <p class="text-xs text-gray-400 dark:text-gray-500 mt-1"><?php echo $item['product']->is_in_stock() ? 'In Stock' : 'Out of Stock'; ?></p>
                                     
                                     <!-- Action Buttons -->
-                                    <div class="flex items-center gap-2 mt-3">
-                                        <button class="add-to-cart-btn flex items-center gap-2 px-3 py-2 bg-primary/10 text-primary text-sm font-bold rounded-lg hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Cart">
-                                            <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text">Add to Cart</span>
-                                            <span class="material-symbols-outlined text-sm added-icon hidden" data-icon="check"></span>
-                                            <span class="added-text hidden">Added</span>
-                                        </button>
+                                    <div class="flex items-start gap-2 mt-3">
+                                        <div class="flex flex-col gap-2">
+                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $item['product']->get_id() ); ?>" class="flex items-center gap-2 px-3 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors justify-center" title="Buy Now">
+                                                <span class="material-symbols-outlined text-sm" data-icon="bolt"></span>
+                                                <span>Buy Now</span>
+                                            </a>
+                                            <button class="add-to-cart-btn flex items-center gap-2 px-3 py-2 bg-primary/10 text-primary text-sm font-bold rounded-lg hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors justify-center" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Cart">
+                                                <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>
+                                                <span class="add-text">Add to Cart</span>
+                                                <span class="material-symbols-outlined text-sm added-icon hidden" data-icon="check"></span>
+                                                <span class="added-text hidden">Added</span>
+                                            </button>
+                                        </div>
                                         <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Love">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                                         </button>
@@ -98,9 +109,6 @@ get_header(); ?>
                             <?php
                         }
                         
-                    } else {
-                        echo '<div class="col-span-full"><p class="text-gray-500 dark:text-gray-400 text-center py-12">No ranked products found. Please select products in the <a href="' . admin_url('themes.php?page=warafy-product-ranking') . '" class="text-primary hover:underline">Product Ranking admin page</a>.</p></div>';
-                    }
                 } else {
                     echo '<div class="col-span-full"><p class="text-gray-500 dark:text-gray-400 text-center py-12">No ranked products found. Please select products in the <a href="' . admin_url('themes.php?page=warafy-product-ranking') . '" class="text-primary hover:underline">Product Ranking admin page</a>.</p></div>';
                 }
@@ -126,31 +134,7 @@ get_header(); ?>
             <!-- Ranking List -->
             <section class="space-y-3">
                 <?php
-                $full_rankings = warafy_get_ranked_products('full', 100);
-                if (!empty($full_rankings)) {
-                    $args = array(
-                        'post_type' => 'product',
-                        'post__in' => $full_rankings,
-                        'orderby' => 'post__in'
-                    );
-                    $loop = new WP_Query($args);
-                    if ($loop->have_posts()) {
-                        $rank = 1;
-                        $products = [];
-                        while ($loop->have_posts()) : $loop->the_post();
-                            global $product;
-                            $products[] = [
-                                'rank' => $rank,
-                                'product' => $product,
-                                'title' => get_the_title(),
-                                'permalink' => get_permalink(),
-                                'thumbnail' => get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'),
-                                'price_html' => $product->get_price_html()
-                            ];
-                            $rank++;
-                        endwhile;
-                        wp_reset_postdata();
-                        
+                if (!empty($products)) {
                         // Display all products in single column for mobile
                         foreach ($products as $item) {
                             $rank_class = $item['rank'] == 1 ? 'gold' : ($item['rank'] == 2 ? 'silver' : ($item['rank'] == 3 ? 'bronze' : 'default'));
@@ -181,13 +165,19 @@ get_header(); ?>
                                     <p class="text-xs text-gray-400 dark:text-gray-500 mt-1"><?php echo $item['product']->is_in_stock() ? 'In Stock' : 'Out of Stock'; ?></p>
                                     
                                     <!-- Action Buttons -->
-                                    <div class="flex items-center gap-2 mt-2">
-                                        <button class="add-to-cart-btn flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary text-sm font-bold rounded-lg hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Cart">
-                                            <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text">Add</span>
-                                            <span class="material-symbols-outlined text-sm added-icon hidden" data-icon="check"></span>
-                                            <span class="added-text hidden">Added</span>
-                                        </button>
+                                    <div class="flex items-start gap-2 mt-2">
+                                        <div class="flex flex-col gap-2">
+                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $item['product']->get_id() ); ?>" class="flex items-center gap-1.5 px-3 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors justify-center" title="Buy Now">
+                                                <span class="material-symbols-outlined text-sm" data-icon="bolt"></span>
+                                                <span>Buy Now</span>
+                                            </a>
+                                            <button class="add-to-cart-btn flex items-center gap-1.5 px-3 py-2 bg-primary/10 text-primary text-sm font-bold rounded-lg hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors justify-center" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Cart">
+                                                <span class="material-symbols-outlined text-sm add-icon" data-icon="add_shopping_cart"></span>
+                                                <span class="add-text">Add</span>
+                                                <span class="material-symbols-outlined text-sm added-icon hidden" data-icon="check"></span>
+                                                <span class="added-text hidden">Added</span>
+                                            </button>
+                                        </div>
                                         <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $item['product']->get_id(); ?>" title="Add to Love">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                                         </button>
@@ -197,9 +187,6 @@ get_header(); ?>
                             <?php
                         }
                         
-                    } else {
-                        echo '<div class="text-center py-8"><p class="text-gray-500 text-sm">No ranked products found.</p></div>';
-                    }
                 } else {
                     echo '<div class="text-center py-8"><p class="text-gray-500 text-sm">No ranked products found.</p></div>';
                 }

@@ -436,10 +436,12 @@
                                 )
                             );
                         ?>
-                        <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex-1 bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg">
-                            <span class="material-symbols-outlined" data-icon="shopping_bag"></span>
-                            Add to Cart
-                        </button>
+                        <div class="flex-1 flex flex-col gap-2">
+                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg w-full">
+                                <span class="material-symbols-outlined" data-icon="shopping_bag"></span>
+                                Add to Cart
+                            </button>
+                        </div>
                     </form>
                     <!-- Add to Love Button -->
                     <button type="button" class="warafy-wishlist-btn flex items-center justify-center gap-2 w-full rounded-lg h-12 px-6 bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors font-medium mt-2" data-product-id="<?php echo $product->get_id(); ?>">

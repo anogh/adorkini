@@ -118,7 +118,7 @@ $random_products_query = new WP_Query([
                         
                         $title = get_option('warafy_hero_title'.$s, ($i == 1 ? 'Summer Styles Are Here' : ''));
                         $desc = get_option('warafy_hero_description'.$s, ($i == 1 ? 'Discover the hottest trends of the season and refresh your wardrobe.' : ''));
-                        $btn_text = get_option('warafy_hero_button_text'.$s, ($i == 1 ? 'Shop Collection' : 'Shop Now'));
+                        $btn_text = get_option('warafy_hero_button_text'.$s, ($i == 1 ? __t('Shop Collection') : __t('Shop Now')));
                         $btn_url = get_option('warafy_hero_button_url'.$s, ($i == 1 ? wc_get_page_permalink('shop') : ''));
                         
                         // Bengali Override
@@ -172,10 +172,15 @@ $random_products_query = new WP_Query([
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-xs font-bold px-4 py-1.5 rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                            <span class="add-text"><?php echo __t('Add to cart'); ?></span>
-                            <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
-                        </button>
+                        <div class="flex flex-col gap-1 items-end">
+                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 transition-colors w-full text-center">
+                                <?php echo __t('Buy Now'); ?>
+                            </a>
+                            <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-xs font-bold px-4 py-1.5 rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                                <span class="add-text"><?php echo __t('Add to cart'); ?></span>
+                                <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <?php
@@ -293,7 +298,7 @@ $random_products_query = new WP_Query([
                     
                     $title = get_option('warafy_hero_mobile_title'.$s, ($i == 1 ? 'Summer Styles' : ''));
                     $desc = get_option('warafy_hero_mobile_description'.$s, ($i == 1 ? 'Discover the latest trends for the season.' : ''));
-                    $btn_text = get_option('warafy_hero_mobile_button_text'.$s, ($i == 1 ? 'Shop Now' : 'Shop Now'));
+                    $btn_text = get_option('warafy_hero_mobile_button_text'.$s, ($i == 1 ? __t('Shop Now') : __t('Shop Now')));
                     $btn_url = get_option('warafy_hero_button_url'.$s, ($i == 1 ? wc_get_page_permalink('shop') : ''));
 
                     // Bengali Override
@@ -383,10 +388,15 @@ $random_products_query = new WP_Query([
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
-                            <span class="add-text"><?php echo __t('Add to cart'); ?></span>
-                            <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
-                        </button>
+                        <div class="flex flex-col gap-1 items-end">
+                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 w-full text-center">
+                                <?php echo __t('Buy Now'); ?>
+                            </a>
+                            <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
+                                <span class="add-text"><?php echo __t('Add to cart'); ?></span>
+                                <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <?php
