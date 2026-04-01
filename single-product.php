@@ -141,13 +141,9 @@
 
                         <!-- Buttons -->
                         <div class="flex flex-col gap-3 sm:flex-row">
-                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary/10 text-primary text-base font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30">
+                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:bg-primary/90">
                                 <span class="material-symbols-outlined" data-icon="add_shopping_cart"></span>
                                 <span class="truncate">Add to Cart</span>
-                            </button>
-                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:bg-primary/90">
-                                <span class="material-symbols-outlined" data-icon="bolt"></span>
-                                <span>Buy Now</span>
                             </button>
                         </div>
                         
