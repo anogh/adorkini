@@ -172,15 +172,10 @@ $random_products_query = new WP_Query([
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <div class="flex flex-col gap-1 items-end">
-                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 transition-colors w-full text-center">
-                                <?php echo __t('Buy Now'); ?>
-                            </a>
-                            <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-xs font-bold px-4 py-1.5 rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                <span class="add-text"><?php echo __t('Add to cart'); ?></span>
-                                <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
-                            </button>
-                        </div>
+                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-xs font-bold px-4 py-1.5 rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                            <span class="add-text"><?php echo __t('Add to cart'); ?></span>
+                            <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
+                        </button>
                     </div>
                 </div>
                 <?php
@@ -388,15 +383,10 @@ $random_products_query = new WP_Query([
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <div class="flex flex-col gap-1 items-end">
-                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 w-full text-center">
-                                <?php echo __t('Buy Now'); ?>
-                            </a>
-                            <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
-                                <span class="add-text"><?php echo __t('Add to cart'); ?></span>
-                                <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
-                            </button>
-                        </div>
+                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
+                            <span class="add-text"><?php echo __t('Add to cart'); ?></span>
+                            <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
+                        </button>
                     </div>
                 </div>
                 <?php
