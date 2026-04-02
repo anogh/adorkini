@@ -2580,6 +2580,34 @@ body.woocommerce-page form .woocommerce-shipping-fields__field-wrapper .form-row
 }
 
 /* ============================================
+   GLOBAL LOGO CONSISTENCY - ALL PAGES
+   ============================================ */
+
+/* Force logo consistency across EVERY page (home, product, cart, etc.) */
+.warafy-logo-img,
+header img[alt="Ador Kini"],
+header img[src*="logo"] {
+    height: var(--logo-h, 48px) !important;
+    width: auto !important;
+    max-width: 280px !important;
+    object-fit: contain !important;
+    display: block !important;
+    transform: none !important;
+}
+
+/* Product page specific logo fix - highest priority */
+.single-product .warafy-logo-img,
+.single-product header img[alt="Ador Kini"],
+.single-product header img[src*="logo"] {
+    height: var(--logo-h, 48px) !important;
+    width: auto !important;
+    max-width: 280px !important;
+    object-fit: contain !important;
+    display: block !important;
+    transform: none !important;
+}
+
+/* ============================================
    WORDPRESS ADMIN BAR FIX - LOGGED IN USERS
    ============================================ */
 

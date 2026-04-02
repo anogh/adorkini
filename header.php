@@ -432,7 +432,7 @@ $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
         <div class="flex items-center justify-between w-full">
             <!-- Logo -->
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex-shrink-0 mr-3">
-                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="h-[55px] w-auto max-w-[160px] object-contain">
+                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
             </a>
             
             <!-- Search Bar -->
