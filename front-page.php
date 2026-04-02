@@ -378,12 +378,12 @@ $random_products_query = new WP_Query([
                         <?php echo get_the_title($product->get_id()); ?>
                     </a>
                     
-                    <div class="w-full flex items-end justify-between mt-auto gap-1">
+                    <div class="warafy-mobile-product-actions w-full mt-auto">
                         <div class="flex items-center flex-wrap mobile-compact-price flex-1 min-w-0 pr-1">
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
+                        <button class="add-to-cart-btn w-full bg-[#FFB800] hover:bg-[#e6a600] text-black text-[10px] font-bold px-[8px] py-[3px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
                             <span class="add-text"><?php echo __t('Add to cart'); ?></span>
                             <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
                         </button>
@@ -399,9 +399,17 @@ $random_products_query = new WP_Query([
                 box-shadow: 0 1px 2px rgba(0,0,0,0.02);
             }
             @media (max-width: 1023px) {
+                .warafy-mobile-product-actions {
+                    display: grid !important;
+                    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+                    gap: 6px;
+                    align-items: end;
+                }
+
                 .warafy-mobile-product-card .add-to-cart-btn {
+                    width: 100%;
                     transform: none !important;
-                    padding: 4px 12px !important;
+                    padding: 5px 12px !important;
                     font-size: 11px !important;
                     line-height: 1.2;
                     max-width: 100%;
@@ -412,14 +420,15 @@ $random_products_query = new WP_Query([
                     transform: translateY(-1px) !important;
                 }
             }
-            .mobile-compact-price del {
+            .warafy-mobile-product-card .mobile-compact-price del,
+            .warafy-desktop-product-card .mobile-compact-price del {
                 color: #6b7280;
                 font-size: 11px;
                 font-weight: 500;
                 margin-right: 4px;
                 text-decoration: line-through !important;
                 text-decoration-thickness: 2px;
-                text-decoration-color: #6b7280;
+                text-decoration-color: currentColor;
             }
             .mobile-compact-price ins {
                 text-decoration: none;
