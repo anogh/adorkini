@@ -398,6 +398,16 @@ $random_products_query = new WP_Query([
             .warafy-mobile-product-card {
                 box-shadow: 0 1px 2px rgba(0,0,0,0.02);
             }
+            @media (max-width: 1023px) {
+                .warafy-mobile-product-card .add-to-cart-btn {
+                    transform: scaleX(1.5) scaleY(1.3) !important;
+                    transform-origin: center;
+                }
+
+                .warafy-mobile-product-card .add-to-cart-btn:hover {
+                    transform: scaleX(1.5) scaleY(1.3) translateY(-1px) !important;
+                }
+            }
             .mobile-compact-price del {
                 color: #6b7280;
                 font-size: 11px;
