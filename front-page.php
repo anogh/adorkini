@@ -400,12 +400,16 @@ $random_products_query = new WP_Query([
             }
             @media (max-width: 1023px) {
                 .warafy-mobile-product-card .add-to-cart-btn {
-                    transform: scaleX(1.5) scaleY(1.3) !important;
-                    transform-origin: center;
+                    transform: none !important;
+                    padding: 4px 12px !important;
+                    font-size: 11px !important;
+                    line-height: 1.2;
+                    max-width: 100%;
+                    box-sizing: border-box;
                 }
 
                 .warafy-mobile-product-card .add-to-cart-btn:hover {
-                    transform: scaleX(1.5) scaleY(1.3) translateY(-1px) !important;
+                    transform: translateY(-1px) !important;
                 }
             }
             .mobile-compact-price del {
@@ -413,7 +417,9 @@ $random_products_query = new WP_Query([
                 font-size: 11px;
                 font-weight: 500;
                 margin-right: 4px;
-                text-decoration: line-through;
+                text-decoration: line-through !important;
+                text-decoration-thickness: 2px;
+                text-decoration-color: #6b7280;
             }
             .mobile-compact-price ins {
                 text-decoration: none;
