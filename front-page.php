@@ -505,6 +505,7 @@ $random_products_query = new WP_Query([
         <div class="w-full bg-[#E50914] text-white text-center py-2.5 text-[15px] font-medium tracking-wide">
             <?php echo __t('Free Shipping over 2500'); ?>
         </div>
+        <!-- CSS Version: 3.4.1 - Add to cart 2x + price strikethrough -->
     </div>
 
 </main>
