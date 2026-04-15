@@ -416,25 +416,48 @@ $random_products_query = new WP_Query([
                     box-sizing: border-box;
                 }
 
+                /* Make Add to cart text 2x larger on mobile */
+                .warafy-mobile-product-card .add-to-cart-btn .add-text,
+                .add-to-cart-btn .add-text {
+                    font-size: 2em !important;
+                    font-weight: 700 !important;
+                    line-height: 1.5 !important;
+                }
+
                 .warafy-mobile-product-card .add-to-cart-btn:hover {
                     transform: translateY(-1px) !important;
                 }
             }
+            /* Make original price more prominent with strikethrough on mobile */
             .warafy-mobile-product-card .mobile-compact-price del,
-            .warafy-desktop-product-card .mobile-compact-price del {
-                color: #6b7280;
-                font-size: 11px;
-                font-weight: 500;
-                margin-right: 4px;
+            .warafy-desktop-product-card .mobile-compact-price del,
+            .mobile-compact-price del,
+            .mobile-compact-price .woocommerce-Price-amount del {
+                color: #9ca3af !important;
+                font-size: 0.85em !important;
+                font-weight: 400 !important;
+                margin-right: 6px !important;
                 text-decoration: line-through !important;
-                text-decoration-thickness: 2px;
-                text-decoration-color: currentColor;
+                text-decoration-thickness: 2px !important;
+                text-decoration-color: #9ca3af !important;
+                opacity: 0.6 !important;
+                display: inline-block !important;
             }
-            .mobile-compact-price ins {
-                text-decoration: none;
-                font-weight: 800;
-                color: #000;
-                font-size: 14px;
+            .dark .warafy-mobile-product-card .mobile-compact-price del,
+            .dark .mobile-compact-price del {
+                color: #6b7280 !important;
+                text-decoration-color: #6b7280 !important;
+            }
+            /* Make sale price more prominent on mobile */
+            .mobile-compact-price ins,
+            .mobile-compact-price .woocommerce-Price-amount ins {
+                text-decoration: none !important;
+                font-weight: 800 !important;
+                color: #000 !important;
+                font-size: 1.15em !important;
+            }
+            .dark .mobile-compact-price ins {
+                color: #fff !important;
             }
             .mobile-compact-price .amount {
                 display: inline-block;
@@ -505,7 +528,7 @@ $random_products_query = new WP_Query([
         <div class="w-full bg-[#E50914] text-white text-center py-2.5 text-[15px] font-medium tracking-wide">
             <?php echo __t('Free Shipping over 2500'); ?>
         </div>
-        <!-- CSS Version: 3.4.1 - Add to cart 2x + price strikethrough -->
+        <!-- CSS Version: 3.4.3 - Add to cart 2x + price strikethrough (inline styles fixed) -->
     </div>
 
 </main>
