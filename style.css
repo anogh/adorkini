@@ -4,7 +4,7 @@ Theme URI: http://adorkini.com
 Author: Antigravity
 Author URI: http://adorkini.com
 Description: A modern e-commerce theme for Ador Kini.
-Version: 3.4.1
+Version: 3.4.2
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: adorkini
@@ -287,9 +287,13 @@ Text Domain: adorkini
         transform: scale(1.3);
     }
 
-    /* Make Add to cart text 2 times larger on mobile */
-    .add-to-cart-btn .add-text {
+    /* Make Add to cart text 2 times larger on mobile - MAXIMUM SPECIFICITY */
+    button.add-to-cart-btn span.add-text,
+    .add-to-cart-btn .add-text,
+    body .add-to-cart-btn .add-text,
+    html body .add-to-cart-btn .add-text {
         font-size: 2em !important;
+        line-height: 1.5 !important;
     }
 
     .add-to-cart-btn {
@@ -301,26 +305,37 @@ Text Domain: adorkini
         transform: scaleX(1.5) scaleY(1.3) translateY(-1px) !important;
     }
 
-    /* Make original price more prominent with strikethrough on mobile */
+    /* Make original price more prominent with strikethrough on mobile - MAXIMUM SPECIFICITY */
     .mobile-compact-price del,
-    .mobile-compact-price .woocommerce-Price-amount del {
+    .mobile-compact-price .woocommerce-Price-amount del,
+    body .mobile-compact-price del,
+    html body .mobile-compact-price del,
+    .mobile-compact-price span.price del,
+    .mobile-compact-price p.price del {
         text-decoration: line-through !important;
-        opacity: 0.6 !important;
-        font-size: 0.9em !important;
+        text-decoration-line: line-through !important;
+        opacity: 0.5 !important;
+        font-size: 0.85em !important;
         color: #9ca3af !important;
-        margin-right: 4px !important;
+        margin-right: 6px !important;
+        display: inline-block !important;
     }
 
     .dark .mobile-compact-price del,
-    .dark .mobile-compact-price .woocommerce-Price-amount del {
+    .dark .mobile-compact-price .woocommerce-Price-amount del,
+    .dark body .mobile-compact-price del {
         color: #6b7280 !important;
     }
 
     /* Make sale price more prominent on mobile */
     .mobile-compact-price ins,
-    .mobile-compact-price .woocommerce-Price-amount ins {
-        font-size: 1.1em !important;
+    .mobile-compact-price .woocommerce-Price-amount ins,
+    body .mobile-compact-price ins,
+    .mobile-compact-price span.price ins,
+    .mobile-compact-price p.price ins {
+        font-size: 1.15em !important;
         font-weight: 700 !important;
+        text-decoration: none !important;
     }
 
     .mobile-ranking-item {
