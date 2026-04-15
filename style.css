@@ -287,6 +287,11 @@ Text Domain: adorkini
         transform: scale(1.3);
     }
 
+    /* Make Add to cart text 1.5 times larger on mobile */
+    .add-to-cart-btn .add-text {
+        font-size: 1.5em !important;
+    }
+
     .add-to-cart-btn {
         transform: scaleX(1.5) scaleY(1.3) !important;
         transform-origin: center;
@@ -524,6 +529,11 @@ input[name="payment_method"] {
     .add-to-cart-btn,
     .warafy-wishlist-btn {
         transform: scale(1.3);
+    }
+
+    /* Make Add to cart text 1.5 times larger on mobile */
+    .add-to-cart-btn .add-text {
+        font-size: 1.5em !important;
     }
 
     .add-to-cart-btn {
