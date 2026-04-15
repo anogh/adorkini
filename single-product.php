@@ -126,7 +126,7 @@
                         
                         <!-- Quantity -->
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-gray-900 dark:text-white" for="quantity">Quantity</label>
+                            <label class="text-sm font-medium text-gray-900 dark:text-white" for="quantity"><?php echo __t('Quantity'); ?></label>
                             <?php
                             woocommerce_quantity_input(
                                 array(
@@ -143,20 +143,20 @@
                         <div class="flex flex-col gap-3 sm:flex-row">
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:bg-primary/90">
                                 <span class="material-symbols-outlined" data-icon="add_shopping_cart"></span>
-                                <span class="truncate">Add to Cart</span>
+                                <span class="truncate"><?php echo __t('Add to Cart'); ?></span>
                             </button>
                         </div>
                         
                         <!-- Add to Love Button -->
                         <button type="button" class="warafy-wishlist-btn flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors font-medium" data-product-id="<?php echo $product->get_id(); ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                            <span class="btn-text">Add to Love</span>
+                            <span class="btn-text"><?php echo __t('Add to Love'); ?></span>
                         </button>
                     </form>
                     
                     <!-- Tabs / Full Description -->
                     <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Description</h3>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4"><?php echo __t('Description'); ?></h3>
                         <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
                             <?php the_content(); ?>
                         </div>
@@ -164,7 +164,7 @@
 
                     <!-- Comments Section -->
                     <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Have question or opinion? Comment here</h3>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6"><?php echo __t('Have question or opinion? Comment here'); ?></h3>
                         
                         <!-- Comment Form -->
                         <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-6">
@@ -172,24 +172,24 @@
                                 <?php if (!is_user_logged_in()) : ?>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name *</label>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Name'); ?> *</label>
                                             <input type="text" name="user_name" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Email'); ?> *</label>
                                             <input type="email" name="user_email" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
                                         </div>
                                     </div>
                                 <?php endif; ?>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Comment *</label>
-                                    <textarea name="comment_text" rows="4" required maxlength="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Share your thoughts or ask questions about this product..."></textarea>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Comment'); ?> *</label>
+                                    <textarea name="comment_text" rows="4" required maxlength="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="<?php echo __t('Share your thoughts or ask questions about this product...'); ?>"></textarea>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum 1000 characters</p>
                                 </div>
                                 <input type="hidden" name="product_id" value="<?php echo $product->get_id(); ?>">
                                 <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('warafy_comment_nonce'); ?>">
                                 <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                                    Post Comment
+                                    <?php echo __t('Post Comment'); ?>
                                 </button>
                             </form>
                         </div>
@@ -229,7 +229,7 @@
                     <!-- Reviews Section -->
                     <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Customer Reviews</h3>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white"><?php echo __t('Customer Reviews'); ?></h3>
                             <div class="flex items-center gap-2">
                                 <div class="flex text-yellow-500">
                                     <?php
@@ -243,8 +243,8 @@
                                     }
                                     ?>
                                 </div>
-                                <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo $avg_rating; ?> out of 5</span>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">(<?php echo warafy_get_review_count($product->get_id()); ?> reviews)</span>
+                                <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo $avg_rating; ?> <?php echo __t('out of 5'); ?></span>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">(<?php echo warafy_get_review_count($product->get_id()); ?> <?php echo __t('reviews'); ?>)</span>
                             </div>
                         </div>
 
@@ -253,7 +253,7 @@
                             <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-6">
                                 <form id="warafy-review-form" class="space-y-4">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Rating *</label>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Your Rating'); ?> *</label>
                                         <div class="flex gap-2" id="rating-stars">
                                             <?php for ($i = 1; $i <= 5; $i++) : ?>
                                                 <button type="button" class="rating-star text-gray-300 hover:text-yellow-500 transition-colors" data-rating="<?php echo $i; ?>">
@@ -264,14 +264,14 @@
                                         <input type="hidden" name="rating" id="selected-rating" value="0" required>
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Review *</label>
-                                        <textarea name="review_text" rows="4" required maxlength="2000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Share your experience with this product..."></textarea>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Your Review'); ?> *</label>
+                                        <textarea name="review_text" rows="4" required maxlength="2000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="<?php echo __t('Share your experience with this product...'); ?>"></textarea>
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum 2000 characters</p>
                                     </div>
                                     <input type="hidden" name="product_id" value="<?php echo $product->get_id(); ?>">
                                     <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('warafy_review_nonce'); ?>">
                                     <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                                        Submit Review
+                                        <?php echo __t('Submit Review'); ?>
                                     </button>
                                 </form>
                             </div>
@@ -439,7 +439,7 @@
                         <div class="flex-1 flex flex-col gap-2">
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg w-full">
                                 <span class="material-symbols-outlined" data-icon="shopping_bag"></span>
-                                Add to Cart
+                                <?php echo __t('Add to Cart'); ?>
                             </button>
                         </div>
                     </form>
@@ -454,7 +454,7 @@
                 <div class="flex flex-col gap-2 border-t border-slate-200 dark:border-slate-700 pt-6">
                     <details class="group" open>
                         <summary class="flex justify-between items-center cursor-pointer py-3 list-none">
-                            <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold">Product Description</h4>
+                            <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold"><?php echo __t('Product Description'); ?></h4>
                             <span class="material-symbols-outlined text-slate-500 transition-transform duration-300 group-open:rotate-180" data-icon="expand_more"></span>
                         </summary>
                         <div class="pb-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
@@ -465,7 +465,7 @@
 
                 <!-- Comments Section -->
                 <div class="flex flex-col gap-4 border-t border-slate-200 dark:border-slate-700 pt-6">
-                    <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold">Have question or opinion? Comment here</h4>
+                    <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold"><?php echo __t('Have question or opinion? Comment here'); ?></h4>
                     
                     <!-- Comment Form -->
                     <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4">
@@ -473,24 +473,24 @@
                             <?php if (!is_user_logged_in()) : ?>
                                 <div class="space-y-3">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name *</label>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Name'); ?> *</label>
                                         <input type="text" name="user_name" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email *</label>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Email'); ?> *</label>
                                         <input type="email" name="user_email" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
                                     </div>
                                 </div>
                             <?php endif; ?>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Comment *</label>
-                                <textarea name="comment_text" rows="3" required maxlength="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Share your thoughts..."></textarea>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Comment'); ?> *</label>
+                                <textarea name="comment_text" rows="3" required maxlength="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="<?php echo __t('Share your thoughts...'); ?>"></textarea>
                                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum 1000 characters</p>
                             </div>
                             <input type="hidden" name="product_id" value="<?php echo $product->get_id(); ?>">
                             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('warafy_comment_nonce'); ?>">
                             <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium">
-                                Post Comment
+                                <?php echo __t('Post Comment'); ?>
                             </button>
                         </form>
                     </div>
@@ -528,7 +528,7 @@
                 <!-- Reviews Section -->
                 <div class="flex flex-col gap-4 border-t border-slate-200 dark:border-slate-700 pt-6">
                     <div class="flex items-center justify-between">
-                        <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold">Customer Reviews</h4>
+                        <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold"><?php echo __t('Customer Reviews'); ?></h4>
                         <div class="flex items-center gap-1">
                             <div class="flex text-yellow-500">
                                 <?php
@@ -551,7 +551,7 @@
                         <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4">
                             <form id="warafy-review-form-mobile" class="space-y-3">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Rating *</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Your Rating'); ?> *</label>
                                     <div class="flex gap-1 justify-center" id="rating-stars-mobile">
                                         <?php for ($i = 1; $i <= 5; $i++) : ?>
                                             <button type="button" class="rating-star text-gray-300 hover:text-yellow-500 transition-colors p-1" data-rating="<?php echo $i; ?>">
@@ -562,14 +562,14 @@
                                     <input type="hidden" name="rating" id="selected-rating-mobile" value="0" required>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Review *</label>
-                                    <textarea name="review_text" rows="3" required maxlength="2000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Share your experience..."></textarea>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Your Review'); ?> *</label>
+                                    <textarea name="review_text" rows="3" required maxlength="2000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="<?php echo __t('Share your experience...'); ?>"></textarea>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum 2000 characters</p>
                                 </div>
                                 <input type="hidden" name="product_id" value="<?php echo $product->get_id(); ?>">
                                 <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('warafy_review_nonce'); ?>">
                                 <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium">
-                                    Submit Review
+                                    <?php echo __t('Submit Review'); ?>
                                 </button>
                             </form>
                         </div>

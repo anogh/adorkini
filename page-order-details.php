@@ -57,16 +57,16 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
             <div>
                 <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-3">
                     <span class="material-symbols-outlined text-4xl lg:text-5xl text-purple-600" data-icon="receipt_long"></span>
-                    Order Details
+                    <?php echo __t('Order Details'); ?>
                 </h1>
-                <p class="text-gray-600 dark:text-gray-300 max-w-3xl">View the order details below. Some information has been masked for privacy protection.</p>
+                <p class="text-gray-600 dark:text-gray-300 max-w-3xl"><?php echo __t('View the order details below. Some information has been masked for privacy protection.'); ?></p>
             </div>
 
             <?php if ($order) : ?>
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
                     <div class="flex items-center justify-between mb-8">
                         <div>
-                            <p class="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1">Order Number</p>
+                            <p class="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-1"><?php echo __t('Order Number'); ?></p>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
                                 <?php 
                                 $custom_number = $order->get_meta('_warafy_order_number');
@@ -87,19 +87,19 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         <div class="space-y-2">
-                            <p class="text-gray-500 dark:text-gray-400 text-sm">Order Date</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm"><?php echo __t('Date'); ?></p>
                             <p class="text-gray-900 dark:text-white font-semibold"><?php echo esc_html(wc_format_datetime($order->get_date_created())); ?></p>
                         </div>
                         <div class="space-y-2">
-                            <p class="text-gray-500 dark:text-gray-400 text-sm">Status</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm"><?php echo __t('Status'); ?></p>
                             <p class="text-gray-900 dark:text-white font-semibold"><?php echo esc_html(wc_get_order_status_name($order->get_status())); ?></p>
                         </div>
                         <div class="space-y-2">
-                            <p class="text-gray-500 dark:text-gray-400 text-sm">Total</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm"><?php echo __t('Total'); ?></p>
                             <p class="text-gray-900 dark:text-white font-semibold text-lg"><?php echo wp_kses_post($order->get_formatted_order_total()); ?></p>
                         </div>
                         <div class="space-y-2">
-                            <p class="text-gray-500 dark:text-gray-400 text-sm">Payment</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm"><?php echo __t('Payment'); ?></p>
                             <p class="text-gray-900 dark:text-white font-semibold"><?php echo wp_kses_post($order->get_payment_method_title()); ?></p>
                         </div>
                     </div>
@@ -108,27 +108,27 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
                     <div class="mb-8 p-6 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                             <span class="material-symbols-outlined" data-icon="person"></span>
-                            Customer Information
+                            <?php echo __t('Customer Information'); ?>
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm mb-1">Name</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm mb-1"><?php echo __t('Name'); ?></p>
                                 <p class="text-gray-900 dark:text-white font-medium"><?php echo esc_html(warafy_mask_name($order->get_formatted_billing_full_name())); ?></p>
                             </div>
                             <?php if ($order->get_billing_phone()) : ?>
                                 <div>
-                                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-1">Phone</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-1"><?php echo __t('Phone'); ?></p>
                                     <p class="text-gray-900 dark:text-white font-medium"><?php echo esc_html(warafy_mask_phone($order->get_billing_phone())); ?></p>
                                 </div>
                             <?php endif; ?>
                             <?php if ($order->get_billing_email()) : ?>
                                 <div>
-                                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-1">Email</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-1"><?php echo __t('Email'); ?></p>
                                     <p class="text-gray-900 dark:text-white font-medium"><?php echo esc_html(warafy_mask_email($order->get_billing_email())); ?></p>
                                 </div>
                             <?php endif; ?>
                             <div class="md:col-span-2">
-                                <p class="text-gray-500 dark:text-gray-400 text-sm mb-1">Address</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm mb-1"><?php echo __t('Address'); ?></p>
                                 <p class="text-gray-900 dark:text-white font-medium"><?php echo esc_html(warafy_mask_address($order->get_formatted_billing_address())); ?></p>
                             </div>
                         </div>
@@ -138,7 +138,7 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
                     <div class="mb-8">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                             <span class="material-symbols-outlined" data-icon="inventory_2"></span>
-                            Order Items
+                            <?php echo __t('Order Items'); ?>
                         </h3>
                         <div class="space-y-4">
                             <?php foreach ($order->get_items() as $item_id => $item) :
@@ -158,8 +158,8 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
                                             <p class="text-sm text-gray-500 dark:text-gray-400">SKU: <?php echo esc_html($product->get_sku()); ?></p>
                                         <?php endif; ?>
                                         <div class="flex items-center gap-4 mt-2">
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">Quantity: <?php echo esc_html($item->get_quantity()); ?></p>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">Price: <?php echo wp_kses_post(wc_price($item->get_total() / $item->get_quantity())); ?></p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400"><?php echo __t('Quantity'); ?>: <?php echo esc_html($item->get_quantity()); ?></p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400"><?php echo __t('Price'); ?>: <?php echo wp_kses_post(wc_price($item->get_total() / $item->get_quantity())); ?></p>
                                         </div>
                                     </div>
                                     <div class="text-right">
@@ -172,7 +172,7 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
 
                     <!-- Order Summary -->
                     <div class="p-6 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Order Summary</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4"><?php echo __t('Order Summary'); ?></h3>
                         <div class="space-y-3 text-sm">
                             <?php foreach ($order->get_order_item_totals() as $key => $total) : ?>
                                 <div class="flex justify-between text-gray-700 dark:text-gray-200 <?php echo esc_attr('order-total' === $key ? 'text-base font-bold pt-3 border-t border-gray-200 dark:border-gray-700 mt-3' : ''); ?>">
@@ -184,7 +184,7 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
                         
                         <?php if ($order->get_customer_note()) : ?>
                             <div class="mt-6 p-4 rounded-xl bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200">
-                                <p class="font-semibold mb-2">Order Note</p>
+                                <p class="font-semibold mb-2"><?php echo __t('Order Note'); ?></p>
                                 <p><?php echo esc_html($order->get_customer_note()); ?></p>
                             </div>
                         <?php endif; ?>
@@ -194,11 +194,11 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
                     <div class="mt-8 flex flex-wrap gap-4">
                         <a href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition">
                             <span class="material-symbols-outlined text-base" data-icon="storefront"></span>
-                            Continue Shopping
+                            <?php echo __t('Continue Shopping'); ?>
                         </a>
                         <a href="<?php echo esc_url(get_home_url()); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                             <span class="material-symbols-outlined text-base" data-icon="home"></span>
-                            Back to Home
+                            <?php echo __t('Back to Home'); ?>
                         </a>
                     </div>
                 </div>
@@ -206,16 +206,16 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
             <?php else : ?>
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 text-center">
                     <span class="material-symbols-outlined text-6xl text-red-500 mb-4" data-icon="error"></span>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Order Not Found</h2>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6">The order you're looking for could not be found or the link has expired.</p>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3"><?php echo __t('Order Not Found'); ?></h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6"><?php echo __t('The order you\'re looking for could not be found or the link has expired.'); ?></p>
                     <div class="flex flex-wrap items-center justify-center gap-4">
                         <a href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition">
                             <span class="material-symbols-outlined text-base" data-icon="storefront"></span>
-                            Continue Shopping
+                            <?php echo __t('Continue Shopping'); ?>
                         </a>
                         <a href="<?php echo esc_url(get_home_url()); ?>" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                             <span class="material-symbols-outlined text-base" data-icon="home"></span>
-                            Back to Home
+                            <?php echo __t('Back to Home'); ?>
                         </a>
                     </div>
                 </div>

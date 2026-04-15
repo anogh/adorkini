@@ -24,17 +24,17 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
             <div class="mb-8">
                 <nav class="text-sm mb-6">
                     <ol class="flex items-center space-x-2 text-gray-500">
-                        <li><a href="<?php echo home_url(); ?>" class="hover:text-blue-600 transition-colors">Home</a></li>
+                        <li><a href="<?php echo home_url(); ?>" class="hover:text-blue-600 transition-colors"><?php echo __t('Home'); ?></a></li>
                         <li><span class="mx-2">/</span></li>
-                        <li><a href="<?php echo wc_get_cart_url(); ?>" class="hover:text-blue-600 transition-colors">Cart</a></li>
+                        <li><a href="<?php echo wc_get_cart_url(); ?>" class="hover:text-blue-600 transition-colors"><?php echo __t('Cart'); ?></a></li>
                         <li><span class="mx-2">/</span></li>
-                        <li class="text-gray-900 dark:text-white font-medium">Checkout</li>
+                        <li class="text-gray-900 dark:text-white font-medium"><?php echo __t('Checkout'); ?></li>
                     </ol>
                 </nav>
 
                 <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
                     <span class="material-symbols-outlined text-4xl lg:text-5xl text-purple-600" data-icon="shopping_bag"></span>
-                    Secure Checkout
+                    <?php echo __t('Secure Checkout'); ?>
                 </h1>
 
                 <!-- Progress Steps -->
@@ -44,21 +44,21 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                             <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center mb-2 shadow-lg">
                                 <span class="material-symbols-outlined" data-icon="check"></span>
                             </div>
-                            <span class="text-sm font-semibold text-gray-900 dark:text-white">Cart</span>
+                            <span class="text-sm font-semibold text-gray-900 dark:text-white"><?php echo __t('Cart'); ?></span>
                         </div>
                         <div class="flex-1 h-1 bg-purple-500 mx-2"></div>
                         <div class="flex flex-col items-center flex-1">
                             <div class="w-12 h-12 rounded-full <?php echo $is_order_received ? 'bg-green-500' : 'bg-purple-600'; ?> text-white flex items-center justify-center mb-2 shadow-lg <?php echo $is_order_received ? '' : 'animate-pulse'; ?>">
                                 <span class="material-symbols-outlined"><?php echo $is_order_received ? 'check' : 'edit_note'; ?></span>
                             </div>
-                            <span class="text-sm font-semibold <?php echo $is_order_received ? 'text-gray-900 dark:text-white' : 'text-purple-600'; ?>">Checkout</span>
+                            <span class="text-sm font-semibold <?php echo $is_order_received ? 'text-gray-900 dark:text-white' : 'text-purple-600'; ?>"><?php echo __t('Checkout'); ?></span>
                         </div>
                         <div class="flex-1 h-1 <?php echo $is_order_received ? 'bg-purple-500' : 'bg-gray-300 dark:bg-gray-600'; ?> mx-2"></div>
                         <div class="flex flex-col items-center flex-1">
                             <div class="w-12 h-12 rounded-full <?php echo $is_order_received ? 'bg-purple-600 text-white animate-pulse' : 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400'; ?> flex items-center justify-center mb-2">
                                 <span class="material-symbols-outlined" data-icon="task_alt"></span>
                             </div>
-                            <span class="text-sm font-medium <?php echo $is_order_received ? 'text-purple-600' : 'text-gray-500 dark:text-gray-400'; ?>">Complete</span>
+                            <span class="text-sm font-medium <?php echo $is_order_received ? 'text-purple-600' : 'text-gray-500 dark:text-gray-400'; ?>"><?php echo __t('Complete'); ?></span>
                         </div>
                     </div>
                 </div>
@@ -89,10 +89,10 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                         if (WC()->cart->is_empty() && !$allow_empty_cart_checkout) {
                             echo '<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-12 text-center">';
                             echo '<span class="material-symbols-outlined text-9xl text-gray-300 mb-6" data-icon="shopping_cart"></span>';
-                            echo '<h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Your cart is empty</h2>';
-                            echo '<p class="text-gray-600 dark:text-gray-400 mb-8">Please add items to your cart before proceeding to checkout.</p>';
+                            echo '<h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">' . __t('Your cart is empty') . '</h2>';
+                            echo '<p class="text-gray-600 dark:text-gray-400 mb-8">' . __t('Please add items to your cart before proceeding to checkout.') . '</p>';
                             echo '<a href="' . get_permalink(wc_get_page_id('shop')) . '" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-purple-800 transition-all transform hover:scale-105 shadow-lg">';
-                            echo '<span class="material-symbols-outlined" data-icon="storefront"></span> Continue Shopping</a>';
+                            echo '<span class="material-symbols-outlined" data-icon="storefront"></span> ' . __t('Continue Shopping') . '</a>';
                             echo '</div>';
                         } else {
                             echo do_shortcode('[woocommerce_checkout]');
@@ -110,7 +110,7 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white flex items-center justify-center shadow-lg">
                                     <span class="material-symbols-outlined text-2xl" data-icon="receipt_long"></span>
                                 </div>
-                                Order Summary
+                                <?php echo __t('Order Summary'); ?>
                             </h3>
                             
                             <div class="space-y-4" id="desktop-order-summary">
@@ -131,7 +131,7 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                                 </div>
                                                 <div class="flex-1 min-w-0">
                                                     <h4 class="font-semibold text-gray-900 dark:text-white text-sm truncate"><?php echo esc_html($product_name); ?></h4>
-                                                    <p class="text-xs text-gray-600 dark:text-gray-400">Quantity: <?php echo esc_html($quantity); ?></p>
+                                                    <p class="text-xs text-gray-600 dark:text-gray-400"><?php echo __t('Quantity'); ?>: <?php echo esc_html($quantity); ?></p>
                                                 </div>
                                                 <div class="text-right">
                                                     <p class="font-semibold text-gray-900 dark:text-white text-sm"><?php echo $product_subtotal; ?></p>
@@ -143,14 +143,14 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                     <!-- Price Summary -->
                                     <div class="space-y-2">
                                         <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                                            <span>Subtotal</span>
+                                            <span><?php echo __t('Subtotal'); ?></span>
                                             <span><?php echo WC()->cart->get_cart_subtotal(); ?></span>
                                         </div>
                                         
                                         <?php if (WC()->cart->needs_shipping() && WC()->cart->show_shipping()) : ?>
                                             <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                                                <span>Shipping</span>
-                                                <span>Calculated at next step</span>
+                                                <span><?php echo __t('Shipping'); ?></span>
+                                                <span><?php echo __t('Calculated at next step'); ?></span>
                                             </div>
                                         <?php endif; ?>
                                         
@@ -163,14 +163,14 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                         
                                         <?php if (WC()->cart->get_discount_tax()) : ?>
                                             <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                                                <span>Discount</span>
+                                                <span><?php echo __t('Discount'); ?></span>
                                                 <span>-<?php echo wc_price(WC()->cart->get_discount_total()); ?></span>
                                             </div>
                                         <?php endif; ?>
                                         
                                         <div class="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
                                             <div class="flex justify-between text-lg font-bold text-gray-900 dark:text-white">
-                                                <span>Total</span>
+                                                <span><?php echo __t('Total'); ?></span>
                                                 <span class="text-purple-600 dark:text-purple-400"><?php echo WC()->cart->get_total(); ?></span>
                                             </div>
                                         </div>
@@ -181,11 +181,11 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                         <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                                             <span class="material-symbols-outlined text-2xl text-gray-400" data-icon="shopping_cart"></span>
                                         </div>
-                                        <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Your cart is empty</h4>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Add items to your cart to see them here</p>
+                                        <h4 class="font-semibold text-gray-900 dark:text-white mb-2"><?php echo __t('Your cart is empty'); ?></h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4"><?php echo __t('Add items to your cart to see them here'); ?></p>
                                         <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>" class="inline-flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
                                             <span class="material-symbols-outlined text-lg" data-icon="storefront"></span>
-                                            Continue Shopping
+                                            <?php echo __t('Continue Shopping'); ?>
                                         </a>
                                     </div>
                                 <?php endif; ?>
@@ -199,16 +199,16 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                     <span class="material-symbols-outlined text-white" data-icon="security"></span>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-green-800 dark:text-green-200">Secure Checkout</h4>
-                                    <p class="text-sm text-green-600 dark:text-green-400">Your data is protected</p>
+                                    <h4 class="font-semibold text-green-800 dark:text-green-200"><?php echo __t('Secure Checkout'); ?></h4>
+                                    <p class="text-sm text-green-600 dark:text-green-400"><?php echo __t('Your data is protected'); ?></p>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Help Section -->
                         <div class="text-center">
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Need help?</p>
-                            <a href="#" class="text-purple-600 hover:text-purple-700 font-medium text-sm">Contact Support</a>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2"><?php echo __t('Need Help?'); ?></p>
+                            <a href="#" class="text-purple-600 hover:text-purple-700 font-medium text-sm"><?php echo __t('Contact Support'); ?></a>
                         </div>
                     </div>
                 </div>

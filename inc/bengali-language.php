@@ -360,6 +360,11 @@ function __t($text) {
     return $text;
 }
 
+function warafy_is_bengali() {
+    $lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
+    return $lang === 'bn';
+}
+
 // Handle language switch via GET parameter
 add_action('init', 'warafy_handle_language_switch');
 function warafy_handle_language_switch() {

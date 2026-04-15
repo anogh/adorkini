@@ -9,7 +9,7 @@ get_header(); ?>
     <div class="container mx-auto px-4 py-6">
         <!-- Page Title -->
         <div class="flex flex-wrap justify-between gap-3 p-4">
-            <p class="text-slate-900 dark:text-white text-2xl font-black leading-tight tracking-[-0.033em]">Shop by Category</p>
+            <p class="text-slate-900 dark:text-white text-2xl font-black leading-tight tracking-[-0.033em]"><?php echo __t('Shop by Category'); ?></p>
         </div>
 
         <!-- Horizontal Categories Scroll -->
@@ -90,16 +90,16 @@ get_header(); ?>
                                 </div>
                                 <div class="flex gap-2">
                                     <?php if ($product->is_in_stock()) : ?>
-                                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
+                                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
                                             <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text truncate">Add</span>
+                                            <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                                             <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                            <span class="added-text hidden truncate">Added</span>
+                                            <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                         </button>
                                     <?php else : ?>
-                                        <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="Out of Stock">
+                                        <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="<?php echo __t('Out of Stock'); ?>">
                                             <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
-                                            <span class="truncate">Out of Stock</span>
+                                            <span class="truncate"><?php echo __t('Out of Stock'); ?></span>
                                         </button>
                                     <?php endif; ?>
                                     <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
@@ -139,7 +139,7 @@ get_header(); ?>
         <div class="container mx-auto px-4 py-6">
             <!-- Page Title -->
             <div class="flex flex-wrap justify-between gap-3 p-4">
-                <p class="text-slate-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Shop by Category</p>
+                <p class="text-slate-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]"><?php echo __t('Shop by Category'); ?></p>
             </div>
 
             <!-- Horizontal Categories Scroll -->
@@ -221,19 +221,19 @@ get_header(); ?>
                                     <div class="flex gap-2">
                                         <div class="flex-1 flex flex-col gap-2">
                                             <?php if ($product->is_in_stock()) : ?>
-                                                <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="Buy Now">
-                                                    <span class="truncate">Buy Now</span>
+                                                <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="<?php echo __t('Buy Now'); ?>">
+                                                    <span class="truncate"><?php echo __t('Buy Now'); ?></span>
                                                 </a>
-                                                <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="Add to Cart">
+                                                <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
                                                     <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                                    <span class="add-text truncate">Add</span>
+                                                    <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                                                     <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                                    <span class="added-text hidden truncate">Added</span>
+                                                    <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                                 </button>
                                             <?php else : ?>
-                                                <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="Out of Stock">
+                                                <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="<?php echo __t('Out of Stock'); ?>">
                                                     <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
-                                                    <span class="truncate">Out of Stock</span>
+                                                    <span class="truncate"><?php echo __t('Out of Stock'); ?></span>
                                                 </button>
                                             <?php endif; ?>
                                         </div>

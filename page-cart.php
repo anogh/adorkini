@@ -60,7 +60,7 @@ $is_cart_empty = WC()->cart->is_empty();
                             <div class="relative">
                                 <a href="<?php echo get_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
                                 <?php if ($product->is_on_sale()) : ?>
-                                    <span class="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">SALE</span>
+                                    <span class="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded"><?php echo __t('Sale!'); ?></span>
                                 <?php endif; ?>
                             </div>
                             <div class="flex flex-col flex-1 justify-between gap-4">
