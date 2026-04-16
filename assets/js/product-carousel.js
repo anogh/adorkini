@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function startDesktopInterval() {
             if (desktopCarouselItems.length > 1) {
-                desktopInterval = setInterval(nextDesktopSlide, 5000);
+                desktopInterval = setInterval(nextDesktopSlide, 6000);
             }
         }
 
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function startMobileInterval() {
             if (mobileCarouselItems.length > 1) {
-                mobileInterval = setInterval(nextMobileSlide, 5000);
+                mobileInterval = setInterval(nextMobileSlide, 6000);
             }
         }
 
@@ -164,5 +164,61 @@ document.addEventListener('DOMContentLoaded', function() {
         
         startMobileInterval(); // Start auto-sliding for mobile
         updateMobileCarousel(); // Initial update
+    }
+
+    // Product Image Modal
+    const modal = document.getElementById('warafy-product-image-modal');
+    const modalPanel = document.getElementById('warafy-product-image-modal-panel');
+    const modalImage = document.getElementById('warafy-product-image-modal-image');
+    const modalClose = document.getElementById('warafy-product-image-modal-close');
+
+    if (modal && modalPanel && modalImage && modalClose) {
+        let currentModalImageIndex = 0;
+        let modalImageUrls = [];
+
+        function openModal(imageUrl, imageAlt, imageIndex = 0) {
+            modalImage.src = imageUrl;
+            modalImage.alt = imageAlt;
+            currentModalImageIndex = imageIndex;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        // Open modal on image click
+        document.addEventListener('click', (e) => {
+            const imageItem = e.target.closest('.desktop-carousel-item, .mobile-carousel-item');
+            if (imageItem && imageItem.dataset.imageUrl) {
+                const imageUrl = imageItem.dataset.imageUrl;
+                const imageAlt = imageItem.dataset.imageAlt || '';
+                const imageIndex = parseInt(imageItem.dataset.imageIndex) || 0;
+                openModal(imageUrl, imageAlt, imageIndex);
+            }
+        });
+
+        // Close modal on close button click
+        modalClose.addEventListener('click', closeModal);
+
+        // Close modal on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
     }
 });

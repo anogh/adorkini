@@ -34,7 +34,7 @@
                             <?php foreach ($all_image_ids as $index => $attachment_id) :
                                 $image_url_full = wp_get_attachment_image_url($attachment_id, 'full');
                             ?>
-                                <div class="desktop-carousel-item absolute inset-0 w-full h-full bg-center bg-no-repeat bg-contain transition-opacity duration-300 ease-in-out <?php echo $index === 0 ? 'opacity-100' : 'opacity-0'; ?>" style="background-image: url('<?php echo esc_url($image_url_full); ?>');" data-image-index="<?php echo $index; ?>"></div>
+                                <div class="desktop-carousel-item absolute inset-0 w-full h-full bg-center bg-no-repeat bg-contain transition-opacity duration-300 ease-in-out cursor-zoom-in <?php echo $index === 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'; ?>" style="background-image: url('<?php echo esc_url($image_url_full); ?>');" data-image-index="<?php echo $index; ?>" data-image-url="<?php echo esc_url($image_url_full); ?>" data-image-alt="<?php echo esc_attr( $product->get_name() ); ?>"></div>
                             <?php endforeach; ?>
                         <?php else : ?>
                             <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>
@@ -354,7 +354,7 @@
                         <?php foreach ($all_image_ids as $attachment_id) :
                             $image_url_large = wp_get_attachment_image_url($attachment_id, 'large');
                         ?>
-                            <div class="mobile-carousel-item flex-shrink-0 w-full aspect-square bg-center bg-no-repeat bg-contain" style='background-image: url("<?php echo esc_url($image_url_large); ?>");'></div>
+                            <div class="mobile-carousel-item flex-shrink-0 w-full aspect-square bg-center bg-no-repeat bg-contain cursor-zoom-in" style='background-image: url("<?php echo esc_url($image_url_large); ?>");' data-image-url="<?php echo esc_url(wp_get_attachment_image_url($attachment_id, 'full')); ?>" data-image-alt="<?php echo esc_attr( $product->get_name() ); ?>"></div>
                         <?php endforeach; ?>
                     </div>
                     <?php if (count($all_image_ids) > 1) : ?>
@@ -637,6 +637,16 @@
                         </div>
                     </div>
                 </div>
+                </div>
+            </div>
+
+        <!-- Product Image Modal -->
+        <div id="warafy-product-image-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4" aria-hidden="true">
+            <div id="warafy-product-image-modal-panel" class="relative overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-gray-900" role="dialog" aria-modal="true" style="width: 75vw; height: 75vh;">
+                <button type="button" id="warafy-product-image-modal-close" class="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70" aria-label="Close image modal">
+                    <span class="material-symbols-outlined" data-icon="close"></span>
+                </button>
+                <img id="warafy-product-image-modal-image" src="" alt="<?php echo esc_attr( $product->get_name() ); ?>" class="block h-full w-full bg-black/5 object-contain">
             </div>
         </div>
 
