@@ -353,16 +353,7 @@ nav.fixed.bottom-0 > div > a:last-child {
                             <h3 class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo $total_spent; ?></h3>
                         </div>
                     </div>
-                    <!-- Stats Card 3 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-500/10 flex items-center justify-center text-red-600 dark:text-red-400">
-                            <span class="material-symbols-outlined text-2xl" data-icon="favorite"></span>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider"><?php echo __t('Wishlist'); ?></p>
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white" id="dashboard-wishlist-count">0</h3>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -656,11 +647,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fetch Wishlist Items for Dashboard Card
-    if (document.getElementById('dashboard-wishlist-count')) {
-        const wishlist = JSON.parse(localStorage.getItem('warafy_wishlist') || '[]');
-        document.getElementById('dashboard-wishlist-count').textContent = wishlist.length;
-    }
+
 });
 </script>
 

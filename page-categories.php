@@ -88,9 +88,9 @@ get_header(); ?>
                                     </h3>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                                 </div>
-                                <div class="flex gap-2">
+                                <div>
                                     <?php if ($product->is_in_stock()) : ?>
-                                        <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
+                                        <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
                                             <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
                                             <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                                             <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
@@ -102,9 +102,6 @@ get_header(); ?>
                                             <span class="truncate"><?php echo __t('Out of Stock'); ?></span>
                                         </button>
                                     <?php endif; ?>
-                                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -218,28 +215,23 @@ get_header(); ?>
                                         </h3>
                                         <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                                     </div>
-                                    <div class="flex gap-2">
-                                        <div class="flex-1 flex flex-col gap-2">
-                                            <?php if ($product->is_in_stock()) : ?>
-                                                <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="<?php echo __t('Buy Now'); ?>">
-                                                    <span class="truncate"><?php echo __t('Buy Now'); ?></span>
-                                                </a>
-                                                <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
-                                                    <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                                    <span class="add-text truncate"><?php echo __t('Add'); ?></span>
-                                                    <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                                    <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                                                </button>
-                                            <?php else : ?>
-                                                <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="<?php echo __t('Out of Stock'); ?>">
-                                                    <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
-                                                    <span class="truncate"><?php echo __t('Out of Stock'); ?></span>
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
-                                        <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                                        </button>
+                                    <div>
+                                        <?php if ($product->is_in_stock()) : ?>
+                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="<?php echo __t('Buy Now'); ?>">
+                                                <span class="truncate"><?php echo __t('Buy Now'); ?></span>
+                                            </a>
+                                            <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
+                                                <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                                <span class="add-text truncate"><?php echo __t('Add'); ?></span>
+                                                <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                                <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
+                                            </button>
+                                        <?php else : ?>
+                                            <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="<?php echo __t('Out of Stock'); ?>">
+                                                <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
+                                                <span class="truncate"><?php echo __t('Out of Stock'); ?></span>
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>

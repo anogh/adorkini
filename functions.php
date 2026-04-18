@@ -178,16 +178,13 @@ function warafy_load_recommendations_ajax() {
                     </h3>
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                 </div>
-                <!-- Action Buttons: Add to Cart & Wishlist -->
-                <div class="flex gap-2">
-                    <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
+                <!-- Action Buttons: Add to Cart -->
+                <div>
+                    <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
                         <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
                         <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                         <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                         <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                    </button>
-                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                     </button>
                 </div>
             </div>
@@ -282,16 +279,13 @@ function warafy_load_related_products_ajax() {
                     </h3>
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                 </div>
-                <!-- Action Buttons: Add to Cart & Wishlist -->
-                <div class="flex gap-2">
-                    <button class="add-to-cart-btn flex-1 flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
+                <!-- Action Buttons: Add to Cart -->
+                <div>
+                    <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
                         <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
                         <span class="add-text truncate"><?php echo __t('Add'); ?></span>
                         <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                         <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                    </button>
-                    <button class="warafy-wishlist-btn flex-none w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                     </button>
                 </div>
             </div>
@@ -1229,108 +1223,7 @@ function warafy_resend_verification_email() {
     }
 }
 
-/* Wishlist Functionality */
-function warafy_wishlist_scripts() {
-    ?>
-    <script>
-    // Make wishlist functions globally accessible
-    window.getWishlist = function() {
-        const wishlist = localStorage.getItem('warafy_wishlist');
-        return wishlist ? JSON.parse(wishlist) : [];
-    };
 
-    window.updateWishlistCount = function() {
-        const wishlist = window.getWishlist();
-        const count = wishlist.length;
-        document.querySelectorAll('.warafy-wishlist-count').forEach(el => {
-            el.textContent = count;
-            el.style.display = count > 0 ? 'flex' : 'none';
-        });
-        
-        // Update button states on page load
-        document.querySelectorAll('.warafy-wishlist-btn').forEach(btn => {
-            if (wishlist.includes(btn.dataset.productId)) {
-                btn.classList.add('active');
-                btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
-                btn.classList.remove('border-gray-300', 'text-gray-600');
-                
-                const btnText = btn.querySelector('.btn-text');
-                if(btnText) {
-                    btnText.textContent = 'Loved!';
-                }
-                
-                if(btn.querySelector('.material-symbols-outlined')) {
-                    btn.querySelector('.material-symbols-outlined').dataset.icon = 'favorite';
-                    btn.querySelector('.material-symbols-outlined').classList.add('text-white');
-                }
-            }
-        });
-    };
-
-    window.toggleWishlist = function(productId, btn) {
-        let wishlist = window.getWishlist();
-        const index = wishlist.indexOf(productId);
-        
-        if (index > -1) {
-            // Remove from wishlist
-            wishlist.splice(index, 1);
-            btn.classList.remove('active');
-            btn.classList.remove('bg-green-500', 'text-white', 'border-green-500');
-            btn.classList.add('border-gray-300', 'text-gray-600');
-            
-            const btnText = btn.querySelector('.btn-text');
-            if(btnText) {
-                btnText.textContent = 'Loved it? Add to love.';
-            }
-            
-            if(btn.querySelector('.material-symbols-outlined')) {
-                btn.querySelector('.material-symbols-outlined').dataset.icon = 'favorite_border';
-                btn.querySelector('.material-symbols-outlined').classList.remove('text-white');
-            }
-        } else {
-            // Add to wishlist
-            wishlist.push(productId);
-            btn.classList.add('active');
-            btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
-            btn.classList.remove('border-gray-300', 'text-gray-600');
-            
-            const btnText = btn.querySelector('.btn-text');
-            if(btnText) {
-                btnText.textContent = 'Loved!';
-            }
-            
-            if(btn.querySelector('.material-symbols-outlined')) {
-                btn.querySelector('.material-symbols-outlined').dataset.icon = 'favorite';
-                btn.querySelector('.material-symbols-outlined').classList.add('text-white');
-            }
-        }
-        
-        localStorage.setItem('warafy_wishlist', JSON.stringify(wishlist));
-        window.updateWishlistCount();
-        
-        // If on wishlist page, reload to update list
-        if (document.body.classList.contains('page-template-page-my-love') || window.location.pathname.includes('/my-love')) {
-            location.reload();
-        }
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        window.updateWishlistCount();
-        
-        // Handle Add to Wishlist Click
-        document.body.addEventListener('click', function(e) {
-            if (e.target.closest('.warafy-wishlist-btn')) {
-                e.preventDefault();
-                const btn = e.target.closest('.warafy-wishlist-btn');
-                const productId = btn.dataset.productId;
-                window.toggleWishlist(productId, btn);
-            }
-        });
-    });
-    </script>
-    <?php
-}
-add_action('wp_footer', 'warafy_wishlist_scripts');
 
 /* Product Ranking System */
 // Add admin menu for product ranking
@@ -1604,25 +1497,7 @@ function warafy_get_ranked_products($type = 'homepage', $limit = null) {
     return $rankings;
 }
 
-// Shortcode to display wishlist items
-function warafy_wishlist_shortcode($atts) {
-    $atts = shortcode_atts(array(
-        'view' => 'desktop'
-    ), $atts);
-    
-    $container_id = $atts['view'] === 'mobile' ? 'warafy-wishlist-container-mobile' : 'warafy-wishlist-container-desktop';
-    
-    ob_start();
-    ?>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Wishlist shortcode loaded for <?php echo $atts['view']; ?> view');
-        const container = document.getElementById('<?php echo $container_id; ?>');
-        
-        if (!container) {
-            console.error('Wishlist container not found: <?php echo $container_id; ?>');
-            return;
-        }
+
         
         // Clear any existing content first
         container.innerHTML = '';

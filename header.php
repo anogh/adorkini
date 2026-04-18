@@ -296,12 +296,6 @@ $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
 </nav>
 <div class="h-6 w-px bg-gray-700 hidden lg:block"></div>
 <div class="flex items-center gap-2">
-<a href="<?php echo esc_url( home_url( '/my-love' ) ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-    </svg>
-    <span class="warafy-wishlist-count absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-xs font-bold text-primary" style="display: none;">0</span>
-</a>
 <a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -373,30 +367,7 @@ $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
             </div>
         </div>
     </header>
-<?php elseif ( is_page('my-love') ) : ?>
-    <!-- Custom Mobile My Love Header -->
-    <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
-        <div class="container mx-auto px-4">
-            <div class="flex h-16 items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <a href="javascript:history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
-                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
-                    </a>
-                    <h1 class="text-xl font-bold text-gray-900 dark:text-white"><?php echo __t('My Love'); ?></h1>
-                </div>
-                <div class="flex items-center justify-end gap-2">
-                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
-                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="search"></span>
-                    </button>
-                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
-                        <span class="warafy-lang-bn text-gray-900 dark:text-white text-[11px] font-medium whitespace-nowrap">বাংলা</span>
-                        <span class="warafy-lang-en text-[#FFB800] text-[9px] font-medium whitespace-nowrap">English</span>
-                    </button>
-                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
-                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
-                    </button>
-                </div>
-            </div>
+
         </div>
     </header>
 <?php elseif ( (function_exists('is_account_page') && is_account_page()) || is_page('my-account') ) : ?>
