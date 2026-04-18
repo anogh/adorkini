@@ -1,0 +1,376 @@
+/* Modern SVG Icon System - Enhanced styling for better visual appeal */
+.material-symbols-outlined {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+}
+
+/* Enhanced hover effects */
+.material-symbols-outlined:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* Size variants */
+.material-symbols-outlined.icon-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.material-symbols-outlined.icon-md {
+  width: 20px;
+  height: 20px;
+}
+
+.material-symbols-outlined.icon-lg {
+  width: 32px;
+  height: 32px;
+}
+
+.material-symbols-outlined.icon-xl {
+  width: 48px;
+  height: 48px;
+}
+
+/* Individual icon definitions with modern SVGs */
+.material-symbols-outlined[data-icon="account_circle"] {
+  background-image: url('../icons/account_circle.svg');
+}
+
+.material-symbols-outlined[data-icon="add"] {
+  background-image: url('../icons/add.svg');
+}
+
+.material-symbols-outlined[data-icon="add_shopping_cart"] {
+  background-image: url('../icons/add_shopping_cart.svg');
+}
+
+.material-symbols-outlined[data-icon="arrow_back"] {
+  background-image: url('../icons/arrow_back.svg');
+}
+
+.material-symbols-outlined[data-icon="arrow_forward"] {
+  background-image: url('../icons/arrow_forward.svg');
+}
+
+.material-symbols-outlined[data-icon="bolt"] {
+  background-image: url('../icons/bolt.svg');
+}
+
+.material-symbols-outlined[data-icon="category"] {
+  background-image: url('../icons/category.svg');
+}
+
+.material-symbols-outlined[data-icon="celebration"] {
+  background-image: url('../icons/celebration.svg');
+}
+
+.material-symbols-outlined[data-icon="check"] {
+  background-image: url('../icons/check.svg');
+}
+
+.material-symbols-outlined[data-icon="chevron_left"] {
+  background-image: url('../icons/chevron_left.svg');
+}
+
+.material-symbols-outlined[data-icon="chevron_right"] {
+  background-image: url('../icons/chevron_right.svg');
+}
+
+.material-symbols-outlined[data-icon="close"] {
+  background-image: url('../icons/close.svg');
+}
+
+.material-symbols-outlined[data-icon="credit_card"] {
+  background-image: url('../icons/credit_card.svg');
+}
+
+.material-symbols-outlined[data-icon="delete"] {
+  background-image: url('../icons/delete.svg');
+}
+
+.material-symbols-outlined[data-icon="edit"] {
+  background-image: url('../icons/edit.svg');
+}
+
+.material-symbols-outlined[data-icon="emoji_events"] {
+  background-image: url('../icons/emoji_events.svg');
+}
+
+.material-symbols-outlined[data-icon="error"] {
+  background-image: url('../icons/error.svg');
+}
+
+.material-symbols-outlined[data-icon="expand_more"] {
+  background-image: url('../icons/expand_more.svg');
+}
+
+.material-symbols-outlined[data-icon="favorite"] {
+  background-image: url('../icons/favorite.svg');
+}
+
+.material-symbols-outlined[data-icon="favorite_border"] {
+  background-image: url('../icons/favorite_border.svg');
+}
+
+.material-symbols-outlined[data-icon="help_outline"] {
+  background-image: url('../icons/help_outline.svg');
+}
+
+.material-symbols-outlined[data-icon="history"] {
+  background-image: url('../icons/history.svg');
+}
+
+.material-symbols-outlined[data-icon="home"] {
+  background-image: url('../icons/home.svg');
+}
+
+.material-symbols-outlined[data-icon="info"] {
+  background-image: url('../icons/info.svg');
+}
+
+.material-symbols-outlined[data-icon="inventory_2"] {
+  background-image: url('../icons/inventory_2.svg');
+}
+
+.material-symbols-outlined[data-icon="local_offer"] {
+  background-image: url('../icons/local_offer.svg');
+}
+
+.material-symbols-outlined[data-icon="local_shipping"] {
+  background-image: url('../icons/local_shipping.svg');
+}
+
+.material-symbols-outlined[data-icon="login"] {
+  background-image: url('../icons/login.svg');
+}
+
+.material-symbols-outlined[data-icon="logout"] {
+  background-image: url('../icons/logout.svg');
+}
+
+.material-symbols-outlined[data-icon="more_vert"] {
+  background-image: url('../icons/more_vert.svg');
+}
+
+.material-symbols-outlined[data-icon="note_add"] {
+  background-image: url('../icons/note_add.svg');
+}
+
+.material-symbols-outlined[data-icon="package"] {
+  background-image: url('../icons/package.svg');
+}
+
+.material-symbols-outlined[data-icon="payment"] {
+  background-image: url('../icons/payment.svg');
+}
+
+.material-symbols-outlined[data-icon="person"] {
+  background-image: url('../icons/person.svg');
+}
+
+.material-symbols-outlined[data-icon="person_add"] {
+  background-image: url('../icons/person_add.svg');
+}
+
+.material-symbols-outlined[data-icon="rate_review"] {
+  background-image: url('../icons/rate_review.svg');
+}
+
+.material-symbols-outlined[data-icon="receipt_long"] {
+  background-image: url('../icons/receipt_long.svg');
+}
+
+.material-symbols-outlined[data-icon="refresh"] {
+  background-image: url('../icons/refresh.svg');
+}
+
+.material-symbols-outlined[data-icon="remove"] {
+  background-image: url('../icons/remove.svg');
+}
+
+.material-symbols-outlined[data-icon="remove_shopping_cart"] {
+  background-image: url('../icons/remove_shopping_cart.svg');
+}
+
+.material-symbols-outlined[data-icon="search"] {
+  background-image: url('../icons/search.svg');
+}
+
+.material-symbols-outlined[data-icon="search_off"] {
+  background-image: url('../icons/search_off.svg');
+}
+
+.material-symbols-outlined[data-icon="security"] {
+  background-image: url('../icons/security.svg');
+}
+
+.material-symbols-outlined[data-icon="settings"] {
+  background-image: url('../icons/settings.svg');
+}
+
+.material-symbols-outlined[data-icon="shopping_bag"] {
+  background-image: url('../icons/shopping_bag.svg');
+}
+
+.material-symbols-outlined[data-icon="shopping_bag_check"] {
+  background-image: url('../icons/shopping_bag_check.svg');
+}
+
+.material-symbols-outlined[data-icon="shopping_cart"] {
+  background-image: url('../icons/shopping_cart.svg');
+}
+
+.material-symbols-outlined[data-icon="spellcheck"] {
+  background-image: url('../icons/spellcheck.svg');
+}
+
+.material-symbols-outlined[data-icon="star"] {
+  background-image: url('../icons/star.svg');
+}
+
+.material-symbols-outlined[data-icon="storefront"] {
+  background-image: url('../icons/storefront.svg');
+}
+
+.material-symbols-outlined[data-icon="swap_vert"] {
+  background-image: url('../icons/swap_vert.svg');
+}
+
+.material-symbols-outlined[data-icon="task_alt"] {
+  background-image: url('../icons/task_alt.svg');
+}
+
+.material-symbols-outlined[data-icon="trending_up"] {
+  background-image: url('../icons/trending_up.svg');
+}
+
+.material-symbols-outlined[data-icon="tune"] {
+  background-image: url('../icons/tune.svg');
+}
+
+.material-symbols-outlined[data-icon="verified"] {
+  background-image: url('../icons/verified.svg');
+}
+
+.material-symbols-outlined[data-icon="visibility"] {
+  background-image: url('../icons/visibility.svg');
+}
+
+.material-symbols-outlined[data-icon="visibility_off"] {
+  background-image: url('../icons/visibility_off.svg');
+}
+
+.material-symbols-outlined[data-icon="lock_reset"] {
+  background-image: url('../icons/lock_reset.svg');
+}
+
+.material-symbols-outlined[data-icon="mail"] {
+  background-image: url('../icons/mail.svg');
+}
+
+.material-symbols-outlined[data-icon="password"] {
+  background-image: url('../icons/password.svg');
+}
+
+/* Category Icons - mapped to available icons */
+.material-symbols-outlined[data-icon="apps"] {
+  background-image: url('../icons/category.svg');
+}
+
+.material-symbols-outlined[data-icon="bed"] {
+  background-image: url('../icons/home.svg');
+}
+
+.material-symbols-outlined[data-icon="hardware"] {
+  background-image: url('../icons/settings.svg');
+}
+
+.material-symbols-outlined[data-icon="apparel"] {
+  background-image: url('../icons/person.svg');
+}
+
+.material-symbols-outlined[data-icon="chair"] {
+  background-image: url('../icons/home.svg');
+}
+
+.material-symbols-outlined[data-icon="spa"] {
+  background-image: url('../icons/favorite.svg');
+}
+
+.material-symbols-outlined[data-icon="restaurant"] {
+  background-image: url('../icons/local_offer.svg');
+}
+
+.material-symbols-outlined[data-icon="devices"] {
+  background-image: url('../icons/settings.svg');
+}
+
+.material-symbols-outlined[data-icon="sports"] {
+  background-image: url('../icons/emoji_events.svg');
+}
+
+.material-symbols-outlined[data-icon="toys"] {
+  background-image: url('../icons/celebration.svg');
+}
+
+.material-symbols-outlined[data-icon="cleaning"] {
+  background-image: url('../icons/delete.svg');
+}
+
+.material-symbols-outlined[data-icon="baby"] {
+  background-image: url('../icons/person_add.svg');
+}
+
+.material-symbols-outlined[data-icon="tools"] {
+  background-image: url('../icons/settings.svg');
+}
+
+.material-symbols-outlined[data-icon="lock"] {
+  background-image: url('../icons/lock.svg');
+}
+
+.material-symbols-outlined[data-icon="link_off"] {
+  background-image: url('../icons/link_off.svg');
+}
+
+.material-symbols-outlined[data-icon="mark_email_read"] {
+  background-image: url('../icons/mark_email_read.svg');
+}
+
+.material-symbols-outlined[data-icon="check_circle"] {
+  background-image: url('../icons/check_circle.svg');
+}
+
+.material-symbols-outlined[data-icon="warning"] {
+  background-image: url('../icons/warning.svg');
+}
+
+/* Special effects for specific icons */
+.material-symbols-outlined[data-icon="favorite"] {
+  transition: all 0.3s ease;
+}
+
+.material-symbols-outlined[data-icon="favorite"]:hover {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.material-symbols-outlined[data-icon="shopping_cart"] {
+  transition: all 0.3s ease;
+}
+
+.material-symbols-outlined[data-icon="shopping_cart"]:hover {
+  transform: translateY(-2px);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .material-symbols-outlined {
+    filter: brightness(1.2);
+  }
+}

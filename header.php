@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<?php
+// Server-side detection for Facebook/Instagram WebView and other in-app browsers
+$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+// Also check for fbclid parameter (Facebook click ID - present in all links from Facebook)
+$has_fbclid = isset($_GET['fbclid']) || (isset($_SERVER['QUERY_STRING']) && strpos($_SERVER['QUERY_STRING'], 'fbclid') !== false);
+$is_facebook_webview = (
+    $has_fbclid || // Links from Facebook always have fbclid
+    strpos($user_agent, 'FBAN') !== false ||
+    strpos($user_agent, 'FBAV') !== false ||
+    strpos($user_agent, 'Instagram') !== false ||
+    strpos($user_agent, 'FB_IAB') !== false ||
+    strpos($user_agent, 'FBIOS') !== false ||
+    strpos($user_agent, 'FB4A') !== false ||
+    strpos($user_agent, 'FBSV') !== false ||
+    strpos($user_agent, 'Messenger') !== false ||
+    strpos($user_agent, 'Line/') !== false ||
+    strpos($user_agent, 'KAKAOTALK') !== false ||
+    strpos($user_agent, 'Snapchat') !== false ||
+    strpos($user_agent, 'Twitter') !== false ||
+    strpos($user_agent, 'Pinterest') !== false ||
+    strpos($user_agent, 'LinkedIn') !== false ||
+    strpos($user_agent, 'Facebook') !== false ||
+    strpos($user_agent, 'fbconnect') !== false ||
+    (preg_match('/(wv|WebView)/i', $user_agent)) ||
+    (preg_match('/(iPhone|iPod|iPad).*AppleWebKit/i', $user_agent) && strpos($user_agent, 'Safari') === false)
+);
+?>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="<?php echo esc_url( warafy_get_logo_url() ); ?>">
+    <link rel="shortcut icon" type="image/jpeg" href="<?php echo esc_url( warafy_get_logo_url() ); ?>">
+    <link rel="apple-touch-icon" href="<?php echo esc_url( warafy_get_logo_url() ); ?>">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <?php wp_head(); ?>
+    <?php if ($is_facebook_webview): ?>
+    <!-- WebView detected - disable preloader completely and force content visible -->
+    <style id="webview-override">
+        #warafy-preloader { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; height: 0 !important; width: 0 !important; overflow: hidden !important; position: absolute !important; }
+        #warafy-content, #warafy-content.loaded, div#warafy-content { opacity: 1 !important; pointer-events: auto !important; animation: none !important; visibility: visible !important; transition: none !important; display: flex !important; }
+        body, html { visibility: visible !important; opacity: 1 !important; }
+        * { -webkit-animation-duration: 0s !important; animation-duration: 0s !important; -webkit-animation: none !important; animation: none !important; }
+    </style>
+    <script>document.documentElement.classList.add('webview-mode');</script>
+    <?php endif; ?>
+    <style>
+        /* Critical Visibility Fix */
+        .hidden { display: none !important; }
+        @media (min-width: 1024px) {
+            .lg\:block { display: block !important; }
+            .lg\:flex { display: flex !important; }
+            .lg\:hidden { display: none !important; }
+            .lg\:grid { display: grid !important; }
+        }
+        
+        /* PRELOADER - Critical CSS */
+        #warafy-preloader {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #000000 !important;
+            z-index: 999999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+        }
+        #warafy-preloader .preloader-logo {
+            width: 40px;
+            height: auto;
+            animation: logoGrow 3s ease-in-out forwards;
+        }
+        @keyframes logoGrow {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            20% {
+                transform: scale(0.5);
+            }
+            40% {
+                transform: scale(1);
+            }
+            60% {
+                transform: scale(2);
+            }
+            80% {
+                transform: scale(4);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(8);
+                opacity: 0;
+            }
+        }
+        #warafy-content {
+            opacity: 0;
+            pointer-events: none;
+            animation: warafy-content-fallback 0.5s ease forwards;
+            animation-delay: 4s; /* Fallback: show content after 4s if JS fails */
+        }
+        #warafy-content.loaded {
+            opacity: 1;
+            pointer-events: auto;
+            transition: opacity 0.3s ease;
+            animation: none; /* Cancel fallback animation when JS works */
+        }
+        @keyframes warafy-content-fallback {
+            to {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+        /* Facebook in-app browser & other webviews - force content visible immediately */
+        @supports (-webkit-touch-callout: none) {
+            #warafy-content {
+                animation-delay: 1s !important; /* Faster fallback for mobile webviews */
+            }
+        }
+        /* Additional fallback for problematic webviews */
+        @media (max-width: 768px) {
+            #warafy-content {
+                animation-delay: 2s !important; /* Even faster for mobile */
+            }
+        }
+    </style>
+</head>
+<body <?php body_class('bg-white font-display text-gray-900'); ?>>
+<?php if (!$is_facebook_webview): ?>
+<!-- Preloader -->
+<div id="warafy-preloader">
+    <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="preloader-logo">
+</div>
+<?php endif; ?>
+<script>
+    // IMMEDIATE WebView detection - runs before DOM is ready
+    (function() {
+        var ua = navigator.userAgent || navigator.vendor || '';
+        var isFacebookBrowser = /FBAN|FBAV|Instagram|FB_IAB|FBIOS|FB4A|FBSV|Messenger|Line\/|KAKAOTALK|Snapchat|Twitter|Pinterest|LinkedIn|Facebook|fbconnect/i.test(ua);
+        var isWebView = /(wv|WebView)/i.test(ua) || (/(iPhone|iPod|iPad).*AppleWebKit/i.test(ua) && ua.indexOf('Safari') === -1);
+        // Also detect via URL parameters (fbclid from Facebook links)
+        var hasFbclid = window.location.search.indexOf('fbclid') > -1;
+        var isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        
+        // For Facebook browser, webviews, fbclid links, and mobile - skip preloader entirely
+        if (isFacebookBrowser || isWebView || hasFbclid || isMobile) {
+            // Mark as webview mode immediately
+            document.documentElement.classList.add('webview-mode');
+            // Inject override styles immediately (before DOM ready)
+            var style = document.createElement('style');
+            style.id = 'webview-js-override';
+            style.textContent = '#warafy-preloader { display: none !important; height: 0 !important; width: 0 !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; position: absolute !important; } #warafy-content, div#warafy-content { opacity: 1 !important; pointer-events: auto !important; animation: none !important; visibility: visible !important; transition: none !important; display: flex !important; } body, html { visibility: visible !important; opacity: 1 !important; } * { animation-duration: 0s !important; -webkit-animation-duration: 0s !important; }';
+            (document.head || document.documentElement).appendChild(style);
+            
+            // Also try to remove/hide preloader if it exists
+            var preloader = document.getElementById('warafy-preloader');
+            if (preloader) {
+                preloader.style.cssText = 'display:none!important;height:0!important;width:0!important;opacity:0!important;visibility:hidden!important;';
+                try { preloader.remove(); } catch(e) {}
+            }
+            // Force content visible directly if element exists
+            var content = document.getElementById('warafy-content');
+            if (content) {
+                content.style.cssText = 'opacity:1!important;pointer-events:auto!important;visibility:visible!important;animation:none!important;display:flex!important;';
+                content.classList.add('loaded');
+            }
+            // Force body visibility
+            if (document.body) document.body.style.cssText += 'visibility:visible!important;opacity:1!important;';
+            
+            // Also run again after DOM ready as a fallback
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    var p = document.getElementById('warafy-preloader');
+                    if (p) { p.style.cssText = 'display:none!important;'; try { p.remove(); } catch(e) {} }
+                    var c = document.getElementById('warafy-content');
+                    if (c) { c.style.cssText = 'opacity:1!important;pointer-events:auto!important;visibility:visible!important;animation:none!important;display:flex!important;'; c.classList.add('loaded'); }
+                });
+            }
+            return;
+        }
+        
+        // Check if preloader was already shown in this session
+        var preloaderShown = false;
+        try {
+            preloaderShown = sessionStorage.getItem('warafy_preloader_shown');
+        } catch(e) {
+            // sessionStorage not available - skip preloader
+            preloaderShown = true;
+        }
+        
+        if (preloaderShown) {
+            var preloader = document.getElementById('warafy-preloader');
+            if (preloader) {
+                preloader.style.display = 'none';
+                preloader.remove();
+            }
+            // Force content visible immediately for subsequent visits
+            var style = document.createElement('style');
+            style.textContent = '#warafy-content { opacity: 1 !important; pointer-events: auto !important; animation: none !important; }';
+            document.head.appendChild(style);
+        } else {
+            // First visit - show animation
+            try {
+                sessionStorage.setItem('warafy_preloader_shown', 'true');
+            } catch(e) {}
+            
+            setTimeout(function() {
+                var preloader = document.getElementById('warafy-preloader');
+                var content = document.getElementById('warafy-content');
+                if (preloader) {
+                    preloader.style.opacity = '0';
+                    preloader.style.pointerEvents = 'none';
+                    preloader.style.transition = 'opacity 0.3s';
+                    setTimeout(function() {
+                        preloader.style.display = 'none';
+                        if (preloader.parentNode) preloader.remove();
+                    }, 300);
+                }
+                if (content) {
+                    content.classList.add('loaded');
+                }
+            }, 3000);
+        }
+        
+        // Emergency fallback - force content visible after 2 seconds regardless
+        setTimeout(function() {
+            var content = document.getElementById('warafy-content');
+            var preloader = document.getElementById('warafy-preloader');
+            if (content && content.style.opacity !== '1') {
+                content.style.opacity = '1';
+                content.style.pointerEvents = 'auto';
+                content.style.visibility = 'visible';
+                content.classList.add('loaded');
+            }
+            if (preloader) {
+                preloader.style.display = 'none';
+                preloader.remove();
+            }
+        }, 2000);
+    })();
+</script>
+<noscript>
+    <style>
+        #warafy-preloader { display: none !important; }
+        #warafy-content { opacity: 1 !important; pointer-events: auto !important; animation: none !important; }
+    </style>
+</noscript>
+
+<div id="warafy-content" class="relative flex min-h-screen w-full flex-col"<?php if ($is_facebook_webview): ?> style="opacity:1!important;visibility:visible!important;pointer-events:auto!important;animation:none!important;"<?php endif; ?>>
+
+<!-- Desktop Header -->
+<header class="hidden lg:block sticky top-0 z-50 w-full bg-black">
+<div class="border-b border-gray-800"></div>
+<div class="container mx-auto px-6">
+<div class="flex items-center justify-between py-3">
+<div class="flex items-center gap-8">
+<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex items-center gap-3">
+<img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
+</a>
+</div>
+<div class="hidden flex-1 justify-center lg:flex mr-6">
+<form role="search" method="get" class="relative w-full max-w-lg flex h-[40px]" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" data-icon="search"></span>
+<input class="warafy-search-input w-full h-full rounded-full border-none bg-white pl-10 pr-[90px] text-[14px] outline-none text-black placeholder:text-gray-500" placeholder="<?php echo __t('Search for products...'); ?>" type="search" name="s" value="<?php echo get_search_query(); ?>" autocomplete="off"/>
+<button type="submit" class="absolute right-[3px] top-[3px] bottom-[3px] bg-[#FFB800] text-black text-[13px] font-bold px-[20px] rounded-full flex items-center justify-center">
+    <?php echo __t('Search'); ?>
+</button>
+<input type="hidden" name="post_type" value="product" />
+</form>
+</div>
+<div class="flex items-center justify-end gap-4">
+<nav class="hidden items-center gap-6 lg:flex">
+<a class="text-sm font-medium text-gray-200 hover:text-primary" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"><?php echo __t('Shop'); ?></a>
+<a class="text-sm font-medium text-gray-200 hover:text-primary" href="#"><?php echo __t("What's New"); ?></a>
+<a class="text-sm font-medium text-gray-200 hover:text-primary" href="#"><?php echo __t('Help'); ?></a>
+<?php 
+// Language toggle using JavaScript instead of URL parameters
+$current_lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
+$bn_class = $current_lang === 'bn' ? 'text-[#FFB800]' : 'text-white';
+$en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
+?>
+<button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="dark">
+    <span class="warafy-lang-bn <?php echo $bn_class; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+    <span class="warafy-lang-en <?php echo $en_class; ?> text-[9px] font-medium whitespace-nowrap">English</span>
+</button>
+</nav>
+<div class="h-6 w-px bg-gray-700 hidden lg:block"></div>
+<div class="flex items-center gap-2">
+<a href="<?php echo esc_url( home_url( '/my-love' ) ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+    <span class="warafy-wishlist-count absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-xs font-bold text-primary" style="display: none;">0</span>
+</a>
+<a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+    </svg>
+</a>
+<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="relative flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+    </svg>
+    <span class="cart-count absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-primary border-2 border-primary shadow-lg" style="z-index: 20; transform: none; line-height: 1;"><?php 
+    $cart_count = WC()->cart->get_cart_contents_count();
+    echo '<span class="warafy-cart-qty">' . $cart_count . '</span>';
+?></span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+<!-- Mobile Header -->
+<?php if ( is_cart() ) : ?>
+    <!-- Custom Mobile Cart Header -->
+    <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="javascript:history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white"><?php echo __t('My Cart'); ?></h1>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="search"></span>
+                    </button>
+                    <?php
+                    $current_lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
+                    $bn_class_light = $current_lang === 'bn' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
+                    $en_class_light = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
+                    ?>
+                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
+                        <span class="warafy-lang-bn <?php echo $bn_class_light; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+                        <span class="warafy-lang-en <?php echo $en_class_light; ?> text-[9px] font-medium whitespace-nowrap">English</span>
+                    <?php
+                    $current_lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
+                    $bn_class_light = $current_lang === 'bn' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
+                    $en_class_light = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
+                    ?>
+                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
+                        <span class="warafy-lang-bn <?php echo $bn_class_light; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+                        <span class="warafy-lang-en <?php echo $en_class_light; ?> text-[9px] font-medium whitespace-nowrap">English</span>
+                    <?php
+                    $current_lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
+                    $bn_class_light = $current_lang === 'bn' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
+                    $en_class_light = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
+                    ?>
+                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
+                        <span class="warafy-lang-bn <?php echo $bn_class_light; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+                        <span class="warafy-lang-en <?php echo $en_class_light; ?> text-[9px] font-medium whitespace-nowrap">English</span>
+                    </button>
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+<?php elseif ( is_page('my-love') ) : ?>
+    <!-- Custom Mobile My Love Header -->
+    <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="javascript:history.back()" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white"><?php echo __t('My Love'); ?></h1>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="search"></span>
+                    </button>
+                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
+                        <span class="warafy-lang-bn text-gray-900 dark:text-white text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+                        <span class="warafy-lang-en text-[#FFB800] text-[9px] font-medium whitespace-nowrap">English</span>
+                    </button>
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+<?php elseif ( (function_exists('is_account_page') && is_account_page()) || is_page('my-account') ) : ?>
+    <!-- Custom Mobile Account Header -->
+    <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="arrow_back"></span>
+                    </a>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white"><?php echo __t('My Account'); ?></h1>
+                </div>
+                <div class="flex items-center justify-end gap-2">
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="search"></span>
+                    </button>
+                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
+                        <span class="warafy-lang-bn text-gray-900 dark:text-white text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+                        <span class="warafy-lang-en text-[#FFB800] text-[9px] font-medium whitespace-nowrap">English</span>
+                    </button>
+                    <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
+                        <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+<?php else : ?>
+    <!-- Default Mobile Header -->
+    <!-- Default Mobile Header -->
+    <header class="lg:hidden sticky top-0 z-50 flex flex-col bg-black py-3 px-4">
+        <div class="flex items-center justify-between w-full">
+            <!-- Logo -->
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="flex-shrink-0 mr-3">
+                <img src="<?php echo esc_url( warafy_get_logo_url() ); ?>" alt="Ador Kini" class="warafy-logo-img">
+            </a>
+            
+            <!-- Search Bar -->
+            <div class="flex-1">
+                <form role="search" method="get" class="relative w-full h-[32px] flex" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+                    <input class="warafy-search-input w-full h-full rounded-full border-none bg-white pl-4 pr-[70px] text-[13px] outline-none text-black placeholder:text-gray-400" placeholder="<?php echo __t('Search products'); ?>" type="search" name="s" value="<?php echo get_search_query(); ?>" autocomplete="off"/>
+                    <button type="submit" class="absolute right-[2px] top-[2px] bottom-[2px] bg-[#FFB800] text-black text-[11px] font-bold px-[14px] rounded-full flex items-center justify-center">
+                        <?php echo __t('Search'); ?>
+                    </button>
+                    <input type="hidden" name="post_type" value="product" />
+                </form>
+            </div>
+
+            <!-- Language Toggle -->
+            <?php
+            $current_lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
+            $bn_class = $current_lang === 'bn' ? 'text-[#FFB800]' : 'text-white';
+            $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
+            ?>
+            <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1] ml-3" data-theme="dark">
+                <span class="warafy-lang-bn <?php echo $bn_class; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
+                <span class="warafy-lang-en <?php echo $en_class; ?> text-[9px] font-medium whitespace-nowrap">English</span>
+            </button>
+        </div>
+    </header>
+<?php endif; ?>
+

@@ -1,0 +1,27 @@
+MY ACCOUNT PAGE FIX - DEPLOYMENT INSTRUCTIONS
+===============================================
+
+Files to upload:
+1. wp-content/themes/warafy-theme/page-my-account-simple.php
+
+What was done:
+- Created a new simple template "My Account Simple"
+- Updated the My Account page (ID: 730) to use this template
+- The template shows a single-page dashboard with:
+  * Profile card with user info
+  * Personal Information form
+  * Addresses form (Billing & Shipping)
+  * Order History
+  * Logout button
+
+How to verify:
+1. Upload the file to your server
+2. Clear browser cache (Ctrl+F5)
+3. Visit https://warafy.com/my-account/
+4. If not logged in, it will show login page
+5. If logged in, it will show the dashboard
+
+Note: The page template has been updated via API to use "My Account Simple" template.
+Just upload the PHP file and it should work immediately.
+
+Deployment timestamp: Nov 27, 2025 7:11 PM

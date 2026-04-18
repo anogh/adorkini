@@ -1,0 +1,10 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/plysxpvv/public_html/wp-content/themes/adorkini
+    - /bin/cp -rf assets $DEPLOYPATH
+    - /bin/cp -rf inc $DEPLOYPATH
+    - /bin/cp -rf woocommerce $DEPLOYPATH
+    - /bin/cp *.php $DEPLOYPATH
+    - /bin/cp style.css $DEPLOYPATH
+    - /bin/cp translations.json $DEPLOYPATH
