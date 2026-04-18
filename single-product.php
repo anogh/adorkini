@@ -154,77 +154,7 @@
                         </button>
                     </form>
                     
-                    <!-- Tabs / Full Description -->
-                    <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4"><?php echo __t('Description'); ?></h3>
-                        <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
-                            <?php the_content(); ?>
-                        </div>
-                    </div>
 
-                    <!-- Comments Section -->
-                    <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6"><?php echo __t('Have question or opinion? Comment here'); ?></h3>
-                        
-                        <!-- Comment Form -->
-                        <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-6">
-                            <form id="warafy-comment-form" class="space-y-4">
-                                <?php if (!is_user_logged_in()) : ?>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Name'); ?> *</label>
-                                            <input type="text" name="user_name" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Email'); ?> *</label>
-                                            <input type="email" name="user_email" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><?php echo __t('Comment'); ?> *</label>
-                                    <textarea name="comment_text" rows="4" required maxlength="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="<?php echo __t('Share your thoughts or ask questions about this product...'); ?>"></textarea>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum 1000 characters</p>
-                                </div>
-                                <input type="hidden" name="product_id" value="<?php echo $product->get_id(); ?>">
-                                <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('warafy_comment_nonce'); ?>">
-                                <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                                    <?php echo __t('Post Comment'); ?>
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Comments List -->
-                        <div id="warafy-comments-list" class="space-y-4">
-                            <?php
-                            $comments = warafy_get_product_comments($product->get_id());
-                            if ($comments) :
-                                foreach ($comments as $comment) :
-                                    $user_display_name = $comment->user_id ? get_the_author_meta('display_name', $comment->user_id) : $comment->user_name;
-                                    $comment_date = date('F j, Y', strtotime($comment->comment_date));
-                            ?>
-                                    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 warafy-comment-card">
-                                        <div class="flex items-start justify-between mb-2">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center warafy-user-avatar">
-                                                    <span class="text-primary font-semibold text-sm"><?php echo strtoupper(substr($user_display_name, 0, 1)); ?></span>
-                                                </div>
-                                                <div>
-                                                    <p class="font-medium text-gray-900 dark:text-white"><?php echo esc_html($user_display_name); ?></p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo $comment_date; ?></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed"><?php echo esc_html($comment->comment_text); ?></p>
-                                    </div>
-                            <?php
-                                endforeach;
-                            else :
-                            ?>
-                                <p class="text-gray-500 dark:text-gray-400 text-center py-8">No comments yet. Be the first to comment!</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
 
                     <!-- Reviews Section -->
                     <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8">
@@ -450,80 +380,7 @@
                     </button>
                 </footer>
 
-                <!-- Description Accordion -->
-                <div class="flex flex-col gap-2 border-t border-slate-200 dark:border-slate-700 pt-6">
-                    <details class="group" open>
-                        <summary class="flex justify-between items-center cursor-pointer py-3 list-none">
-                            <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold"><?php echo __t('Product Description'); ?></h4>
-                            <span class="material-symbols-outlined text-slate-500 transition-transform duration-300 group-open:rotate-180" data-icon="expand_more"></span>
-                        </summary>
-                        <div class="pb-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                            <?php the_content(); ?>
-                        </div>
-                    </details>
-                </div>
 
-                <!-- Comments Section -->
-                <div class="flex flex-col gap-4 border-t border-slate-200 dark:border-slate-700 pt-6">
-                    <h4 class="text-slate-900 dark:text-slate-100 text-base font-bold"><?php echo __t('Have question or opinion? Comment here'); ?></h4>
-                    
-                    <!-- Comment Form -->
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4">
-                        <form id="warafy-comment-form-mobile" class="space-y-3">
-                            <?php if (!is_user_logged_in()) : ?>
-                                <div class="space-y-3">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Name'); ?> *</label>
-                                        <input type="text" name="user_name" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Email'); ?> *</label>
-                                        <input type="email" name="user_email" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><?php echo __t('Comment'); ?> *</label>
-                                <textarea name="comment_text" rows="3" required maxlength="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="<?php echo __t('Share your thoughts...'); ?>"></textarea>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Maximum 1000 characters</p>
-                            </div>
-                            <input type="hidden" name="product_id" value="<?php echo $product->get_id(); ?>">
-                            <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('warafy_comment_nonce'); ?>">
-                            <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium">
-                                <?php echo __t('Post Comment'); ?>
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Comments List -->
-                    <div id="warafy-comments-list-mobile" class="space-y-3">
-                        <?php
-                        $comments = warafy_get_product_comments($product->get_id());
-                        if ($comments) :
-                            foreach ($comments as $comment) :
-                                $user_display_name = $comment->user_id ? get_the_author_meta('display_name', $comment->user_id) : $comment->user_name;
-                                $comment_date = date('M j, Y', strtotime($comment->comment_date));
-                        ?>
-                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 warafy-comment-card">
-                                <div class="flex items-start gap-3 mb-2">
-                                    <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center warafy-user-avatar flex-shrink-0">
-                                        <span class="text-primary font-semibold text-xs"><?php echo strtoupper(substr($user_display_name, 0, 1)); ?></span>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="font-medium text-gray-900 dark:text-white text-sm"><?php echo esc_html($user_display_name); ?></p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo $comment_date; ?></p>
-                                    </div>
-                                </div>
-                                <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed"><?php echo esc_html($comment->comment_text); ?></p>
-                            </div>
-                        <?php
-                            endforeach;
-                        else :
-                        ?>
-                            <p class="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">No comments yet. Be the first to comment!</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
 
                 <!-- Reviews Section -->
                 <div class="flex flex-col gap-4 border-t border-slate-200 dark:border-slate-700 pt-6">
