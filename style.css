@@ -338,41 +338,6 @@ Text Domain: adorkini
         text-decoration: none !important;
     }
 
-<<<<<<< HEAD
-    /* Keep the price and cart button balanced on mobile cards */
-    .warafy-mobile-product-card .w-full.flex.items-end.justify-between {
-        gap: 0 !important;
-        column-gap: 30% !important;
-    }
-
-    .warafy-mobile-product-card .mobile-compact-price {
-        flex: 0 0 35% !important;
-        min-width: 0 !important;
-        padding-right: 0 !important;
-    }
-
-    .warafy-mobile-product-card .add-to-cart-btn {
-        flex: 0 0 35% !important;
-        max-width: 35% !important;
-        min-width: 0 !important;
-        padding: 6px 10px !important;
-        box-sizing: border-box !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-    }
-
-    .warafy-mobile-product-card .add-to-cart-btn .add-text,
-    .warafy-mobile-product-card .add-to-cart-btn .added-text {
-        display: block;
-        width: 100%;
-        line-height: 1.1 !important;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-=======
->>>>>>> 96fe3fb7a3f8fa7714dbeeed8844e5215af76373
     .mobile-ranking-item {
         border-width: 2px !important;
     }

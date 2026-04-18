@@ -442,27 +442,39 @@ $random_products_query = new WP_Query([
             @media (max-width: 1023px) {
                 .warafy-mobile-product-actions {
                     display: grid !important;
-                    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-                    gap: 6px;
+                    grid-template-columns: 35% 35%;
+                    column-gap: 30%;
                     align-items: end;
+                }
+
+                .warafy-mobile-product-actions .mobile-compact-price {
+                    min-width: 0;
+                    width: 100%;
+                    padding-right: 0 !important;
                 }
 
                 .warafy-mobile-product-card .add-to-cart-btn {
                     width: 100%;
                     transform: none !important;
-                    padding: 4px 10px !important;
+                    padding: 6px 10px !important;
                     font-size: 10px !important;
                     line-height: 1.2;
                     max-width: 100%;
                     box-sizing: border-box;
+                    overflow: hidden;
                 }
 
-                /* Make Add to cart text 2x larger on mobile */
+                /* Keep the button label inside the pill */
                 .warafy-mobile-product-card .add-to-cart-btn .add-text,
-                .add-to-cart-btn .add-text {
-                    font-size: 2em !important;
-                    font-weight: 700 !important;
-                    line-height: 1.5 !important;
+                .warafy-mobile-product-card .add-to-cart-btn .added-text {
+                    display: block;
+                    width: 100%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-size: inherit !important;
+                    font-weight: inherit !important;
+                    line-height: 1.1 !important;
                 }
 
                 .warafy-mobile-product-card .add-to-cart-btn:hover {
@@ -1329,4 +1341,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php get_footer(); ?>
-
