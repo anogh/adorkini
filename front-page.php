@@ -172,7 +172,7 @@ $random_products_query = new WP_Query([
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[13px] font-bold px-3 py-1 rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[13px] font-bold px-3 py-1 rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
                             <span class="add-text"><?php echo __t('Add to cart'); ?></span>
                             <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
                         </button>
@@ -383,7 +383,7 @@ $random_products_query = new WP_Query([
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[11px] font-bold px-[7px] py-[2px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 justify-self-end" data-product-id="<?php echo $product->get_id(); ?>">
+                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[11px] font-bold px-[7px] py-[2px] rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 justify-self-end" data-product-id="<?php echo $product->get_id(); ?>">
                             <span class="add-text"><?php echo __t('Add to cart'); ?></span>
                             <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
                         </button>
@@ -420,6 +420,8 @@ $random_products_query = new WP_Query([
                 box-sizing: border-box;
                 max-width: 100%;
                 overflow: hidden;
+                white-space: normal !important;
+                text-align: center;
             }
 
             .warafy-mobile-product-card .add-to-cart-btn {
@@ -432,9 +434,9 @@ $random_products_query = new WP_Query([
             .warafy-product-actions .add-to-cart-btn .added-text {
                 display: block;
                 width: 100%;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
                 font-size: inherit !important;
                 font-weight: inherit !important;
                 line-height: 1.1 !important;
