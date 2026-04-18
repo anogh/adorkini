@@ -338,6 +338,7 @@ Text Domain: adorkini
         text-decoration: none !important;
     }
 
+<<<<<<< HEAD
     /* Keep the price and cart button balanced on mobile cards */
     .warafy-mobile-product-card .w-full.flex.items-end.justify-between {
         gap: 0 !important;
@@ -370,6 +371,8 @@ Text Domain: adorkini
         text-overflow: ellipsis;
     }
 
+=======
+>>>>>>> 96fe3fb7a3f8fa7714dbeeed8844e5215af76373
     .mobile-ranking-item {
         border-width: 2px !important;
     }
@@ -3481,4 +3484,8 @@ footer .bg-primary:hover {
 .bengali-mode .warafy-language-toggle:hover {
     background: #E8960E !important;
     border-color: #E8960E !important;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 96fe3fb7a3f8fa7714dbeeed8844e5215af76373
