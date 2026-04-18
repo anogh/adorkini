@@ -33,3 +33,7 @@
 - Always check for closed PHP tags `?>` and HTML tags.
 - Do not place PHP logic inside HTML attributes without proper escaping (`esc_attr`).
 - Avoid nesting double quotes in HTML attributes (use single quotes for inner strings or escape).
+
+## 4. Git Pushes
+- Use the local SOCKS5 proxy when pushing if direct GitHub access fails: `git -c http.proxy=socks5h://127.0.0.1:10808 push origin main`.
+- Keep homepage layout tweaks in `front-page.php` when the change is specific to the front page.

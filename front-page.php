@@ -167,8 +167,8 @@ $random_products_query = new WP_Query([
                         <?php echo get_the_title($product->get_id()); ?>
                     </a>
                     
-                    <div class="w-full flex items-end justify-between mt-auto gap-2">
-                        <div class="flex items-center flex-wrap mobile-compact-price flex-1 min-w-0 pr-1">
+                    <div class="warafy-product-actions warafy-desktop-product-actions w-full mt-auto">
+                        <div class="flex items-center flex-wrap mobile-compact-price min-w-0">
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
@@ -378,12 +378,12 @@ $random_products_query = new WP_Query([
                         <?php echo get_the_title($product->get_id()); ?>
                     </a>
                     
-                    <div class="warafy-mobile-product-actions w-full mt-auto">
-                        <div class="flex items-center flex-wrap mobile-compact-price flex-1 min-w-0 pr-1">
+                    <div class="warafy-product-actions warafy-mobile-product-actions w-full mt-auto">
+                        <div class="flex items-center flex-wrap mobile-compact-price min-w-0">
                             <?php echo $product->get_price_html(); ?>
                         </div>
                         
-                        <button class="add-to-cart-btn w-full bg-[#FFB800] hover:bg-[#e6a600] text-black text-[9px] font-bold px-[7px] py-[2px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0" data-product-id="<?php echo $product->get_id(); ?>">
+                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[9px] font-bold px-[7px] py-[2px] rounded-full flex items-center justify-center whitespace-nowrap flex-shrink-0 justify-self-end" data-product-id="<?php echo $product->get_id(); ?>">
                             <span class="add-text"><?php echo __t('Add to cart'); ?></span>
                             <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
                         </button>
@@ -397,6 +397,51 @@ $random_products_query = new WP_Query([
         <style>
             .warafy-mobile-product-card {
                 box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            }
+
+            .warafy-product-actions {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 8px;
+                align-items: end;
+                width: 100%;
+            }
+
+            .warafy-product-actions .mobile-compact-price {
+                min-width: 0;
+                width: 100%;
+                padding-right: 0 !important;
+            }
+
+            .warafy-product-actions .add-to-cart-btn {
+                width: auto;
+                justify-self: end;
+                transform: none !important;
+                box-sizing: border-box;
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .warafy-mobile-product-card .add-to-cart-btn {
+                padding: 5px 10px !important;
+                font-size: 10px !important;
+                line-height: 1.15;
+            }
+
+            .warafy-product-actions .add-to-cart-btn .add-text,
+            .warafy-product-actions .add-to-cart-btn .added-text {
+                display: block;
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: inherit !important;
+                font-weight: inherit !important;
+                line-height: 1.1 !important;
+            }
+
+            .warafy-product-actions .add-to-cart-btn:hover {
+                transform: translateY(-1px) !important;
             }
             
             /* Desktop: Add to cart button - 10% smaller */
@@ -439,48 +484,47 @@ $random_products_query = new WP_Query([
                 color: #fff !important;
             }
             
-            @media (max-width: 1023px) {
-                .warafy-mobile-product-actions {
-                    display: grid !important;
-                    grid-template-columns: 35% 35%;
-                    column-gap: 30%;
-                    align-items: end;
+            @media (max-width: 479px) {
+                .warafy-product-actions {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 6px;
                 }
 
-                .warafy-mobile-product-actions .mobile-compact-price {
-                    min-width: 0;
+                .warafy-product-actions .add-to-cart-btn {
+                    justify-self: stretch;
                     width: 100%;
-                    padding-right: 0 !important;
+                    padding: 4px 10px !important;
+                    font-size: 9px !important;
+                }
+            }
+
+            @media (min-width: 480px) and (max-width: 767px) {
+                .warafy-product-actions {
+                    gap: 8px;
                 }
 
-                .warafy-mobile-product-card .add-to-cart-btn {
-                    width: 100%;
-                    transform: none !important;
-                    padding: 6px 10px !important;
+                .warafy-product-actions .add-to-cart-btn {
+                    padding: 5px 10px !important;
                     font-size: 10px !important;
-                    line-height: 1.2;
-                    max-width: 100%;
-                    box-sizing: border-box;
-                    overflow: hidden;
+                }
+            }
+
+            @media (min-width: 768px) and (max-width: 1023px) {
+                .warafy-product-actions {
+                    gap: 10px;
                 }
 
-                /* Keep the button label inside the pill */
-                .warafy-mobile-product-card .add-to-cart-btn .add-text,
-                .warafy-mobile-product-card .add-to-cart-btn .added-text {
-                    display: block;
-                    width: 100%;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    font-size: inherit !important;
-                    font-weight: inherit !important;
-                    line-height: 1.1 !important;
+                .warafy-product-actions .add-to-cart-btn {
+                    padding: 6px 12px !important;
+                    font-size: 11px !important;
+                }
+            }
+
+            @media (min-width: 1024px) {
+                .warafy-product-actions {
+                    gap: 12px;
                 }
 
-                .warafy-mobile-product-card .add-to-cart-btn:hover {
-                    transform: translateY(-1px) !important;
-                }
-                
                 /* Mobile: Original price strikethrough */
                 .warafy-mobile-product-card .mobile-compact-price del,
                 .warafy-mobile-product-card .mobile-compact-price .woocommerce-Price-amount del {

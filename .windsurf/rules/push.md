@@ -8,7 +8,7 @@ Rules:
 1. After you make any code change or create/delete files, stage, commit, and push the change to remote immediately using git:
    git add -A
    git commit -m "AUTO: <short-description> — <files-changed> — yyyy-mm-dd HH:MM:SS"
-   git push origin main
+   git -c http.proxy=socks5h://127.0.0.1:10808 push origin main
 
 2. Commit message format (mandatory):
    - prefix: AUTO:
@@ -30,6 +30,8 @@ Rules:
 6. If a merge conflict occurs during push, stop and request manual resolution.
 
 7. Confirm git config user.name and user.email are set. Use SSH authentication (git@gitee.com) so push is non-interactive.
+
+8. If direct push fails from the environment, retry with the local SOCKS5 proxy on `127.0.0.1:10808` using `git -c http.proxy=socks5h://127.0.0.1:10808 push origin main`.
 
 When you finish a coding step, return a short JSON summary:
 { "status": "pushed"|"skipped"|"failed", "commit": "<commit-sha-or-empty>", "message": "<commit message or error>" }
