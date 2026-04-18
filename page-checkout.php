@@ -42,21 +42,21 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                     <div class="flex items-center justify-between max-w-3xl mx-auto">
                         <div class="flex flex-col items-center flex-1">
                             <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center mb-2 shadow-lg">
-                                <span class="material-symbols-outlined" data-icon="check"></span>
+                                <?php echo warafy_get_icon_svg('check', 'w-6 h-6'); ?>
                             </div>
                             <span class="text-sm font-semibold text-gray-900 dark:text-white"><?php echo __t('Cart'); ?></span>
                         </div>
                         <div class="flex-1 h-1 bg-purple-500 mx-2"></div>
                         <div class="flex flex-col items-center flex-1">
                             <div class="w-12 h-12 rounded-full <?php echo $is_order_received ? 'bg-green-500' : 'bg-purple-600'; ?> text-white flex items-center justify-center mb-2 shadow-lg <?php echo $is_order_received ? '' : 'animate-pulse'; ?>">
-                                <span class="material-symbols-outlined"><?php echo $is_order_received ? 'check' : 'edit_note'; ?></span>
+                                <?php echo warafy_get_icon_svg($is_order_received ? 'check' : 'edit', 'w-6 h-6'); ?>
                             </div>
                             <span class="text-sm font-semibold <?php echo $is_order_received ? 'text-gray-900 dark:text-white' : 'text-purple-600'; ?>"><?php echo __t('Checkout'); ?></span>
                         </div>
                         <div class="flex-1 h-1 <?php echo $is_order_received ? 'bg-purple-500' : 'bg-gray-300 dark:bg-gray-600'; ?> mx-2"></div>
                         <div class="flex flex-col items-center flex-1">
                             <div class="w-12 h-12 rounded-full <?php echo $is_order_received ? 'bg-purple-600 text-white animate-pulse' : 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400'; ?> flex items-center justify-center mb-2">
-                                <span class="material-symbols-outlined" data-icon="task_alt"></span>
+                                <?php echo warafy_get_icon_svg('task_alt', 'w-6 h-6'); ?>
                             </div>
                             <span class="text-sm font-medium <?php echo $is_order_received ? 'text-purple-600' : 'text-gray-500 dark:text-gray-400'; ?>"><?php echo __t('Complete'); ?></span>
                         </div>
