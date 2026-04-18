@@ -11,7 +11,7 @@ function warafy_enqueue_scripts() {
     
     // Theme Styles
     $theme_version = wp_get_theme()->get( 'Version' );
-    wp_enqueue_style('warafy-style', get_stylesheet_uri(), array(), $theme_version);
+    wp_enqueue_style('warafy-style', get_stylesheet_uri(), array(), $theme_version . '.' . time());
 
     // Tailwind Config
     wp_add_inline_script('tailwind', '
@@ -35,7 +35,7 @@ function warafy_enqueue_scripts() {
 
     // Enqueue product carousel script only on single product pages
     if (is_product()) {
-        wp_enqueue_script('warafy-product-carousel', get_template_directory_uri() . '/assets/js/product-carousel.js', array(), '1.0.0', true);
+        wp_enqueue_script('warafy-product-carousel', get_template_directory_uri() . '/assets/js/product-carousel.js', array(), '1.0.0.' . time(), true);
         wp_enqueue_script('warafy-comments-reviews', get_template_directory_uri() . '/assets/js/comments-reviews.js', array(), '1.0.0', true);
         
         // Pass AJAX URL to JavaScript

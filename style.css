@@ -234,8 +234,10 @@ Text Domain: adorkini
 }
 
 #warafy-product-image-modal-panel {
-    max-width: 70vw;
-    max-height: 70vh;
+    width: 70vw !important;
+    height: 70vh !important;
+    max-width: 70vw !important;
+    max-height: 70vh !important;
 }
 
 @media (max-width: 1024px) {
