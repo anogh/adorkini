@@ -223,6 +223,39 @@ Text Domain: adorkini
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
+/* Product image modal */
+.warafy-product-image-modal-stage {
+    touch-action: none;
+}
+
+.warafy-product-image-modal-image {
+    transition: transform 0.15s ease;
+    will-change: transform;
+}
+
+#warafy-product-image-modal-panel {
+    max-width: 70vw;
+    max-height: 70vh;
+}
+
+@media (max-width: 1024px) {
+    #warafy-product-image-modal-panel {
+        width: 90vw !important;
+        height: 75vh !important;
+        max-width: 90vw;
+        max-height: 75vh;
+    }
+}
+
+@media (max-width: 640px) {
+    #warafy-product-image-modal-panel {
+        width: 94vw !important;
+        height: 70vh !important;
+        max-width: 94vw;
+        max-height: 70vh;
+    }
+}
+
 .dark .warafy-wishlist-btn {
     background-color: rgba(127, 29, 29, 0.3) !important;
     color: rgb(248 113 113) !important;

@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const ROTATION_INTERVAL_MS = 6000;
+
     // Desktop Carousel
     const desktopMainCarousel = document.getElementById('desktop-product-carousel-main');
     const desktopThumbsContainer = document.getElementById('desktop-product-carousel-thumbs');
@@ -51,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function startDesktopInterval() {
             if (desktopCarouselItems.length > 1) {
-                desktopInterval = setInterval(nextDesktopSlide, 6000);
+                desktopInterval = setInterval(nextDesktopSlide, ROTATION_INTERVAL_MS);
             }
         }
 
@@ -120,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function startMobileInterval() {
             if (mobileCarouselItems.length > 1) {
-                mobileInterval = setInterval(nextMobileSlide, 6000);
+                mobileInterval = setInterval(nextMobileSlide, ROTATION_INTERVAL_MS);
             }
         }
 
@@ -174,12 +176,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (modal && modalPanel && modalImage && modalClose) {
         let currentModalImageIndex = 0;
-        let modalImageUrls = [];
+        const modalStage = document.getElementById('warafy-product-image-modal-stage');
+        let modalZoom = 1;
+        let pinchStartDistance = 0;
+        let pinchStartZoom = 1;
+
+        const clampZoom = (value) => Math.min(4, Math.max(1, value));
+
+        function applyModalZoom() {
+            modalImage.style.transform = `scale(${modalZoom})`;
+            modalImage.style.transformOrigin = 'center center';
+        }
+
+        function resetModalZoom() {
+            modalZoom = 1;
+            applyModalZoom();
+        }
+
+        function getTouchDistance(touches) {
+            if (touches.length < 2) return 0;
+            const dx = touches[0].clientX - touches[1].clientX;
+            const dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt((dx * dx) + (dy * dy));
+        }
 
         function openModal(imageUrl, imageAlt, imageIndex = 0) {
             modalImage.src = imageUrl;
             modalImage.alt = imageAlt;
             currentModalImageIndex = imageIndex;
+            resetModalZoom();
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             modal.setAttribute('aria-hidden', 'false');
@@ -191,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.classList.remove('flex');
             modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
+            resetModalZoom();
         }
 
         // Open modal on image click
@@ -213,6 +239,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeModal();
             }
         });
+
+        if (modalStage) {
+            modalStage.addEventListener('wheel', (e) => {
+                if (modal.classList.contains('hidden')) return;
+                e.preventDefault();
+                modalZoom = clampZoom(modalZoom + (e.deltaY < 0 ? 0.15 : -0.15));
+                applyModalZoom();
+            }, { passive: false });
+
+            modalStage.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    pinchStartDistance = getTouchDistance(e.touches);
+                    pinchStartZoom = modalZoom;
+                }
+            }, { passive: true });
+
+            modalStage.addEventListener('touchmove', (e) => {
+                if (modal.classList.contains('hidden')) return;
+                if (e.touches.length === 2 && pinchStartDistance) {
+                    e.preventDefault();
+                    const distance = getTouchDistance(e.touches);
+                    modalZoom = clampZoom(pinchStartZoom * (distance / pinchStartDistance));
+                    applyModalZoom();
+                }
+            }, { passive: false });
+
+            modalStage.addEventListener('dblclick', () => {
+                modalZoom = modalZoom > 1 ? 1 : 2;
+                applyModalZoom();
+            });
+
+            applyModalZoom();
+        }
 
         // Close modal on Escape key
         document.addEventListener('keydown', (e) => {
