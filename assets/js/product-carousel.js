@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    if (window.__warafyProductGalleryInitialized) {
+        return;
+    }
+
+    window.__warafyProductGalleryInitialized = true;
+
     const ROTATION_INTERVAL_MS = 6000;
 
     // Desktop Carousel

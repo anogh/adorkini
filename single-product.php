@@ -351,10 +351,10 @@
             <div id="mobile-product-carousel" class="relative overflow-hidden w-full bg-white dark:bg-background-dark">
                 <?php if (!empty($all_image_ids)) : ?>
                     <div class="mobile-carousel-track flex transition-transform duration-300 ease-in-out">
-                        <?php foreach ($all_image_ids as $attachment_id) :
+                        <?php foreach ($all_image_ids as $index => $attachment_id) :
                             $image_url_large = wp_get_attachment_image_url($attachment_id, 'large');
                         ?>
-                            <div class="mobile-carousel-item flex-shrink-0 w-full aspect-square bg-center bg-no-repeat bg-contain cursor-zoom-in" style='background-image: url("<?php echo esc_url($image_url_large); ?>");' data-image-url="<?php echo esc_url(wp_get_attachment_image_url($attachment_id, 'full')); ?>" data-image-alt="<?php echo esc_attr( $product->get_name() ); ?>"></div>
+                            <div class="mobile-carousel-item flex-shrink-0 w-full aspect-square bg-center bg-no-repeat bg-contain cursor-zoom-in" style='background-image: url("<?php echo esc_url($image_url_large); ?>");' data-image-index="<?php echo $index; ?>" data-image-url="<?php echo esc_url(wp_get_attachment_image_url($attachment_id, 'full')); ?>" data-image-alt="<?php echo esc_attr( $product->get_name() ); ?>"></div>
                         <?php endforeach; ?>
                     </div>
                     <?php if (count($all_image_ids) > 1) : ?>
@@ -651,6 +651,353 @@
                 </div>
             </div>
         </div>
+
+        <style id="warafy-product-gallery-inline-style">
+            #warafy-product-image-modal-panel {
+                width: 70vw !important;
+                height: 70vh !important;
+                max-width: 70vw !important;
+                max-height: 70vh !important;
+            }
+
+            .warafy-product-image-modal-stage {
+                touch-action: none;
+            }
+
+            .warafy-product-image-modal-image {
+                transition: transform 0.15s ease;
+                transform-origin: center center;
+                will-change: transform;
+            }
+
+            @media (max-width: 1024px) {
+                #warafy-product-image-modal-panel {
+                    width: 90vw !important;
+                    height: 75vh !important;
+                    max-width: 90vw !important;
+                    max-height: 75vh !important;
+                }
+            }
+
+            @media (max-width: 640px) {
+                #warafy-product-image-modal-panel {
+                    width: 94vw !important;
+                    height: 70vh !important;
+                    max-width: 94vw !important;
+                    max-height: 70vh !important;
+                }
+            }
+        </style>
+
+        <script id="warafy-product-gallery-inline-script">
+        (function () {
+            const ROTATION_INTERVAL_MS = 6000;
+
+            function initializeProductGallery() {
+                if (window.__warafyProductGalleryInitialized) {
+                    return;
+                }
+
+                window.__warafyProductGalleryInitialized = true;
+
+                const desktopMainCarousel = document.getElementById('desktop-product-carousel-main');
+                const desktopCarouselItems = desktopMainCarousel ? Array.from(desktopMainCarousel.querySelectorAll('.desktop-carousel-item')) : [];
+                const desktopCarouselThumbs = Array.from(document.querySelectorAll('.desktop-carousel-thumb'));
+                const desktopPrevBtn = document.querySelector('.desktop-carousel-prev');
+                const desktopNextBtn = document.querySelector('.desktop-carousel-next');
+                let currentDesktopIndex = 0;
+                let desktopInterval = null;
+
+                function renderDesktopCarousel() {
+                    desktopCarouselItems.forEach((item, index) => {
+                        const isActive = index === currentDesktopIndex;
+                        item.classList.toggle('opacity-100', isActive);
+                        item.classList.toggle('opacity-0', !isActive);
+                        item.classList.toggle('pointer-events-auto', isActive);
+                        item.classList.toggle('pointer-events-none', !isActive);
+                    });
+
+                    desktopCarouselThumbs.forEach((thumb, index) => {
+                        thumb.classList.toggle('border-primary', index === currentDesktopIndex);
+                    });
+                }
+
+                function startDesktopInterval() {
+                    if (desktopInterval) {
+                        clearInterval(desktopInterval);
+                    }
+
+                    if (desktopCarouselItems.length > 1) {
+                        desktopInterval = setInterval(() => {
+                            currentDesktopIndex = (currentDesktopIndex + 1) % desktopCarouselItems.length;
+                            renderDesktopCarousel();
+                        }, ROTATION_INTERVAL_MS);
+                    }
+                }
+
+                function goToDesktopSlide(index) {
+                    if (!desktopCarouselItems.length) {
+                        return;
+                    }
+
+                    currentDesktopIndex = ((index % desktopCarouselItems.length) + desktopCarouselItems.length) % desktopCarouselItems.length;
+                    renderDesktopCarousel();
+                    startDesktopInterval();
+                }
+
+                if (desktopCarouselItems.length) {
+                    currentDesktopIndex = Math.max(0, desktopCarouselItems.findIndex((item) => item.classList.contains('opacity-100')));
+                    renderDesktopCarousel();
+                    startDesktopInterval();
+
+                    desktopCarouselThumbs.forEach((thumb) => {
+                        thumb.addEventListener('click', () => {
+                            const nextIndex = parseInt(thumb.dataset.imageIndex || '0', 10);
+                            goToDesktopSlide(nextIndex);
+                        });
+                    });
+
+                    if (desktopPrevBtn) {
+                        desktopPrevBtn.addEventListener('click', () => goToDesktopSlide(currentDesktopIndex - 1));
+                    }
+
+                    if (desktopNextBtn) {
+                        desktopNextBtn.addEventListener('click', () => goToDesktopSlide(currentDesktopIndex + 1));
+                    }
+                }
+
+                const mobileCarousel = document.getElementById('mobile-product-carousel');
+                const mobileCarouselTrack = mobileCarousel ? mobileCarousel.querySelector('.mobile-carousel-track') : null;
+                const mobileCarouselItems = mobileCarousel ? Array.from(mobileCarousel.querySelectorAll('.mobile-carousel-item')) : [];
+                const mobileCarouselDots = mobileCarousel ? Array.from(mobileCarousel.querySelectorAll('.mobile-carousel-dot')) : [];
+                let currentMobileIndex = 0;
+                let mobileInterval = null;
+                let mobileTouchStartX = 0;
+                let mobileTouchEndX = 0;
+
+                function renderMobileCarousel() {
+                    if (!mobileCarouselTrack || !mobileCarouselItems.length) {
+                        return;
+                    }
+
+                    const itemWidth = mobileCarouselItems[0].clientWidth;
+                    mobileCarouselTrack.style.transform = 'translateX(-' + (currentMobileIndex * itemWidth) + 'px)';
+
+                    mobileCarouselDots.forEach((dot, index) => {
+                        const isActive = index === currentMobileIndex;
+                        dot.classList.toggle('bg-primary', isActive);
+                        dot.classList.toggle('dark:bg-primary-light', isActive);
+                        dot.classList.toggle('bg-gray-300', !isActive);
+                        dot.classList.toggle('dark:bg-gray-600', !isActive);
+                    });
+                }
+
+                function startMobileInterval() {
+                    if (mobileInterval) {
+                        clearInterval(mobileInterval);
+                    }
+
+                    if (mobileCarouselItems.length > 1) {
+                        mobileInterval = setInterval(() => {
+                            currentMobileIndex = (currentMobileIndex + 1) % mobileCarouselItems.length;
+                            renderMobileCarousel();
+                        }, ROTATION_INTERVAL_MS);
+                    }
+                }
+
+                function goToMobileSlide(index) {
+                    if (!mobileCarouselItems.length) {
+                        return;
+                    }
+
+                    currentMobileIndex = ((index % mobileCarouselItems.length) + mobileCarouselItems.length) % mobileCarouselItems.length;
+                    renderMobileCarousel();
+                    startMobileInterval();
+                }
+
+                if (mobileCarouselTrack && mobileCarouselItems.length) {
+                    renderMobileCarousel();
+                    startMobileInterval();
+
+                    mobileCarouselDots.forEach((dot) => {
+                        dot.addEventListener('click', () => {
+                            const nextIndex = parseInt(dot.dataset.imageIndex || '0', 10);
+                            if (nextIndex < mobileCarouselItems.length) {
+                                goToMobileSlide(nextIndex);
+                            }
+                        });
+                    });
+
+                    mobileCarousel.addEventListener('touchstart', (event) => {
+                        if (!event.touches.length) {
+                            return;
+                        }
+
+                        mobileTouchStartX = event.touches[0].clientX;
+                        mobileTouchEndX = mobileTouchStartX;
+                    }, { passive: true });
+
+                    mobileCarousel.addEventListener('touchmove', (event) => {
+                        if (!event.touches.length) {
+                            return;
+                        }
+
+                        mobileTouchEndX = event.touches[0].clientX;
+                    }, { passive: true });
+
+                    mobileCarousel.addEventListener('touchend', () => {
+                        const swipeDistance = mobileTouchStartX - mobileTouchEndX;
+                        const sensitivity = 50;
+
+                        if (swipeDistance > sensitivity) {
+                            goToMobileSlide(currentMobileIndex + 1);
+                        } else if (swipeDistance < -sensitivity) {
+                            goToMobileSlide(currentMobileIndex - 1);
+                        }
+                    });
+
+                    window.addEventListener('resize', renderMobileCarousel);
+                }
+
+                const modal = document.getElementById('warafy-product-image-modal');
+                const modalImage = document.getElementById('warafy-product-image-modal-image');
+                const modalStage = document.getElementById('warafy-product-image-modal-stage');
+                const modalClose = document.getElementById('warafy-product-image-modal-close');
+                let modalZoom = 1;
+                let pinchStartDistance = 0;
+                let pinchStartZoom = 1;
+
+                function clampZoom(value) {
+                    return Math.min(4, Math.max(1, value));
+                }
+
+                function applyModalZoom() {
+                    if (!modalImage) {
+                        return;
+                    }
+
+                    modalImage.style.transform = 'scale(' + modalZoom + ')';
+                }
+
+                function resetModalZoom() {
+                    modalZoom = 1;
+                    applyModalZoom();
+                }
+
+                function getTouchDistance(touches) {
+                    if (touches.length < 2) {
+                        return 0;
+                    }
+
+                    const dx = touches[0].clientX - touches[1].clientX;
+                    const dy = touches[0].clientY - touches[1].clientY;
+                    return Math.sqrt((dx * dx) + (dy * dy));
+                }
+
+                function openModal(imageUrl, imageAlt) {
+                    if (!modal || !modalImage || !imageUrl) {
+                        return;
+                    }
+
+                    modalImage.src = imageUrl;
+                    modalImage.alt = imageAlt || '';
+                    resetModalZoom();
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    modal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeModal() {
+                    if (!modal) {
+                        return;
+                    }
+
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    modal.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                    resetModalZoom();
+                }
+
+                document.querySelectorAll('.desktop-carousel-item, .mobile-carousel-item').forEach((imageItem) => {
+                    imageItem.addEventListener('click', () => {
+                        openModal(imageItem.dataset.imageUrl, imageItem.dataset.imageAlt);
+                    });
+                });
+
+                if (modalClose) {
+                    modalClose.addEventListener('click', closeModal);
+                }
+
+                if (modal) {
+                    modal.addEventListener('click', (event) => {
+                        if (event.target === modal) {
+                            closeModal();
+                        }
+                    });
+                }
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                        closeModal();
+                    }
+                });
+
+                if (modalStage) {
+                    modalStage.addEventListener('wheel', (event) => {
+                        if (!modal || modal.classList.contains('hidden')) {
+                            return;
+                        }
+
+                        event.preventDefault();
+                        modalZoom = clampZoom(modalZoom + (event.deltaY < 0 ? 0.15 : -0.15));
+                        applyModalZoom();
+                    }, { passive: false });
+
+                    modalStage.addEventListener('touchstart', (event) => {
+                        if (event.touches.length === 2) {
+                            pinchStartDistance = getTouchDistance(event.touches);
+                            pinchStartZoom = modalZoom;
+                        }
+                    }, { passive: true });
+
+                    modalStage.addEventListener('touchmove', (event) => {
+                        if (!modal || modal.classList.contains('hidden')) {
+                            return;
+                        }
+
+                        if (event.touches.length === 2 && pinchStartDistance) {
+                            event.preventDefault();
+                            modalZoom = clampZoom(pinchStartZoom * (getTouchDistance(event.touches) / pinchStartDistance));
+                            applyModalZoom();
+                        }
+                    }, { passive: false });
+
+                    modalStage.addEventListener('touchend', () => {
+                        pinchStartDistance = 0;
+                    });
+
+                    modalStage.addEventListener('touchcancel', () => {
+                        pinchStartDistance = 0;
+                    });
+
+                    modalStage.addEventListener('dblclick', () => {
+                        modalZoom = modalZoom > 1 ? 1 : 2;
+                        applyModalZoom();
+                    });
+
+                    applyModalZoom();
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeProductGallery, { once: true });
+            } else {
+                initializeProductGallery();
+            }
+        })();
+        </script>
 
     <?php endwhile; ?>
 </main>
