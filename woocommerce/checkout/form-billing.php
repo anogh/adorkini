@@ -31,6 +31,7 @@ defined('ABSPATH') || exit;
 
         foreach ($fields as $key => $field) {
             if (in_array($key, ['billing_country', 'billing_state', 'billing_city', 'billing_postcode'])) {
+                woocommerce_form_field($key, $field, $checkout->get_value($key));
                 continue;
             }
 

@@ -390,18 +390,21 @@ function warafy_custom_checkout_fields( $fields ) {
     $fields['billing']['billing_first_name']['required'] = true;
     $fields['billing']['billing_first_name']['class'] = array('form-row-wide');
     $fields['billing']['billing_first_name']['placeholder'] = __t('Enter your full name');
+    $fields['billing']['billing_first_name']['autocomplete'] = 'name';
     
     // Address (required)
     $fields['billing']['billing_address_1']['label'] = __t('Address');
     $fields['billing']['billing_address_1']['required'] = true;
     $fields['billing']['billing_address_1']['class'] = array('form-row-wide');
     $fields['billing']['billing_address_1']['placeholder'] = __t('House, road, area');
+    $fields['billing']['billing_address_1']['autocomplete'] = 'street-address';
     
     // Mobile Number (required)
     $fields['billing']['billing_phone']['label'] = __t('Mobile Number');
     $fields['billing']['billing_phone']['required'] = true;
     $fields['billing']['billing_phone']['class'] = array('form-row-wide');
     $fields['billing']['billing_phone']['placeholder'] = __t('Enter your mobile number');
+    $fields['billing']['billing_phone']['autocomplete'] = 'tel';
 
     if (isset($fields['billing']['billing_email'])) {
         $fields['billing']['billing_email']['label'] = __t('Email');
@@ -409,6 +412,7 @@ function warafy_custom_checkout_fields( $fields ) {
         $fields['billing']['billing_email']['class'] = array('form-row-wide');
         $fields['billing']['billing_email']['placeholder'] = __t('Email address (optional)');
         $fields['billing']['billing_email']['validate'] = array('email');
+        $fields['billing']['billing_email']['autocomplete'] = 'email';
     }
     
     // Remove extra checkout sections from the UI.
@@ -451,32 +455,94 @@ function warafy_mirror_billing_to_shipping($data) {
         $data['shipping_postcode'] = $data['billing_postcode'];
     }
 
-    if (empty($data['billing_email'])) {
-        $data['billing_email'] = warafy_generate_checkout_email($data);
+    if (!empty($data['billing_email']) && warafy_should_clear_checkout_email($data['billing_email'], $data['billing_phone'] ?? '')) {
+        $data['billing_email'] = '';
     }
 
     return $data;
 }
 
-function warafy_generate_checkout_email($data) {
-    if (function_exists('wp_get_current_user')) {
-        $user = wp_get_current_user();
-        if ($user && !empty($user->user_email)) {
-            return $user->user_email;
-        }
+function warafy_should_clear_checkout_email($email_value, $phone_value = '') {
+    if (!is_string($email_value)) {
+        return false;
     }
 
-    $phone = isset($data['billing_phone']) ? preg_replace('/\D+/', '', (string) $data['billing_phone']) : '';
-    if ($phone === '') {
-        $phone = uniqid('order', true);
+    $email_value = trim($email_value);
+    if ($email_value === '') {
+        return false;
     }
 
-    $host = function_exists('home_url') ? wp_parse_url(home_url(), PHP_URL_HOST) : 'example.com';
-    if (!$host) {
-        $host = 'example.com';
+    if (strpos($email_value, '@phone.local') !== false) {
+        return true;
     }
 
-    return 'orders+' . $phone . '@' . $host;
+    if (preg_match('/^orders\+[0-9]+@/i', $email_value)) {
+        return true;
+    }
+
+    $phone_digits = preg_replace('/\D+/', '', (string) $phone_value);
+    $email_digits = preg_replace('/\D+/', '', $email_value);
+
+    if ($phone_digits !== '' && $email_digits === $phone_digits && strpos($email_value, '@') === false) {
+        return true;
+    }
+
+    return false;
+}
+
+add_filter('woocommerce_checkout_get_value', 'warafy_normalize_checkout_field_value', 10, 2);
+function warafy_normalize_checkout_field_value($value, $input) {
+    if (in_array($input, array('billing_country', 'shipping_country'), true) && ($value === null || $value === '') && function_exists('WC') && WC()->countries) {
+        return WC()->countries->get_base_country();
+    }
+
+    if (in_array($input, array('billing_state', 'shipping_state'), true) && ($value === null || $value === '') && function_exists('WC') && WC()->countries) {
+        return WC()->countries->get_base_state();
+    }
+
+    if ($input !== 'billing_email') {
+        return $value;
+    }
+
+    if (!is_string($value) || $value === '') {
+        return $value;
+    }
+
+    $normalized_value = trim($value);
+
+    $customer_phone = function_exists('WC') && WC()->customer ? WC()->customer->get_billing_phone() : '';
+
+    if (warafy_should_clear_checkout_email($normalized_value, $customer_phone)) {
+        return '';
+    }
+
+    return $normalized_value;
+}
+
+add_action('woocommerce_before_checkout_form', 'warafy_prime_checkout_customer_location', 5);
+function warafy_prime_checkout_customer_location() {
+    if (!function_exists('WC') || !WC()->customer || !WC()->countries) {
+        return;
+    }
+
+    $base_country = WC()->countries->get_base_country();
+    $base_state = WC()->countries->get_base_state();
+
+    if ($base_country && !WC()->customer->get_billing_country()) {
+        WC()->customer->set_billing_country($base_country);
+    }
+
+    if ($base_country && !WC()->customer->get_shipping_country()) {
+        WC()->customer->set_shipping_country($base_country);
+    }
+
+    if ($base_state && !WC()->customer->get_billing_state()) {
+        WC()->customer->set_billing_state($base_state);
+    }
+
+    if ($base_state && !WC()->customer->get_shipping_state()) {
+        WC()->customer->set_shipping_state($base_state);
+    }
 }
 
 add_filter('woocommerce_thankyou_order_received_text', 'warafy_custom_order_received_text', 10, 2);
@@ -491,22 +557,20 @@ function warafy_custom_order_received_text($text, $order) {
 // Allow guests to view order details without login
 add_filter('woocommerce_order_details_allow_guest_access', '__return_true');
 
-// Generate unique 5-digit order number
-add_action('woocommerce_new_order', 'warafy_generate_custom_order_number', 10, 1);
-function warafy_generate_custom_order_number($order_id) {
-    $order = wc_get_order($order_id);
-    if (!$order) return;
-    
-    // Check if custom order number already exists
+// Generate unique 5-digit order number before WooCommerce saves the order.
+add_action('woocommerce_checkout_create_order', 'warafy_generate_custom_order_number', 10, 2);
+function warafy_generate_custom_order_number($order, $data) {
+    if (!$order instanceof WC_Order) {
+        return;
+    }
+
     $existing_number = $order->get_meta('_warafy_order_number');
-    if ($existing_number) return;
-    
-    // Generate unique 5-digit number
+    if ($existing_number) {
+        return;
+    }
+
     $custom_number = warafy_generate_unique_order_number();
-    
-    // Save to order meta
     $order->update_meta_data('_warafy_order_number', $custom_number);
-    $order->save();
 }
 
 function warafy_generate_unique_order_number() {

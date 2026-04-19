@@ -98,32 +98,30 @@ function warafy_mirror_billing_to_shipping($data) {
         }
     }
 
-    if (empty($data['billing_email'])) {
-        $data['billing_email'] = warafy_generate_checkout_email($data);
-    }
-
     return $data;
 }
 
-function warafy_generate_checkout_email($data) {
-    if (function_exists('wp_get_current_user')) {
-        $user = wp_get_current_user();
-        if ($user && !empty($user->user_email)) {
-            return $user->user_email;
-        }
+add_filter('woocommerce_checkout_get_value', 'warafy_normalize_checkout_field_value', 10, 2);
+function warafy_normalize_checkout_field_value($value, $input) {
+    if ($input !== 'billing_email') {
+        return $value;
     }
 
-    $phone = isset($data['billing_phone']) ? preg_replace('/\D+/', '', (string) $data['billing_phone']) : '';
-    if ($phone === '') {
-        $phone = uniqid('order', true);
+    if (!is_string($value) || $value === '') {
+        return $value;
     }
 
-    $host = function_exists('home_url') ? wp_parse_url(home_url(), PHP_URL_HOST) : 'example.com';
-    if (!$host) {
-        $host = 'example.com';
+    $normalized_value = trim($value);
+
+    if (strpos($normalized_value, '@phone.local') !== false) {
+        return '';
     }
 
-    return 'orders+' . $phone . '@' . $host;
+    if (preg_match('/^orders\+[0-9]+@/i', $normalized_value)) {
+        return '';
+    }
+
+    return $normalized_value;
 }
 
 add_filter('woocommerce_thankyou_order_received_text', 'warafy_custom_order_received_text', 10, 2);
@@ -139,18 +137,19 @@ function warafy_custom_order_received_text($text, $order) {
 add_filter('woocommerce_order_details_allow_guest_access', '__return_true');
 
 // Generate unique 5-digit order number
-add_action('woocommerce_new_order', 'warafy_generate_custom_order_number', 10, 1);
-function warafy_generate_custom_order_number($order_id) {
-    $order = wc_get_order($order_id);
-    if (!$order) return;
-    
+add_action('woocommerce_checkout_create_order', 'warafy_generate_custom_order_number', 10, 2);
+function warafy_generate_custom_order_number($order, $data) {
+    if (!$order instanceof WC_Order) {
+        return;
+    }
+
     $existing_number = $order->get_meta('_warafy_order_number');
-    if ($existing_number) return;
-    
+    if ($existing_number) {
+        return;
+    }
+
     $custom_number = warafy_generate_unique_order_number();
-    
     $order->update_meta_data('_warafy_order_number', $custom_number);
-    $order->save();
 }
 
 function warafy_generate_unique_order_number() {
