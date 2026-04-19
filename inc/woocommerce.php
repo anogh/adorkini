@@ -36,42 +36,92 @@ function warafy_custom_checkout_fields( $fields ) {
         'billing_address_1',
         'billing_phone',
         'billing_email',
-        'order_comments'
+        'billing_country',
+        'billing_state',
+        'billing_city',
+        'billing_postcode'
     );
-    
+
     foreach ($fields['billing'] as $key => $field) {
         if (!in_array($key, $allowed_fields)) {
             unset($fields['billing'][$key]);
         }
     }
-    
+
+    if (isset($fields['billing']['billing_email'])) {
+        $fields['billing']['billing_email']['type'] = 'hidden';
+        $fields['billing']['billing_email']['required'] = false;
+        $fields['billing']['billing_email']['class'] = array('warafy-hidden-checkout-field');
+    }
+
+    foreach (array('billing_country', 'billing_state', 'billing_city', 'billing_postcode') as $key) {
+        if (isset($fields['billing'][$key])) {
+            $fields['billing'][$key]['type'] = 'hidden';
+            $fields['billing'][$key]['required'] = false;
+            $fields['billing'][$key]['class'] = array('warafy-hidden-checkout-field');
+        }
+    }
+
     $fields['shipping'] = array();
-    
+    $fields['order'] = array();
+
     $fields['billing']['billing_first_name']['label'] = 'Name';
     $fields['billing']['billing_first_name']['required'] = true;
     $fields['billing']['billing_first_name']['class'] = array('form-row-wide');
     $fields['billing']['billing_first_name']['placeholder'] = 'Enter your full name';
-    
+
     $fields['billing']['billing_address_1']['label'] = 'Address';
     $fields['billing']['billing_address_1']['required'] = true;
     $fields['billing']['billing_address_1']['class'] = array('form-row-wide');
-    $fields['billing']['billing_address_1']['placeholder'] = 'Street address, apartment, suite, etc.';
-    
+    $fields['billing']['billing_address_1']['placeholder'] = 'House, road, area';
+
     $fields['billing']['billing_phone']['label'] = 'Mobile Number';
     $fields['billing']['billing_phone']['required'] = true;
     $fields['billing']['billing_phone']['class'] = array('form-row-wide');
     $fields['billing']['billing_phone']['placeholder'] = 'Enter your mobile number';
-    
-    $fields['billing']['billing_email']['label'] = 'Email Address';
-    $fields['billing']['billing_email']['required'] = false;
-    $fields['billing']['billing_email']['class'] = array('form-row-wide');
-    $fields['billing']['billing_email']['placeholder'] = 'Enter your email (optional)';
-    
-    $fields['order']['order_comments']['label'] = 'Order Instructions';
-    $fields['order']['order_comments']['required'] = false;
-    $fields['order']['order_comments']['placeholder'] = 'Any special instructions for your order...';
 
     return $fields;
+}
+
+add_filter('woocommerce_checkout_posted_data', 'warafy_mirror_billing_to_shipping');
+function warafy_mirror_billing_to_shipping($data) {
+    $mirror_fields = array('first_name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country');
+
+    foreach ($mirror_fields as $field) {
+        $billing_key = 'billing_' . $field;
+        $shipping_key = 'shipping_' . $field;
+
+        if (isset($data[$billing_key])) {
+            $data[$shipping_key] = $data[$billing_key];
+        }
+    }
+
+    if (empty($data['billing_email'])) {
+        $data['billing_email'] = warafy_generate_checkout_email($data);
+    }
+
+    return $data;
+}
+
+function warafy_generate_checkout_email($data) {
+    if (function_exists('wp_get_current_user')) {
+        $user = wp_get_current_user();
+        if ($user && !empty($user->user_email)) {
+            return $user->user_email;
+        }
+    }
+
+    $phone = isset($data['billing_phone']) ? preg_replace('/\D+/', '', (string) $data['billing_phone']) : '';
+    if ($phone === '') {
+        $phone = uniqid('order', true);
+    }
+
+    $host = function_exists('home_url') ? wp_parse_url(home_url(), PHP_URL_HOST) : 'example.com';
+    if (!$host) {
+        $host = 'example.com';
+    }
+
+    return 'orders+' . $phone . '@' . $host;
 }
 
 add_filter('woocommerce_thankyou_order_received_text', 'warafy_custom_order_received_text', 10, 2);

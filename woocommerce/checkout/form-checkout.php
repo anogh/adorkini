@@ -71,7 +71,7 @@ function initializeMobileCheckoutForm() {
         var originalForm = document.querySelector('form.checkout.woocommerce-checkout');
         if (originalForm) {
             // Ensure all required fields exist in original form
-            var requiredFields = ['billing_first_name', 'billing_address_1', 'billing_phone', 'billing_email'];
+            var requiredFields = ['billing_first_name', 'billing_address_1', 'billing_phone'];
             
             for (var i = 0; i < requiredFields.length; i++) {
                 var fieldName = requiredFields[i];
@@ -508,14 +508,7 @@ function createCustomerDetailsSection() {
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Mobile Number *</label>
                     <input type="tel" name="billing_phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email address (optional)</label>
-                    <input type="email" name="billing_email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Order instructions (optional)</label>
-                    <textarea name="order_comments" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Any special instructions for your order..."></textarea>
-                </div>
+                <input type="hidden" name="billing_email">
             </div>
         `;
         wrapper.appendChild(customerContainer);

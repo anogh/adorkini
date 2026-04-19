@@ -340,6 +340,7 @@ function warafy_custom_checkout_fields( $fields ) {
         'billing_first_name',  // Name (required)
         'billing_address_1',   // Address (required)
         'billing_phone',       // Mobile (required)
+        'billing_email',       // Hidden backend field
         'billing_country',     // Hidden backend field
         'billing_state',       // Hidden backend field
         'billing_city',        // Hidden backend field
@@ -362,6 +363,12 @@ function warafy_custom_checkout_fields( $fields ) {
         $fields['billing']['billing_country']['required'] = false;
         $fields['billing']['billing_country']['default'] = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : '';
         $fields['billing']['billing_country']['class'] = array('warafy-hidden-checkout-field');
+    }
+
+    if (isset($fields['billing']['billing_email'])) {
+        $fields['billing']['billing_email']['type'] = 'hidden';
+        $fields['billing']['billing_email']['required'] = false;
+        $fields['billing']['billing_email']['class'] = array('warafy-hidden-checkout-field');
     }
 
     if (isset($fields['billing']['billing_state'])) {
@@ -422,7 +429,52 @@ function warafy_mirror_billing_to_shipping($data) {
         }
     }
 
+    if (empty($data['billing_country']) && function_exists('WC') && WC()->countries) {
+        $data['billing_country'] = WC()->countries->get_base_country();
+        $data['shipping_country'] = $data['billing_country'];
+    }
+
+    if (empty($data['billing_state']) && function_exists('WC') && WC()->countries) {
+        $data['billing_state'] = WC()->countries->get_base_state();
+        $data['shipping_state'] = $data['billing_state'];
+    }
+
+    if (empty($data['billing_city']) && function_exists('WC') && WC()->countries && method_exists(WC()->countries, 'get_base_city')) {
+        $data['billing_city'] = WC()->countries->get_base_city();
+        $data['shipping_city'] = $data['billing_city'];
+    }
+
+    if (empty($data['billing_postcode']) && function_exists('WC') && WC()->countries && method_exists(WC()->countries, 'get_base_postcode')) {
+        $data['billing_postcode'] = WC()->countries->get_base_postcode();
+        $data['shipping_postcode'] = $data['billing_postcode'];
+    }
+
+    if (empty($data['billing_email'])) {
+        $data['billing_email'] = warafy_generate_checkout_email($data);
+    }
+
     return $data;
+}
+
+function warafy_generate_checkout_email($data) {
+    if (function_exists('wp_get_current_user')) {
+        $user = wp_get_current_user();
+        if ($user && !empty($user->user_email)) {
+            return $user->user_email;
+        }
+    }
+
+    $phone = isset($data['billing_phone']) ? preg_replace('/\D+/', '', (string) $data['billing_phone']) : '';
+    if ($phone === '') {
+        $phone = uniqid('order', true);
+    }
+
+    $host = function_exists('home_url') ? wp_parse_url(home_url(), PHP_URL_HOST) : 'example.com';
+    if (!$host) {
+        $host = 'example.com';
+    }
+
+    return 'orders+' . $phone . '@' . $host;
 }
 
 add_filter('woocommerce_thankyou_order_received_text', 'warafy_custom_order_received_text', 10, 2);
