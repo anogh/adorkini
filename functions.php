@@ -532,64 +532,29 @@ function warafy_checkout_log($message) {
     file_put_contents($log_file, "[{$time}] {$message}\n", FILE_APPEND);
 }
 
-add_action('after_setup_theme', 'warafy_override_wc_ajax_checkout');
-function warafy_override_wc_ajax_checkout() {
-    global $wp_filter;
-    foreach (array('wp_ajax_woocommerce_checkout', 'wp_ajax_nopriv_woocommerce_checkout') as $hook) {
-        if (isset($wp_filter[$hook])) {
-            foreach ($wp_filter[$hook]->callbacks as $priority => $callbacks) {
-                foreach ($callbacks as $key => $cb) {
-                    $func = $cb['function'];
-                    $is_wc = false;
-                    if (is_array($func) && isset($func[0]) && is_object($func[0]) && get_class($func[0]) === 'WC_AJAX') $is_wc = true;
-                    if (is_array($func) && isset($func[0]) && $func[0] === 'WC_AJAX') $is_wc = true;
-                    if ($is_wc) {
-                        remove_action($hook, $func, $priority);
-                        warafy_checkout_log("REMOVED WC_AJAX::checkout from {$hook} at priority {$priority}");
-                    }
-                }
-            }
-        }
-    }
-    add_action('wp_ajax_woocommerce_checkout', 'warafy_custom_wc_checkout_ajax');
-    add_action('wp_ajax_nopriv_woocommerce_checkout', 'warafy_custom_wc_checkout_ajax');
-}
 
-function warafy_custom_wc_checkout_ajax() {
-    warafy_checkout_log('=== CUSTOM AJAX CHECKOUT START ===');
+add_action('woocommerce_checkout_order_processed', 'warafy_checkout_order_processed', 1, 3);
+function warafy_checkout_order_processed($order_id, $posted_data, $order) {
+    warafy_checkout_log("ORDER #{$order_id} CREATED - sending clean redirect");
 
-    if (empty($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce($_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process-checkout')) {
-        warafy_checkout_log('NONCE FAIL');
-        wp_send_json_error(array('messages' => '<ul class="woocommerce-error"><li>Nonce error. Refresh page.</li></ul>'));
-        return;
-    }
+    $order->update_status('processing');
+    $order_key = $order->get_order_key();
+    $redirect = add_query_arg(array(
+        'key' => $order_key,
+        'order-received' => $order_id,
+    ), wc_get_page_permalink('checkout'));
 
-    wc_maybe_define_constant('WOOCOMMERCE_CHECKOUT', true);
-    WC()->session->set_customer_session_cookie(true);
+    $response = array(
+        'result'   => 'success',
+        'redirect' => $redirect,
+    );
 
-    try {
-        warafy_checkout_log('Calling WC()->checkout()->process_checkout()');
-        WC()->checkout()->process_checkout();
-        warafy_checkout_log('process_checkout() completed without exception');
-    } catch (\Exception $e) {
-        warafy_checkout_log('EXCEPTION: ' . get_class($e) . ': ' . $e->getMessage());
-        warafy_checkout_log('FILE: ' . $e->getFile() . ':' . $e->getLine());
-        warafy_checkout_log('TRACE: ' . $e->getTraceAsString());
-        wp_send_json_error(array(
-            'messages' => '<ul class="woocommerce-error"><li><strong>Error:</strong> ' . esc_html($e->getMessage()) . '</li></ul>'
-        ));
-    } catch (\Error $e) {
-        warafy_checkout_log('FATAL ERROR: ' . get_class($e) . ': ' . $e->getMessage());
-        warafy_checkout_log('FILE: ' . $e->getFile() . ':' . $e->getLine());
-        wp_send_json_error(array(
-            'messages' => '<ul class="woocommerce-error"><li><strong>Error:</strong> ' . esc_html($e->getMessage()) . '</li></ul>'
-        ));
-    }
-}
+    warafy_checkout_log("REDIRECT: {$redirect}");
 
-add_action('woocommerce_checkout_order_processed', 'warafy_log_order_success', 10, 1);
-function warafy_log_order_success($order_id) {
-    warafy_checkout_log("ORDER PROCESSED OK: #{$order_id}");
+    while (ob_get_level()) ob_end_clean();
+    header('Content-Type: application/json; charset=utf-8');
+    echo wp_json_encode($response);
+    exit;
 }
 
 add_action('woocommerce_after_checkout_validation', 'warafy_log_validation_result', 9999, 2);
