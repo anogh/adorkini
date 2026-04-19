@@ -351,9 +351,6 @@ $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
             </div>
         </div>
     </header>
-
-        </div>
-    </header>
 <?php elseif ( (function_exists('is_account_page') && is_account_page()) || is_page('my-account') ) : ?>
     <!-- Custom Mobile Account Header -->
     <header class="lg:hidden sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-gray-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
