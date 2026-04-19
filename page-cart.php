@@ -8,8 +8,9 @@ defined('ABSPATH') || exit;
 
 get_header();
 
-// Check if cart is empty
-$is_cart_empty = WC()->cart->is_empty();
+// Check if cart is available and empty
+$cart = function_exists('WC') && WC()->cart ? WC()->cart : null;
+$is_cart_empty = !$cart || $cart->is_empty();
 ?>
 
 <!-- Cart Content -->
@@ -55,10 +56,15 @@ $is_cart_empty = WC()->cart->is_empty();
                 <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center"><?php echo __t('New in store'); ?></h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <?php while ($products_query->have_posts()) : $products_query->the_post(); ?>
-                        <?php global $product; ?>
+                        <?php
+                        $product = wc_get_product(get_the_ID());
+                        if (!$product) {
+                            continue;
+                        }
+                        ?>
                         <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm">
                             <div class="relative">
-                                <a href="<?php echo get_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
+                                <a href="<?php echo get_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo esc_url(get_the_post_thumbnail_url($product->get_id(), "woocommerce_thumbnail")); ?>");'></a>
                                 <?php if ($product->is_on_sale()) : ?>
                                     <span class="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded"><?php echo __t('Sale!'); ?></span>
                                 <?php endif; ?>
@@ -95,8 +101,6 @@ $is_cart_empty = WC()->cart->is_empty();
         
     </div>
 </main>
-
-<?php get_footer(); ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -248,3 +252,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<?php get_footer(); ?>

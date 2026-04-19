@@ -4,9 +4,12 @@
  *
  * @version 10.1.0
  */
- */
 
 defined('ABSPATH') || exit;
+
+if (!function_exists('WC') || !WC()->cart) {
+    return;
+}
 ?>
 
 
@@ -394,5 +397,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
-

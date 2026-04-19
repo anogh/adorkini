@@ -309,7 +309,7 @@ $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
         <path d="M16 10a4 4 0 0 1-8 0"></path>
     </svg>
     <span class="cart-count absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-primary border-2 border-primary shadow-lg" style="z-index: 20; transform: none; line-height: 1;"><?php 
-    $cart_count = WC()->cart->get_cart_contents_count();
+    $cart_count = function_exists('WC') && WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
     echo '<span class="warafy-cart-qty">' . $cart_count . '</span>';
 ?></span>
 </a>
@@ -414,4 +414,3 @@ $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
         </div>
     </header>
 <?php endif; ?>
-
