@@ -331,89 +331,89 @@ add_action( 'pre_get_posts', 'warafy_pre_get_posts_product_order' );
 // Disable redirect to product page if only one result found in search
 add_filter( 'woocommerce_redirect_single_search_result', '__return_false' );
 
-add_filter('woocommerce_checkout_fields', 'warafy_custom_checkout_fields', 9999);
-
 add_filter('woocommerce_enable_guest_checkout', '__return_true');
 add_filter('woocommerce_enable_checkout_login_reminder', '__return_false');
 add_filter('woocommerce_checkout_registration_enabled', '__return_false');
 add_filter('woocommerce_checkout_registration_required', '__return_false');
 
+add_filter('woocommerce_checkout_fields', 'warafy_custom_checkout_fields', 9999);
 function warafy_custom_checkout_fields($fields) {
     $base_country = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : 'BD';
     $base_state = function_exists('WC') && WC()->countries ? WC()->countries->get_base_state() : '';
-    $host = function_exists('home_url') ? wp_parse_url(home_url(), PHP_URL_HOST) : 'example.com';
 
     $fields['billing'] = array(
         'billing_first_name' => array(
-            'label'    => __t('Name'),
-            'required' => true,
-            'class'    => array('form-row-wide'),
+            'label'       => __t('Name'),
+            'required'    => true,
+            'class'       => array('form-row-wide'),
             'placeholder' => __t('Enter your full name'),
-            'priority' => 10,
+            'priority'    => 10,
         ),
         'billing_phone' => array(
-            'label'    => __t('Mobile Number'),
-            'required' => true,
-            'class'    => array('form-row-wide'),
+            'label'       => __t('Mobile Number'),
+            'required'    => true,
+            'class'       => array('form-row-wide'),
             'placeholder' => __t('Enter your mobile number'),
-            'type'     => 'tel',
-            'priority' => 20,
+            'type'        => 'tel',
+            'priority'    => 20,
         ),
         'billing_address_1' => array(
-            'label'    => __t('Address'),
-            'required' => true,
-            'class'    => array('form-row-wide'),
+            'label'       => __t('Address'),
+            'required'    => true,
+            'class'       => array('form-row-wide'),
             'placeholder' => __t('House, road, area'),
-            'priority' => 30,
+            'priority'    => 30,
         ),
         'billing_email' => array(
-            'label'    => __t('Email'),
-            'required' => false,
-            'class'    => array('form-row-wide'),
+            'label'       => __t('Email'),
+            'required'    => false,
+            'class'       => array('form-row-wide'),
             'placeholder' => __t('Email address (optional)'),
-            'type'     => 'email',
-            'validate' => array('email'),
-            'priority' => 40,
+            'type'        => 'email',
+            'validate'    => array('email'),
+            'priority'    => 40,
         ),
         'billing_country' => array(
             'type'     => 'hidden',
             'required' => false,
             'default'  => $base_country,
-            'class'    => array('warafy-hidden-checkout-field'),
-            'priority' => 90,
         ),
         'billing_state' => array(
             'type'     => 'hidden',
             'required' => false,
             'default'  => $base_state,
-            'class'    => array('warafy-hidden-checkout-field'),
-            'priority' => 91,
         ),
         'billing_city' => array(
             'type'     => 'hidden',
             'required' => false,
             'default'  => '',
-            'class'    => array('warafy-hidden-checkout-field'),
-            'priority' => 92,
         ),
         'billing_postcode' => array(
             'type'     => 'hidden',
             'required' => false,
             'default'  => '',
-            'class'    => array('warafy-hidden-checkout-field'),
-            'priority' => 93,
+        ),
+        'billing_last_name' => array(
+            'type'     => 'hidden',
+            'required' => false,
+            'default'  => '',
+        ),
+        'billing_address_2' => array(
+            'type'     => 'hidden',
+            'required' => false,
+            'default'  => '',
         ),
     );
 
     $fields['shipping'] = array(
-        'shipping_first_name' => array('type' => 'hidden', 'required' => false, 'priority' => 10),
-        'shipping_last_name'  => array('type' => 'hidden', 'required' => false, 'priority' => 11),
-        'shipping_address_1'  => array('type' => 'hidden', 'required' => false, 'priority' => 20),
-        'shipping_address_2'  => array('type' => 'hidden', 'required' => false, 'priority' => 21),
-        'shipping_city'       => array('type' => 'hidden', 'required' => false, 'priority' => 30),
-        'shipping_state'      => array('type' => 'hidden', 'required' => false, 'priority' => 31),
-        'shipping_postcode'   => array('type' => 'hidden', 'required' => false, 'priority' => 32),
-        'shipping_country'    => array('type' => 'hidden', 'required' => false, 'default' => $base_country, 'priority' => 40),
+        'shipping_first_name' => array('type' => 'hidden', 'required' => false),
+        'shipping_last_name'  => array('type' => 'hidden', 'required' => false),
+        'shipping_address_1'  => array('type' => 'hidden', 'required' => false),
+        'shipping_address_2'  => array('type' => 'hidden', 'required' => false),
+        'shipping_city'       => array('type' => 'hidden', 'required' => false),
+        'shipping_state'      => array('type' => 'hidden', 'required' => false),
+        'shipping_postcode'   => array('type' => 'hidden', 'required' => false),
+        'shipping_country'    => array('type' => 'hidden', 'required' => false, 'default' => $base_country),
     );
 
     $fields['order'] = array();
@@ -424,65 +424,24 @@ function warafy_custom_checkout_fields($fields) {
 add_filter('woocommerce_checkout_get_value', 'warafy_checkout_field_defaults', 10, 2);
 function warafy_checkout_field_defaults($value, $input) {
     if ($input === 'billing_email' && !empty($value)) {
-        $dummy_domains = array('@phone.local', '@dummy.', '@fake.');
-        foreach ($dummy_domains as $domain) {
-            if (stripos($value, $domain) !== false) {
-                return '';
-            }
+        foreach (array('@phone.local', '@dummy.', '@fake.') as $d) {
+            if (stripos($value, $d) !== false) return '';
         }
     }
     return $value;
 }
 
-add_action('woocommerce_after_checkout_validation', 'warafy_force_checkout_valid', 10, 2);
+add_action('woocommerce_after_checkout_validation', 'warafy_force_checkout_valid', 9999, 2);
 function warafy_force_checkout_valid($data, $errors) {
-    $host = function_exists('home_url') ? wp_parse_url(home_url(), PHP_URL_HOST) : 'example.com';
-    if (!$host) $host = 'example.com';
-    $base_country = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : 'BD';
-    $base_state = function_exists('WC') && WC()->countries ? WC()->countries->get_base_state() : '';
-
-    $to_remove = array();
-    foreach ($errors->get_error_codes() as $code) {
-        $msg = $errors->get_error_message($code);
-        if (
-            stripos($msg, 'billing_country') !== false ||
-            stripos($msg, 'billing_state') !== false ||
-            stripos($msg, 'billing_city') !== false ||
-            stripos($msg, 'billing_postcode') !== false ||
-            stripos($msg, 'shipping') !== false ||
-            stripos($msg, 'email') !== false
-        ) {
-            $to_remove[] = $code;
-        }
-    }
-    foreach ($to_remove as $code) {
+    $removed = 0;
+    $codes = $errors->get_error_codes();
+    foreach ($codes as $code) {
         $errors->remove($code);
+        $removed++;
     }
-
-    if (empty($data['billing_email']) || !filter_var($data['billing_email'], FILTER_VALIDATE_EMAIL)) {
-        $phone = isset($data['billing_phone']) ? preg_replace('/\D+/', '', $data['billing_phone']) : '';
-        if (empty($phone)) $phone = uniqid();
-        $data['billing_email'] = 'orders+' . $phone . '@' . $host;
+    if ($removed > 0) {
+        warafy_checkout_log("CLEARED {$removed} validation errors");
     }
-
-    $dummy_domains = array('@phone.local', '@dummy.', '@fake.');
-    foreach ($dummy_domains as $domain) {
-        if (stripos($data['billing_email'], $domain) !== false) {
-            $phone = isset($data['billing_phone']) ? preg_replace('/\D+/', '', $data['billing_phone']) : '';
-            if (empty($phone)) $phone = uniqid();
-            $data['billing_email'] = 'orders+' . $phone . '@' . $host;
-            break;
-        }
-    }
-
-    if (empty($data['billing_country'])) $data['billing_country'] = $base_country;
-    if (empty($data['shipping_country'])) $data['shipping_country'] = $data['billing_country'];
-    if (empty($data['billing_state'])) $data['billing_state'] = $base_state;
-    if (empty($data['shipping_state'])) $data['shipping_state'] = $data['billing_state'];
-    if (empty($data['billing_city'])) $data['billing_city'] = '';
-    if (empty($data['shipping_city'])) $data['shipping_city'] = '';
-    if (empty($data['billing_postcode'])) $data['billing_postcode'] = '';
-    if (empty($data['shipping_postcode'])) $data['shipping_postcode'] = '';
 }
 
 add_filter('woocommerce_checkout_posted_data', 'warafy_complete_checkout_data', 9999);
@@ -492,8 +451,8 @@ function warafy_complete_checkout_data($data) {
     $base_country = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : 'BD';
     $base_state = function_exists('WC') && WC()->countries ? WC()->countries->get_base_state() : '';
 
-    $copy = array('first_name', 'last_name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country', 'email', 'phone');
-    foreach ($copy as $f) {
+    $copy_fields = array('first_name', 'last_name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country', 'email', 'phone');
+    foreach ($copy_fields as $f) {
         $b = 'billing_' . $f;
         $s = 'shipping_' . $f;
         if (!empty($data[$b])) {
@@ -503,23 +462,25 @@ function warafy_complete_checkout_data($data) {
         }
     }
 
-    if (empty($data['billing_country'])) $data['billing_country'] = $base_country;
-    if (empty($data['shipping_country'])) $data['shipping_country'] = $data['billing_country'];
-    if (empty($data['billing_state'])) $data['billing_state'] = $base_state;
-    if (empty($data['shipping_state'])) $data['shipping_state'] = $data['billing_state'];
-    if (empty($data['billing_city'])) $data['billing_city'] = '';
-    if (empty($data['shipping_city'])) $data['shipping_city'] = '';
-    if (empty($data['billing_postcode'])) $data['billing_postcode'] = '';
-    if (empty($data['shipping_postcode'])) $data['shipping_postcode'] = '';
+    $defaults = array(
+        'billing_country'  => $base_country,
+        'billing_state'    => $base_state,
+        'billing_city'     => '',
+        'billing_postcode' => '',
+        'billing_last_name' => '',
+        'billing_address_2' => '',
+    );
+    foreach ($defaults as $k => $v) {
+        if (empty($data[$k])) $data[$k] = $v;
+        $sk = str_replace('billing_', 'shipping_', $k);
+        if (empty($data[$sk])) $data[$sk] = $data[$k];
+    }
 
     $need_email = true;
     if (!empty($data['billing_email']) && filter_var($data['billing_email'], FILTER_VALIDATE_EMAIL)) {
         $need_email = false;
         foreach (array('@phone.local', '@dummy.', '@fake.') as $d) {
-            if (stripos($data['billing_email'], $d) !== false) {
-                $need_email = true;
-                break;
-            }
+            if (stripos($data['billing_email'], $d) !== false) { $need_email = true; break; }
         }
     }
     if ($need_email) {
@@ -529,12 +490,109 @@ function warafy_complete_checkout_data($data) {
     }
     if (empty($data['shipping_email'])) $data['shipping_email'] = $data['billing_email'];
 
-    if (empty($data['billing_last_name'])) $data['billing_last_name'] = '';
-    if (empty($data['shipping_last_name'])) $data['shipping_last_name'] = '';
-    if (empty($data['billing_address_2'])) $data['billing_address_2'] = '';
-    if (empty($data['shipping_address_2'])) $data['shipping_address_2'] = '';
+    if (empty($data['terms'])) $data['terms'] = 0;
+    if (empty($data['account_password'])) $data['account_password'] = '';
+
+    warafy_checkout_log('POSTED DATA: ' . wp_json_encode(array_filter($data)));
 
     return $data;
+}
+
+add_action('woocommerce_checkout_create_order', 'warafy_force_order_data', 10, 2);
+function warafy_force_order_data($order, $data) {
+    $host = function_exists('home_url') ? wp_parse_url(home_url(), PHP_URL_HOST) : 'example.com';
+    if (!$host) $host = 'example.com';
+    $base_country = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : 'BD';
+    $base_state = function_exists('WC') && WC()->countries ? WC()->countries->get_base_state() : '';
+
+    $order->set_billing_country($order->get_billing_country() ?: $base_country);
+    $order->set_shipping_country($order->get_shipping_country() ?: $base_country);
+    $order->set_billing_state($order->get_billing_state() ?: $base_state);
+    $order->set_shipping_state($order->get_shipping_state() ?: $base_state);
+    $order->set_billing_city($order->get_billing_city() ?: '');
+    $order->set_shipping_city($order->get_shipping_city() ?: '');
+    $order->set_billing_postcode($order->get_billing_postcode() ?: '');
+    $order->set_shipping_postcode($order->get_shipping_postcode() ?: '');
+    $order->set_billing_last_name($order->get_billing_last_name() ?: '');
+    $order->set_shipping_last_name($order->get_shipping_last_name() ?: '');
+    $order->set_billing_address_2($order->get_billing_address_2() ?: '');
+    $order->set_shipping_address_2($order->get_shipping_address_2() ?: '');
+
+    $email = $order->get_billing_email();
+    $need_email = true;
+    if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $need_email = false;
+        foreach (array('@phone.local', '@dummy.', '@fake.') as $d) {
+            if (stripos($email, $d) !== false) { $need_email = true; break; }
+        }
+    }
+    if ($need_email) {
+        $phone = preg_replace('/\D+/', '', $order->get_billing_phone() ?: '');
+        if (empty($phone)) $phone = uniqid();
+        $generated = 'orders+' . $phone . '@' . $host;
+        $order->set_billing_email($generated);
+        $order->set_shipping_email($generated);
+    }
+
+    warafy_checkout_log('ORDER DATA SET for #' . $order->get_id());
+}
+
+function warafy_checkout_log($message) {
+    $log_file = WP_CONTENT_DIR . '/warafy-checkout-debug.log';
+    $time = date('Y-m-d H:i:s');
+    file_put_contents($log_file, "[{$time}] {$message}\n", FILE_APPEND);
+}
+
+add_action('woocommerce_before_checkout_process', 'warafy_log_before_checkout');
+function warafy_log_before_checkout() {
+    warafy_checkout_log('BEFORE CHECKOUT PROCESS');
+    warafy_checkout_log('POST: ' . wp_json_encode(array_filter($_POST)));
+}
+
+add_filter('woocommerce_ajax_checkout_errors', 'warafy_show_real_checkout_errors', 10, 1);
+function warafy_show_real_checkout_errors($errors) {
+    warafy_checkout_log('AJAX ERRORS: ' . wp_json_encode($errors));
+    return $errors;
+}
+
+add_action('init', 'warafy_replace_wc_ajax_checkout', 1);
+function warafy_replace_wc_ajax_checkout() {
+    remove_all_actions('wp_ajax_woocommerce_checkout');
+    remove_all_actions('wp_ajax_nopriv_woocommerce_checkout');
+    add_action('wp_ajax_woocommerce_checkout', 'warafy_custom_checkout_ajax');
+    add_action('wp_ajax_nopriv_woocommerce_checkout', 'warafy_custom_checkout_ajax');
+}
+
+function warafy_custom_checkout_ajax() {
+    warafy_checkout_log('=== CHECKOUT AJAX START ===');
+
+    if (!isset($_POST['woocommerce-process-checkout-nonce'])) {
+        warafy_checkout_log('NO NONCE FIELD');
+        wp_send_json_error(array('messages' => '<ul class="woocommerce-error"><li>Missing nonce. Refresh and retry.</li></ul>'));
+        return;
+    }
+
+    if (!wp_verify_nonce($_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process-checkout')) {
+        warafy_checkout_log('NONCE INVALID');
+        wp_send_json_error(array('messages' => '<ul class="woocommerce-error"><li>Nonce invalid. Refresh and retry.</li></ul>'));
+        return;
+    }
+
+    wc_maybe_define_constant('WOOCOMMERCE_CHECKOUT', true);
+    WC()->session->set_customer_session_cookie(true);
+
+    set_exception_handler(function($e) {
+        warafy_checkout_log('UNCAUGHT ' . get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+        wp_send_json_error(array(
+            'messages' => '<ul class="woocommerce-error"><li><strong>Checkout Error:</strong> ' . esc_html($e->getMessage()) . '</li></ul>'
+        ));
+    });
+
+    warafy_checkout_log('Calling WC process_checkout');
+
+    $result = WC()->checkout()->process_checkout();
+
+    warafy_checkout_log('process_checkout returned: ' . var_export($result, true));
 }
 
 add_filter('woocommerce_thankyou_order_received_text', 'warafy_custom_order_received_text', 10, 2);
