@@ -1,8 +1,9 @@
 <?php
 /**
  * Cart Page - ModernStore Design
- * Desktop: Two-column layout with cart items and order summary
- * Mobile: Clean minimal layout with sticky checkout footer
+ *
+ * @version 10.1.0
+ */
  */
 
 defined('ABSPATH') || exit;

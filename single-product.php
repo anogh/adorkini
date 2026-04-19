@@ -1,4 +1,10 @@
-<?php get_header(); ?>
+<?php
+/**
+ * Single Product
+ *
+ * @version 1.6.4
+ */
+get_header(); ?>
 
 <main class="flex-grow pb-40 lg:pb-0">
     <?php

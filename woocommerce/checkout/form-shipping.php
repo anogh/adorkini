@@ -1,6 +1,8 @@
 <?php
 /**
- * Checkout shipping information form
+ * Checkout shipping form
+ *
+ * @version 3.6.0
  */
 
 defined('ABSPATH') || exit;

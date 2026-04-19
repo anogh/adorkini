@@ -1,6 +1,8 @@
 <?php
 /**
  * Review order table
+ *
+ * @version 5.2.0
  */
 
 defined('ABSPATH') || exit;

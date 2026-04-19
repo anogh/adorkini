@@ -1,4 +1,9 @@
 <?php
+/**
+ * Checkout billing form
+ *
+ * @version 3.6.0
+ */
 defined('ABSPATH') || exit;
 
 $base_country = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : 'BD';

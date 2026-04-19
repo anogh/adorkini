@@ -1,6 +1,8 @@
 <?php
 /**
  * Checkout Payment Section
+ *
+ * @version 9.8.0
  */
 
 defined('ABSPATH') || exit;
