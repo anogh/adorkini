@@ -497,7 +497,7 @@ function warafy_complete_checkout_data($data) {
     $base_country = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : 'BD';
     $base_state = function_exists('WC') && WC()->countries ? WC()->countries->get_base_state() : '';
 
-    $copy_fields = array('first_name', 'last_name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country', 'email', 'phone');
+    $copy_fields = array('first_name', 'last_name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country');
     foreach ($copy_fields as $f) {
         $b = 'billing_' . $f;
         $s = 'shipping_' . $f;
@@ -534,8 +534,6 @@ function warafy_complete_checkout_data($data) {
         if (empty($phone)) $phone = uniqid();
         $data['billing_email'] = 'orders+' . $phone . '@' . $host;
     }
-    if (empty($data['shipping_email'])) $data['shipping_email'] = $data['billing_email'];
-
     if (empty($data['terms'])) $data['terms'] = 0;
     if (empty($data['account_password'])) $data['account_password'] = '';
 
@@ -577,10 +575,44 @@ function warafy_force_order_data($order, $data) {
         if (empty($phone)) $phone = uniqid();
         $generated = 'orders+' . $phone . '@' . $host;
         $order->set_billing_email($generated);
-        $order->set_shipping_email($generated);
     }
 
     warafy_checkout_log('ORDER DATA SET for #' . $order->get_id());
+}
+
+add_action('woocommerce_checkout_order_processed', 'warafy_finalize_cod_checkout', 0, 3);
+function warafy_finalize_cod_checkout($order_id, $posted_data, $order) {
+    if (!function_exists('WC') || !$order) {
+        return;
+    }
+
+    $payment_method = isset($posted_data['payment_method']) ? $posted_data['payment_method'] : $order->get_payment_method();
+    if ($payment_method !== 'cod') {
+        return;
+    }
+
+    warafy_checkout_log('COD FAST PATH for order #' . $order_id);
+
+    if ($order->has_status(array('pending', 'failed'))) {
+        $order->update_status('processing', 'Order placed via COD fast path.');
+    }
+
+    if (WC()->cart) {
+        WC()->cart->empty_cart();
+    }
+
+    $redirect = $order->get_checkout_order_received_url();
+    warafy_checkout_log('COD REDIRECT: ' . $redirect);
+
+    if (wp_doing_ajax() || (isset($_GET['wc-ajax']) && $_GET['wc-ajax'] === 'checkout')) {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        wp_send_json(array(
+            'result'   => 'success',
+            'redirect' => $redirect,
+        ));
+    }
 }
 
 function warafy_checkout_log($message) {
