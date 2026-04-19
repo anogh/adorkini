@@ -86,9 +86,6 @@ function warafy_custom_order_received_text($text, $order) {
 // Allow guests to view order details without login
 add_filter('woocommerce_order_details_allow_guest_access', '__return_true');
 
-// Remove login requirement for order viewing
-add_filter('woocommerce_is_checkout', '__return_false');
-
 // Generate unique 5-digit order number
 add_action('woocommerce_new_order', 'warafy_generate_custom_order_number', 10, 1);
 function warafy_generate_custom_order_number($order_id) {

@@ -335,9 +335,13 @@ add_filter( 'woocommerce_redirect_single_search_result', '__return_false' );
 add_filter( 'woocommerce_checkout_fields' , 'warafy_custom_checkout_fields' );
 
 function warafy_custom_checkout_fields( $fields ) {
-    // Keep only the fields we need
+    // Keep required WooCommerce fields available, but only show the simplified UI fields.
     $allowed_fields = array(
         'billing_first_name',  // Name (required)
+        'billing_country',     // Needed for totals/payment validation
+        'billing_state',       // Needed for totals/payment validation
+        'billing_city',        // Needed for totals/payment validation
+        'billing_postcode',    // Needed for totals/payment validation
         'billing_address_1',   // Address (required)
         'billing_phone',        // Mobile (required)
         'billing_email',        // Email (optional)
@@ -351,8 +355,8 @@ function warafy_custom_checkout_fields( $fields ) {
         }
     }
     
-    // Remove all shipping fields (not needed)
-    $fields['shipping'] = array();
+    // Keep shipping fields so WooCommerce validation stays intact.
+    // They remain hidden in the custom checkout UI.
     
     // Configure the remaining fields
     // Name (required)
@@ -378,6 +382,26 @@ function warafy_custom_checkout_fields( $fields ) {
     $fields['billing']['billing_email']['required'] = false;
     $fields['billing']['billing_email']['class'] = array('form-row-wide');
     $fields['billing']['billing_email']['placeholder'] = __t('Enter your email (optional)');
+
+    if (isset($fields['billing']['billing_country'])) {
+        $fields['billing']['billing_country']['required'] = false;
+        $fields['billing']['billing_country']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
+    }
+
+    if (isset($fields['billing']['billing_state'])) {
+        $fields['billing']['billing_state']['required'] = false;
+        $fields['billing']['billing_state']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
+    }
+
+    if (isset($fields['billing']['billing_city'])) {
+        $fields['billing']['billing_city']['required'] = false;
+        $fields['billing']['billing_city']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
+    }
+
+    if (isset($fields['billing']['billing_postcode'])) {
+        $fields['billing']['billing_postcode']['required'] = false;
+        $fields['billing']['billing_postcode']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
+    }
     
     // Order Instructions (optional)
     $fields['order']['order_comments']['label'] = __t('Order Instructions');
@@ -398,9 +422,6 @@ function warafy_custom_order_received_text($text, $order) {
 
 // Allow guests to view order details without login
 add_filter('woocommerce_order_details_allow_guest_access', '__return_true');
-
-// Remove login requirement for order viewing
-add_filter('woocommerce_is_checkout', '__return_false');
 
 // Generate unique 5-digit order number
 add_action('woocommerce_new_order', 'warafy_generate_custom_order_number', 10, 1);

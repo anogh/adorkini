@@ -590,21 +590,13 @@ function submitMobileCheckoutForm(event) {
         // Copy mobile form data to original form
         copyMobileFormDataToOriginalForm(originalForm);
         
-        // Show the original form temporarily for submission
-        originalForm.style.display = 'block';
-        
-        // Use WooCommerce's checkout submission
-        if (typeof jQuery !== 'undefined') {
-            // Trigger WooCommerce's checkout validation and submission
-            jQuery(originalForm).on('submit', function(e) {
-                // Let WooCommerce handle the submission
-                return true;
-            });
-            
-            // Trigger the submit event
-            jQuery(originalForm).submit();
+        // Keep the original form hidden and trigger WooCommerce's real submit button
+        const placeOrderButton = originalForm.querySelector('#place_order');
+        if (placeOrderButton && typeof placeOrderButton.click === 'function') {
+            placeOrderButton.click();
+        } else if (typeof originalForm.requestSubmit === 'function') {
+            originalForm.requestSubmit();
         } else {
-            // Fallback: native form submission
             originalForm.submit();
         }
     } else {
@@ -638,7 +630,6 @@ function copyMobileFormDataToOriginalForm(originalForm) {
             }
             // Trigger change event for WooCommerce validation
             originalInput.dispatchEvent(new Event('change', { bubbles: true }));
-            originalInput.dispatchEvent(new Event('input', { bubbles: true }));
         }
     });
     
@@ -658,11 +649,6 @@ function copyMobileFormDataToOriginalForm(originalForm) {
     const originalTerms = originalForm.querySelector('input[name="terms"]');
     if (mobileTerms && originalTerms) {
         originalTerms.checked = mobileTerms.checked;
-    }
-    
-    // Trigger WooCommerce checkout update
-    if (typeof jQuery !== 'undefined') {
-        jQuery(document.body).trigger('update_checkout');
     }
 }
 
