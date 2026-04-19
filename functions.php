@@ -340,7 +340,7 @@ function warafy_custom_checkout_fields( $fields ) {
         'billing_first_name',  // Name (required)
         'billing_address_1',   // Address (required)
         'billing_phone',       // Mobile (required)
-        'billing_email',       // Hidden backend field
+        'billing_email',       // Email (optional)
         'billing_country',     // Hidden backend field
         'billing_state',       // Hidden backend field
         'billing_city',        // Hidden backend field
@@ -363,12 +363,6 @@ function warafy_custom_checkout_fields( $fields ) {
         $fields['billing']['billing_country']['required'] = false;
         $fields['billing']['billing_country']['default'] = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : '';
         $fields['billing']['billing_country']['class'] = array('warafy-hidden-checkout-field');
-    }
-
-    if (isset($fields['billing']['billing_email'])) {
-        $fields['billing']['billing_email']['type'] = 'hidden';
-        $fields['billing']['billing_email']['required'] = false;
-        $fields['billing']['billing_email']['class'] = array('warafy-hidden-checkout-field');
     }
 
     if (isset($fields['billing']['billing_state'])) {
@@ -408,6 +402,14 @@ function warafy_custom_checkout_fields( $fields ) {
     $fields['billing']['billing_phone']['required'] = true;
     $fields['billing']['billing_phone']['class'] = array('form-row-wide');
     $fields['billing']['billing_phone']['placeholder'] = __t('Enter your mobile number');
+
+    if (isset($fields['billing']['billing_email'])) {
+        $fields['billing']['billing_email']['label'] = __t('Email');
+        $fields['billing']['billing_email']['required'] = false;
+        $fields['billing']['billing_email']['class'] = array('form-row-wide');
+        $fields['billing']['billing_email']['placeholder'] = __t('Email address (optional)');
+        $fields['billing']['billing_email']['validate'] = array('email');
+    }
     
     // Remove extra checkout sections from the UI.
     $fields['shipping'] = array();

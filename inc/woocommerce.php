@@ -48,12 +48,6 @@ function warafy_custom_checkout_fields( $fields ) {
         }
     }
 
-    if (isset($fields['billing']['billing_email'])) {
-        $fields['billing']['billing_email']['type'] = 'hidden';
-        $fields['billing']['billing_email']['required'] = false;
-        $fields['billing']['billing_email']['class'] = array('warafy-hidden-checkout-field');
-    }
-
     foreach (array('billing_country', 'billing_state', 'billing_city', 'billing_postcode') as $key) {
         if (isset($fields['billing'][$key])) {
             $fields['billing'][$key]['type'] = 'hidden';
@@ -79,6 +73,14 @@ function warafy_custom_checkout_fields( $fields ) {
     $fields['billing']['billing_phone']['required'] = true;
     $fields['billing']['billing_phone']['class'] = array('form-row-wide');
     $fields['billing']['billing_phone']['placeholder'] = 'Enter your mobile number';
+
+    if (isset($fields['billing']['billing_email'])) {
+        $fields['billing']['billing_email']['label'] = 'Email';
+        $fields['billing']['billing_email']['required'] = false;
+        $fields['billing']['billing_email']['class'] = array('form-row-wide');
+        $fields['billing']['billing_email']['placeholder'] = 'Email address (optional)';
+        $fields['billing']['billing_email']['validate'] = array('email');
+    }
 
     return $fields;
 }
