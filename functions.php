@@ -335,6 +335,63 @@ add_filter('woocommerce_enable_guest_checkout', '__return_true');
 add_filter('woocommerce_enable_checkout_login_reminder', '__return_false');
 add_filter('woocommerce_checkout_registration_enabled', '__return_false');
 add_filter('woocommerce_checkout_registration_required', '__return_false');
+add_filter('woocommerce_default_gateway', 'warafy_default_cash_on_delivery_gateway');
+
+add_action('woocommerce_before_checkout_process', 'warafy_sync_checkout_customer_context', 1);
+function warafy_sync_checkout_customer_context() {
+    if (empty($_POST) || !function_exists('WC') || !WC()->customer || !WC()->session) {
+        return;
+    }
+
+    $base_country = WC()->countries ? WC()->countries->get_base_country() : 'BD';
+    $base_state = WC()->countries ? WC()->countries->get_base_state() : '';
+
+    $billing_country = isset($_POST['billing_country']) ? sanitize_text_field(wp_unslash($_POST['billing_country'])) : $base_country;
+    $billing_state = isset($_POST['billing_state']) ? sanitize_text_field(wp_unslash($_POST['billing_state'])) : $base_state;
+    $billing_city = isset($_POST['billing_city']) ? sanitize_text_field(wp_unslash($_POST['billing_city'])) : '';
+    $billing_postcode = isset($_POST['billing_postcode']) ? sanitize_text_field(wp_unslash($_POST['billing_postcode'])) : '';
+    $payment_method = isset($_POST['payment_method']) ? sanitize_text_field(wp_unslash($_POST['payment_method'])) : 'cod';
+
+    $customer = WC()->customer;
+    $customer->set_billing_country($billing_country);
+    $customer->set_shipping_country($billing_country);
+    $customer->set_billing_state($billing_state);
+    $customer->set_shipping_state($billing_state);
+    $customer->set_billing_city($billing_city);
+    $customer->set_shipping_city($billing_city);
+    $customer->set_billing_postcode($billing_postcode);
+    $customer->set_shipping_postcode($billing_postcode);
+    $customer->save();
+
+    WC()->session->set('chosen_payment_method', $payment_method);
+
+    $available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+    warafy_checkout_log('PAYMENT CONTEXT: method=' . $payment_method . ' gateways=' . wp_json_encode(array_keys($available_gateways)));
+}
+
+add_filter('woocommerce_available_payment_gateways', 'warafy_force_cod_gateway_availability', 9999);
+function warafy_force_cod_gateway_availability($available_gateways) {
+    if (is_admin() && !wp_doing_ajax()) {
+        return $available_gateways;
+    }
+
+    if (!function_exists('WC')) {
+        return $available_gateways;
+    }
+
+    if (isset($available_gateways['cod'])) {
+        return array('cod' => $available_gateways['cod']);
+    }
+
+    $all_gateways = WC()->payment_gateways()->payment_gateways();
+    if (isset($all_gateways['cod'])) {
+        $cod_gateway = $all_gateways['cod'];
+        $cod_gateway->enabled = 'yes';
+        return array('cod' => $cod_gateway);
+    }
+
+    return $available_gateways;
+}
 
 add_filter('woocommerce_checkout_fields', 'warafy_custom_checkout_fields', 9999);
 function warafy_custom_checkout_fields($fields) {
@@ -739,7 +796,7 @@ function warafy_mask_address($address) {
 
 function warafy_default_cash_on_delivery_gateway( $default_gateway ) {
     // Check if Cash on Delivery is an available gateway
-    $available_gateways = WC()->payment_gateways->get_available_payment_gateways();
+    $available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
     if ( array_key_exists( 'cod', $available_gateways ) ) {
         return 'cod';
     } else {
