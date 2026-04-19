@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 <div class="warafy-checkout-wrapper">
     <?php do_action('woocommerce_before_checkout_form', $checkout); ?>
 
-    <form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url(home_url('/checkout-process/')); ?>" enctype="multipart/form-data">
+    <form name="checkout" method="post" class="warafy-checkout-form" action="<?php echo esc_url(add_query_arg('warafy_checkout', '1', wc_get_checkout_url())); ?>" enctype="multipart/form-data">
 
         <?php if ($checkout->get_checkout_fields()) : ?>
 
