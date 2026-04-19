@@ -338,14 +338,12 @@ function warafy_custom_checkout_fields( $fields ) {
     // Keep required WooCommerce fields available, but only show the simplified UI fields.
     $allowed_fields = array(
         'billing_first_name',  // Name (required)
-        'billing_country',     // Needed for totals/payment validation
-        'billing_state',       // Needed for totals/payment validation
-        'billing_city',        // Needed for totals/payment validation
-        'billing_postcode',    // Needed for totals/payment validation
         'billing_address_1',   // Address (required)
-        'billing_phone',        // Mobile (required)
-        'billing_email',        // Email (optional)
-        'order_comments'        // Instructions (optional)
+        'billing_phone',       // Mobile (required)
+        'billing_country',     // Hidden backend field
+        'billing_state',       // Hidden backend field
+        'billing_city',        // Hidden backend field
+        'billing_postcode'     // Hidden backend field
     );
     
     // Remove all billing fields except the ones we want
@@ -358,7 +356,34 @@ function warafy_custom_checkout_fields( $fields ) {
     // Keep shipping fields so WooCommerce validation stays intact.
     // They remain hidden in the custom checkout UI.
     
-    // Configure the remaining fields
+    // Hide unused billing fields but keep them available for WooCommerce processing.
+    if (isset($fields['billing']['billing_country'])) {
+        $fields['billing']['billing_country']['type'] = 'hidden';
+        $fields['billing']['billing_country']['required'] = false;
+        $fields['billing']['billing_country']['default'] = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : '';
+        $fields['billing']['billing_country']['class'] = array('warafy-hidden-checkout-field');
+    }
+
+    if (isset($fields['billing']['billing_state'])) {
+        $fields['billing']['billing_state']['type'] = 'hidden';
+        $fields['billing']['billing_state']['required'] = false;
+        $fields['billing']['billing_state']['default'] = function_exists('WC') && WC()->countries ? WC()->countries->get_base_state() : '';
+        $fields['billing']['billing_state']['class'] = array('warafy-hidden-checkout-field');
+    }
+
+    if (isset($fields['billing']['billing_city'])) {
+        $fields['billing']['billing_city']['type'] = 'hidden';
+        $fields['billing']['billing_city']['required'] = false;
+        $fields['billing']['billing_city']['class'] = array('warafy-hidden-checkout-field');
+    }
+
+    if (isset($fields['billing']['billing_postcode'])) {
+        $fields['billing']['billing_postcode']['type'] = 'hidden';
+        $fields['billing']['billing_postcode']['required'] = false;
+        $fields['billing']['billing_postcode']['class'] = array('warafy-hidden-checkout-field');
+    }
+
+    // Configure the visible fields
     // Name (required)
     $fields['billing']['billing_first_name']['label'] = __t('Name');
     $fields['billing']['billing_first_name']['required'] = true;
@@ -369,7 +394,7 @@ function warafy_custom_checkout_fields( $fields ) {
     $fields['billing']['billing_address_1']['label'] = __t('Address');
     $fields['billing']['billing_address_1']['required'] = true;
     $fields['billing']['billing_address_1']['class'] = array('form-row-wide');
-    $fields['billing']['billing_address_1']['placeholder'] = __t('Street address, apartment, suite, etc.');
+    $fields['billing']['billing_address_1']['placeholder'] = __t('House, road, area');
     
     // Mobile Number (required)
     $fields['billing']['billing_phone']['label'] = __t('Mobile Number');
@@ -377,38 +402,27 @@ function warafy_custom_checkout_fields( $fields ) {
     $fields['billing']['billing_phone']['class'] = array('form-row-wide');
     $fields['billing']['billing_phone']['placeholder'] = __t('Enter your mobile number');
     
-    // Email (optional)
-    $fields['billing']['billing_email']['label'] = __t('Email Address');
-    $fields['billing']['billing_email']['required'] = false;
-    $fields['billing']['billing_email']['class'] = array('form-row-wide');
-    $fields['billing']['billing_email']['placeholder'] = __t('Enter your email (optional)');
-
-    if (isset($fields['billing']['billing_country'])) {
-        $fields['billing']['billing_country']['required'] = false;
-        $fields['billing']['billing_country']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
-    }
-
-    if (isset($fields['billing']['billing_state'])) {
-        $fields['billing']['billing_state']['required'] = false;
-        $fields['billing']['billing_state']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
-    }
-
-    if (isset($fields['billing']['billing_city'])) {
-        $fields['billing']['billing_city']['required'] = false;
-        $fields['billing']['billing_city']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
-    }
-
-    if (isset($fields['billing']['billing_postcode'])) {
-        $fields['billing']['billing_postcode']['required'] = false;
-        $fields['billing']['billing_postcode']['class'] = array('form-row-wide', 'warafy-hidden-checkout-field');
-    }
-    
-    // Order Instructions (optional)
-    $fields['order']['order_comments']['label'] = __t('Order Instructions');
-    $fields['order']['order_comments']['required'] = false;
-    $fields['order']['order_comments']['placeholder'] = __t('Any special instructions for your order...');
+    // Remove extra checkout sections from the UI.
+    $fields['shipping'] = array();
+    $fields['order'] = array();
 
     return $fields;
+}
+
+add_filter('woocommerce_checkout_posted_data', 'warafy_mirror_billing_to_shipping');
+function warafy_mirror_billing_to_shipping($data) {
+    $mirror_fields = array('first_name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country');
+
+    foreach ($mirror_fields as $field) {
+        $billing_key = 'billing_' . $field;
+        $shipping_key = 'shipping_' . $field;
+
+        if (isset($data[$billing_key])) {
+            $data[$shipping_key] = $data[$billing_key];
+        }
+    }
+
+    return $data;
 }
 
 add_filter('woocommerce_thankyou_order_received_text', 'warafy_custom_order_received_text', 10, 2);
