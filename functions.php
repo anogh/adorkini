@@ -555,10 +555,15 @@ function warafy_checkout_order_processed($order_id, $posted_data, $order) {
     $is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     $is_wc_ajax = !empty($_REQUEST['wc-ajax']);
 
-    header('Content-Type: application/json; charset=utf-8');
-    echo wp_json_encode($response);
-
     if ($is_ajax || $is_wc_ajax) {
+        while (ob_get_level()) ob_end_clean();
+        header('Content-Type: application/json; charset=utf-8');
+        echo wp_json_encode($response);
+        exit;
+    }
+
+    if (!is_wp_error($order) && $order) {
+        wp_safe_redirect($redirect);
         exit;
     }
 }
