@@ -552,9 +552,47 @@ function warafy_checkout_order_processed($order_id, $posted_data, $order) {
     warafy_checkout_log("REDIRECT: {$redirect}");
 
     while (ob_get_level()) ob_end_clean();
+    $is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    $is_wc_ajax = !empty($_REQUEST['wc-ajax']);
+
     header('Content-Type: application/json; charset=utf-8');
     echo wp_json_encode($response);
-    exit;
+
+    if ($is_ajax || $is_wc_ajax) {
+        exit;
+    }
+}
+
+add_action('wp_footer', 'warafy_disable_checkout_ajax');
+function warafy_disable_checkout_ajax() {
+    if (!is_checkout()) return;
+?>
+<script>
+(function() {
+    var form = document.querySelector('form.checkout, form[name="checkout"]');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        // Disable AJAX by clearing jQuery's submit handlers and let browser submit normally
+        jQuery(form).off('submit');
+        // Remove WooCommerce's checkout submission flag
+        delete form.dataset.wcCheckoutProcessing;
+
+        // Ensure the form submits normally as HTML POST
+        form.method = 'POST';
+        form.action = '<?php echo esc_url(wc_get_checkout_url()); ?>';
+
+        // Let the browser submit the form normally
+        // Small delay to allow our JS to run first
+        setTimeout(function() {
+            form.submit();
+        }, 10);
+        e.preventDefault();
+        return false;
+    }, false);
+})();
+</script>
+<?php
 }
 
 add_action('woocommerce_after_checkout_validation', 'warafy_log_validation_result', 9999, 2);
