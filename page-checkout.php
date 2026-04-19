@@ -33,7 +33,11 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                 </nav>
 
                 <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                    <span class="material-symbols-outlined text-4xl lg:text-5xl text-purple-600" data-icon="shopping_bag"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-10 lg:w-12 h-10 lg:h-12 text-purple-600">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                      <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
                     <?php echo __t('Secure Checkout'); ?>
                 </h1>
 
@@ -88,11 +92,18 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                         
                         if (WC()->cart->is_empty() && !$allow_empty_cart_checkout) {
                             echo '<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-12 text-center">';
-                            echo '<span class="material-symbols-outlined text-9xl text-gray-300 mb-6" data-icon="shopping_cart"></span>';
+                            echo '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-24 h-24 text-gray-300 mx-auto mb-6">
+                              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                              <line x1="3" y1="6" x2="21" y2="6"></line>
+                              <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>';
                             echo '<h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">' . __t('Your cart is empty') . '</h2>';
                             echo '<p class="text-gray-600 dark:text-gray-400 mb-8">' . __t('Please add items to your cart before proceeding to checkout.') . '</p>';
                             echo '<a href="' . get_permalink(wc_get_page_id('shop')) . '" class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-purple-800 transition-all transform hover:scale-105 shadow-lg">';
-                            echo '<span class="material-symbols-outlined" data-icon="storefront"></span> ' . __t('Continue Shopping') . '</a>';
+                            echo '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg> ' . __t('Continue Shopping') . '</a>';
                             echo '</div>';
                         } else {
                             echo do_shortcode('[woocommerce_checkout]');
@@ -108,7 +119,13 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
                             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
                                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white flex items-center justify-center shadow-lg">
-                                    <span class="material-symbols-outlined text-2xl" data-icon="receipt_long"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                      <polyline points="14 2 14 8 20 8"></polyline>
+                                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                                      <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
                                 </div>
                                 <?php echo __t('Order Summary'); ?>
                             </h3>
@@ -127,7 +144,11 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                             ?>
                                             <div class="flex items-start space-x-3">
                                                 <div class="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <span class="material-symbols-outlined text-lg text-purple-600 dark:text-purple-300" data-icon="shopping_bag"></span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-purple-600 dark:text-purple-300">
+                                                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                                                      <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                                    </svg>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
                                                     <h4 class="font-semibold text-gray-900 dark:text-white text-sm truncate"><?php echo esc_html($product_name); ?></h4>
@@ -177,17 +198,24 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                                     </div>
                                 <?php else : ?>
                                     <!-- Empty Cart -->
-                                    <div class="text-center py-8">
-                                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <span class="material-symbols-outlined text-2xl text-gray-400" data-icon="shopping_cart"></span>
+                                        <div class="text-center py-8">
+                                            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gray-400">
+                                                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                                                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                                </svg>
+                                            </div>
+                                            <h4 class="font-semibold text-gray-900 dark:text-white mb-2"><?php echo __t('Your cart is empty'); ?></h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4"><?php echo __t('Add items to your cart to see them here'); ?></p>
+                                            <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>" class="inline-flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                                </svg>
+                                                <?php echo __t('Continue Shopping'); ?>
+                                            </a>
                                         </div>
-                                        <h4 class="font-semibold text-gray-900 dark:text-white mb-2"><?php echo __t('Your cart is empty'); ?></h4>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4"><?php echo __t('Add items to your cart to see them here'); ?></p>
-                                        <a href="<?php echo get_permalink(wc_get_page_id('shop')); ?>" class="inline-flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
-                                            <span class="material-symbols-outlined text-lg" data-icon="storefront"></span>
-                                            <?php echo __t('Continue Shopping'); ?>
-                                        </a>
-                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -196,7 +224,9 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
                         <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-4 border border-green-200 dark:border-green-800">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-white" data-icon="security"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-white">
+                                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    </svg>
                                 </div>
                                 <div>
                                     <h4 class="font-semibold text-green-800 dark:text-green-200"><?php echo __t('Secure Checkout'); ?></h4>
