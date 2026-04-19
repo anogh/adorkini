@@ -30,12 +30,13 @@ defined('ABSPATH') || exit;
         $fields = $checkout->get_checkout_fields('billing');
 
         foreach ($fields as $key => $field) {
-            if (in_array($key, ['billing_country', 'billing_state', 'billing_city', 'billing_postcode'])) {
+            $is_hidden = in_array($key, ['billing_country', 'billing_state', 'billing_city', 'billing_postcode']);
+
+            if ($is_hidden) {
                 woocommerce_form_field($key, $field, $checkout->get_value($key));
                 continue;
             }
 
-            // Make the visible fields full width
             if (in_array($key, ['billing_first_name', 'billing_address_1', 'billing_phone'])) {
                 echo '<div class="md:col-span-2">';
                 woocommerce_form_field($key, $field, $checkout->get_value($key));
