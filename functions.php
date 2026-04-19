@@ -337,6 +337,30 @@ add_filter('woocommerce_checkout_registration_enabled', '__return_false');
 add_filter('woocommerce_checkout_registration_required', '__return_false');
 add_filter('woocommerce_default_gateway', 'warafy_default_cash_on_delivery_gateway');
 
+add_action('init', 'warafy_register_checkout_fatal_logger', 1);
+function warafy_register_checkout_fatal_logger() {
+    $is_checkout_request = (
+        (isset($_GET['wc-ajax']) && $_GET['wc-ajax'] === 'checkout') ||
+        isset($_POST['woocommerce-process-checkout-nonce'])
+    );
+
+    if (!$is_checkout_request) {
+        return;
+    }
+
+    register_shutdown_function(function() {
+        $error = error_get_last();
+        if (!$error) {
+            return;
+        }
+
+        $fatal_types = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR);
+        if (in_array($error['type'], $fatal_types, true)) {
+            warafy_checkout_log('FATAL CHECKOUT ERROR: ' . wp_json_encode($error));
+        }
+    });
+}
+
 add_action('woocommerce_before_checkout_process', 'warafy_sync_checkout_customer_context', 1);
 function warafy_sync_checkout_customer_context() {
     if (empty($_POST) || !function_exists('WC') || !WC()->customer || !WC()->session) {
@@ -599,7 +623,7 @@ function warafy_force_cod_successful_result($result, $order_id) {
 add_filter('woocommerce_cod_process_payment_order_status', 'warafy_force_cod_order_status', 10, 2);
 function warafy_force_cod_order_status($status, $order) {
     warafy_checkout_log('COD STATUS FILTER for order #' . $order->get_id() . ' status=' . $status);
-    return 'processing';
+    return 'pending';
 }
 
 function warafy_checkout_log($message) {

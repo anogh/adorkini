@@ -219,7 +219,7 @@ $allow_empty_cart_checkout = $is_order_received || $is_order_pay_endpoint;
 
 <!-- Version Footer -->
 <div class="fixed bottom-2 right-2 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-mono z-50">
-    v9.3-cod-native-result
+    v9.4-cod-pending
 </div>
 
 <?php get_footer(); ?>
