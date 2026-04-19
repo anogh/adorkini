@@ -1,5 +1,5 @@
 /* Modern SVG Icon System - Enhanced styling for better visual appeal */
-.material-symbols-outlined {
+.material-symbols-outlined[data-icon] {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -8,6 +8,9 @@
   background-position: center;
   vertical-align: middle;
   transition: all 0.2s ease;
+  font-family: inherit !important;
+  font-size: 0 !important;
+  text-indent: -9999px;
 }
 
 /* Enhanced hover effects */

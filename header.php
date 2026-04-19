@@ -343,22 +343,6 @@ $en_class = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-white';
                     <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
                         <span class="warafy-lang-bn <?php echo $bn_class_light; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
                         <span class="warafy-lang-en <?php echo $en_class_light; ?> text-[9px] font-medium whitespace-nowrap">English</span>
-                    <?php
-                    $current_lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
-                    $bn_class_light = $current_lang === 'bn' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
-                    $en_class_light = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
-                    ?>
-                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
-                        <span class="warafy-lang-bn <?php echo $bn_class_light; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
-                        <span class="warafy-lang-en <?php echo $en_class_light; ?> text-[9px] font-medium whitespace-nowrap">English</span>
-                    <?php
-                    $current_lang = isset($_COOKIE['warafy_language']) ? $_COOKIE['warafy_language'] : 'en';
-                    $bn_class_light = $current_lang === 'bn' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
-                    $en_class_light = $current_lang === 'en' ? 'text-[#FFB800]' : 'text-gray-900 dark:text-white';
-                    ?>
-                    <button type="button" class="warafy-language-toggle flex flex-col items-center justify-center flex-shrink-0 leading-[1.1]" data-theme="light">
-                        <span class="warafy-lang-bn <?php echo $bn_class_light; ?> text-[11px] font-medium whitespace-nowrap">বাংলা</span>
-                        <span class="warafy-lang-en <?php echo $en_class_light; ?> text-[9px] font-medium whitespace-nowrap">English</span>
                     </button>
                     <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50">
                         <span class="material-symbols-outlined text-gray-600 dark:text-gray-300" data-icon="more_vert"></span>
