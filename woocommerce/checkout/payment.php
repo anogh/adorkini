@@ -15,7 +15,10 @@ if (!wp_doing_ajax()) {
 <div id="payment" class="woocommerce-checkout-payment">
     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-600 to-green-700 text-white flex items-center justify-center">
-            <span class="material-symbols-outlined text-lg" data-icon="payment"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
         </div>
         <?php esc_html_e('Payment Method', 'woocommerce'); ?>
     </h3>
@@ -52,7 +55,10 @@ if (!wp_doing_ajax()) {
                 id="place_order" 
                 value="<?php esc_attr_e('Place order', 'woocommerce'); ?>" 
                 data-value="<?php esc_attr_e('Place order', 'woocommerce'); ?>">
-            <span class="material-symbols-outlined text-2xl" data-icon="shopping_bag_check"></span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <polyline points="9 11 12 14 22 4"></polyline>
+            </svg>
             <?php echo esc_html(apply_filters('woocommerce_order_button_text', __('Place order', 'woocommerce'))); ?>
         </button>
 
