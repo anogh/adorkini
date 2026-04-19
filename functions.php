@@ -213,11 +213,63 @@ function warafy_load_related_products_ajax() {
         wp_send_json_error(['message' => 'Invalid Product ID']);
     }
 
-    // Get current product's categories
-    $terms = wp_get_post_terms($product_id, 'product_cat', ['fields' => 'ids']);
-    if (empty($terms) || is_wp_error($terms)) {
-        wp_send_json_error(['message' => 'No related categories']);
+    // Check for custom related products first
+    $custom_related_ids = get_post_meta($product_id, '_warafy_related_product_ids', true);
+    if (!empty($custom_related_ids) && is_array($custom_related_ids)) {
+        $custom_related_ids = array_map('intval', $custom_related_ids);
+        $custom_related_ids = array_filter($custom_related_ids);
+        
+        if (!empty($custom_related_ids)) {
+            // Use custom related products
+            $total_products = count($custom_related_ids);
+            $offset = ($page - 1) * $per_page;
+            
+            if ($offset >= $total_products) {
+                wp_send_json_error(['message' => 'No more products']);
+            }
+            
+            $current_page_ids = array_slice($custom_related_ids, $offset, $per_page);
+            
+            ob_start();
+            foreach ($current_page_ids as $post_id) {
+                $product = wc_get_product($post_id);
+                if (!$product) continue;
+                
+                // Render Product Card (Consistent with homepage recommendations)
+                ?>
+                <div class="product-card-recommendation flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark hover:shadow-lg transition-all">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
+                    <div class="flex flex-col flex-1 justify-between gap-4">
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
+                                <a href="<?php echo get_permalink($product->get_id()); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php echo get_the_title($product->get_id()); ?></a>
+                            </h3>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
+                        </div>
+                        <!-- Action Buttons: Add to Cart -->
+                        <div>
+                            <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
+                                <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                <span class="add-text truncate"><?php echo __t('Add'); ?></span>
+                                <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }
+            $html = ob_get_clean();
+            
+            wp_send_json_success([
+                'html' => $html,
+                'is_custom' => true
+            ]);
+            wp_die();
+        }
     }
+
+    // Fall back to category-based related products
 
     // Use session manager to consistently randomize products
     // We'll use a specific seed for related products so it's consistent for this user session
@@ -3331,6 +3383,421 @@ function warafy_set_default_address() {
     } else {
         wp_send_json_error('Address not found');
     }
+}
+
+// ==============================================
+// Custom Related Products for Single Product Page
+// ==============================================
+
+add_action('add_meta_boxes', 'warafy_add_related_products_meta_box');
+function warafy_add_related_products_meta_box() {
+    add_meta_box(
+        'warafy_related_products',
+        __('Custom Related Products', 'warafy'),
+        'warafy_related_products_meta_box_html',
+        'product',
+        'side',
+        'default'
+    );
+}
+
+function warafy_related_products_meta_box_html($post) {
+    wp_nonce_field('warafy_related_products_nonce', 'warafy_related_products_nonce_field');
+    
+    $selected_ids = get_post_meta($post->ID, '_warafy_related_product_ids', true);
+    $selected_ids = is_array($selected_ids) ? $selected_ids : array();
+    
+    ?>
+    <style>
+        .warafy-related-products-search {
+            margin-bottom: 10px;
+        }
+        .warafy-related-products-search input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .warafy-related-products-results {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .warafy-related-products-results.show {
+            display: block;
+        }
+        .warafy-related-products-results .result-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .warafy-related-products-results .result-item:last-child {
+            border-bottom: none;
+        }
+        .warafy-related-products-results .result-item:hover {
+            background: #f0f0f0;
+        }
+        .warafy-related-products-results .result-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .warafy-related-products-results .result-item .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .warafy-related-products-results .result-item .product-title {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .warafy-related-products-results .result-item .product-price {
+            font-size: 11px;
+            color: #666;
+        }
+        .warafy-related-products-selected {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 60px;
+            padding: 8px;
+            background: #fafafa;
+        }
+        .warafy-related-products-selected .selected-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        .warafy-related-products-selected .selected-item:last-child {
+            margin-bottom: 0;
+        }
+        .warafy-related-products-selected .selected-item img {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .warafy-related-products-selected .selected-item .item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .warafy-related-products-selected .selected-item .item-title {
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .warafy-related-products-selected .selected-item .remove-btn {
+            background: none;
+            border: none;
+            color: #d63638;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .warafy-related-products-selected .selected-item .remove-btn:hover {
+            color: #b32d2e;
+        }
+        .warafy-related-products-selected .no-items {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            padding: 15px;
+        }
+        .warafy-related-products-loading {
+            text-align: center;
+            padding: 10px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+    
+    <p><?php _e('Search and select products to show in the related products section on the single product page.', 'warafy'); ?></p>
+    
+    <div class="warafy-related-products-search">
+        <input type="text" id="warafy-related-products-search-input" placeholder="<?php esc_attr_e('Search products...', 'warafy'); ?>">
+        <div id="warafy-related-products-results" class="warafy-related-products-results"></div>
+    </div>
+    
+    <div id="warafy-related-products-selected" class="warafy-related-products-selected">
+        <?php if (empty($selected_ids)) : ?>
+            <div class="no-items"><?php _e('No related products selected', 'warafy'); ?></div>
+        <?php else : ?>
+            <?php foreach ($selected_ids as $product_id) : 
+                $product = wc_get_product($product_id);
+                if ($product) :
+                    $thumbnail = get_the_post_thumbnail_url($product_id, array(32, 32));
+                    if (!$thumbnail) {
+                        $thumbnail = wc_placeholder_img_src();
+                    }
+            ?>
+                <div class="selected-item" data-product-id="<?php echo esc_attr($product_id); ?>">
+                    <img src="<?php echo esc_url($thumbnail); ?>" alt="">
+                    <div class="item-info">
+                        <div class="item-title"><?php echo esc_html($product->get_name()); ?></div>
+                    </div>
+                    <button type="button" class="remove-btn" aria-label="Remove">×</button>
+                    <input type="hidden" name="warafy_related_product_ids[]" value="<?php echo esc_attr($product_id); ?>">
+                </div>
+            <?php endif; endforeach; ?>
+        <?php endif; ?>
+    </div>
+    
+    <script>
+    (function() {
+        var searchTimeout = null;
+        var currentSelectedIds = <?php echo json_encode($selected_ids); ?>;
+        
+        var searchInput = document.getElementById('warafy-related-products-search-input');
+        var resultsContainer = document.getElementById('warafy-related-products-results');
+        var selectedContainer = document.getElementById('warafy-related-products-selected');
+        
+        if (!searchInput) return;
+        
+        searchInput.addEventListener('input', function() {
+            var searchTerm = this.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.classList.remove('show');
+                return;
+            }
+            
+            searchTimeout = setTimeout(function() {
+                performSearch(searchTerm);
+            }, 300);
+        });
+        
+        function performSearch(term) {
+            resultsContainer.innerHTML = '<div class="warafy-related-products-loading">Searching...</div>';
+            resultsContainer.classList.add('show');
+            
+            var data = {
+                'action': 'warafy_search_products_for_related',
+                'search_term': term,
+                'exclude_ids': currentSelectedIds,
+                'nonce': document.getElementById('warafy_related_products_nonce_field').value
+            };
+            
+            jQuery.post(ajaxurl, data, function(response) {
+                if (response.success && response.data.length > 0) {
+                    displayResults(response.data);
+                } else {
+                    resultsContainer.innerHTML = '<div style="padding: 10px; color: #999; font-size: 12px;">No products found</div>';
+                }
+            }).fail(function() {
+                resultsContainer.innerHTML = '<div style="padding: 10px; color: #d63638; font-size: 12px;">Search error</div>';
+            });
+        }
+        
+        function displayResults(products) {
+            var html = '';
+            products.forEach(function(product) {
+                html += '<div class="result-item" data-product-id="' + product.id + '">';
+                html += '<img src="' + product.image + '" alt="">';
+                html += '<div class="product-info">';
+                html += '<div class="product-title">' + product.title + '</div>';
+                html += '<div class="product-price">' + product.price + '</div>';
+                html += '</div>';
+                html += '</div>';
+            });
+            resultsContainer.innerHTML = html;
+            
+            resultsContainer.querySelectorAll('.result-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var productId = this.dataset.productId;
+                    var product = products.find(function(p) { return p.id == productId; });
+                    if (product) {
+                        addSelectedProduct(product);
+                    }
+                    resultsContainer.classList.remove('show');
+                    searchInput.value = '';
+                });
+            });
+        }
+        
+        function addSelectedProduct(product) {
+            if (currentSelectedIds.indexOf(parseInt(product.id)) !== -1) {
+                return;
+            }
+            
+            currentSelectedIds.push(parseInt(product.id));
+            
+            var noItems = selectedContainer.querySelector('.no-items');
+            if (noItems) {
+                noItems.remove();
+            }
+            
+            var itemHtml = '<div class="selected-item" data-product-id="' + product.id + '">';
+            itemHtml += '<img src="' + product.image + '" alt="">';
+            itemHtml += '<div class="item-info"><div class="item-title">' + product.title + '</div></div>';
+            itemHtml += '<button type="button" class="remove-btn" aria-label="Remove">×</button>';
+            itemHtml += '<input type="hidden" name="warafy_related_product_ids[]" value="' + product.id + '">';
+            itemHtml += '</div>';
+            
+            selectedContainer.insertAdjacentHTML('beforeend', itemHtml);
+            
+            var newItem = selectedContainer.lastElementChild;
+            newItem.querySelector('.remove-btn').addEventListener('click', function() {
+                removeSelectedProduct(newItem, product.id);
+            });
+        }
+        
+        function removeSelectedProduct(item, productId) {
+            item.remove();
+            currentSelectedIds = currentSelectedIds.filter(function(id) { return id !== parseInt(productId); });
+            
+            if (currentSelectedIds.length === 0) {
+                selectedContainer.innerHTML = '<div class="no-items"><?php _e('No related products selected', 'warafy'); ?></div>';
+            }
+        }
+        
+        selectedContainer.querySelectorAll('.remove-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var item = this.closest('.selected-item');
+                var productId = item.dataset.productId;
+                removeSelectedProduct(item, productId);
+            });
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                resultsContainer.classList.remove('show');
+            }
+        });
+    })();
+    </script>
+    <?php
+}
+
+add_action('woocommerce_process_product_meta', 'warafy_save_related_products_meta_box');
+function warafy_save_related_products_meta_box($post_id) {
+    if (!isset($_POST['warafy_related_products_nonce_field']) || 
+        !wp_verify_nonce($_POST['warafy_related_products_nonce_field'], 'warafy_related_products_nonce')) {
+        return;
+    }
+    
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    if (isset($_POST['warafy_related_product_ids'])) {
+        $product_ids = array_map('intval', $_POST['warafy_related_product_ids']);
+        $product_ids = array_unique($product_ids);
+        update_post_meta($post_id, '_warafy_related_product_ids', $product_ids);
+    } else {
+        delete_post_meta($post_id, '_warafy_related_product_ids');
+    }
+}
+
+add_action('wp_ajax_warafy_search_products_for_related', 'warafy_search_products_for_related_ajax');
+function warafy_search_products_for_related_ajax() {
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'warafy_related_products_nonce')) {
+        wp_send_json_error('Invalid nonce');
+        wp_die();
+    }
+    
+    $search_term = isset($_POST['search_term']) ? sanitize_text_field($_POST['search_term']) : '';
+    $exclude_ids = isset($_POST['exclude_ids']) ? array_map('intval', $_POST['exclude_ids']) : array();
+    
+    if (strlen($search_term) < 2) {
+        wp_send_json_success(array());
+        wp_die();
+    }
+    
+    $args = array(
+        'post_type' => 'product',
+        'post_status' => 'publish',
+        'posts_per_page' => 15,
+        's' => $search_term,
+        'post__not_in' => $exclude_ids
+    );
+    
+    $products_query = new WP_Query($args);
+    $products = array();
+    
+    if ($products_query->have_posts()) {
+        while ($products_query->have_posts()) {
+            $products_query->the_post();
+            $product = wc_get_product(get_the_ID());
+            if ($product) {
+                $thumbnail = get_the_post_thumbnail_url(get_the_ID(), array(64, 64));
+                if (!$thumbnail) {
+                    $thumbnail = wc_placeholder_img_src();
+                }
+                $products[] = array(
+                    'id' => get_the_ID(),
+                    'title' => get_the_title(),
+                    'price' => wp_strip_all_tags($product->get_price_html()),
+                    'image' => $thumbnail
+                );
+            }
+        }
+        wp_reset_postdata();
+    }
+    
+    wp_send_json_success($products);
+    wp_die();
+}
+
+function warafy_get_custom_related_products($product_id, $limit = 8) {
+    $related_ids = get_post_meta($product_id, '_warafy_related_product_ids', true);
+    
+    if (empty($related_ids) || !is_array($related_ids)) {
+        return array();
+    }
+    
+    $related_ids = array_map('intval', $related_ids);
+    $related_ids = array_filter($related_ids);
+    
+    if (empty($related_ids)) {
+        return array();
+    }
+    
+    $args = array(
+        'post_type' => 'product',
+        'post_status' => 'publish',
+        'posts_per_page' => $limit,
+        'post__in' => $related_ids,
+        'orderby' => 'post__in'
+    );
+    
+    $products_query = new WP_Query($args);
+    $products = array();
+    
+    if ($products_query->have_posts()) {
+        while ($products_query->have_posts()) {
+            $products_query->the_post();
+            $product = wc_get_product(get_the_ID());
+            if ($product) {
+                $products[] = $product;
+            }
+        }
+        wp_reset_postdata();
+    }
+    
+    return $products;
 }
 
 // ==============================================
