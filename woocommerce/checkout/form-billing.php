@@ -1,54 +1,53 @@
 <?php
-/**
- * Checkout billing information form
- */
-
 defined('ABSPATH') || exit;
+
+$base_country = function_exists('WC') && WC()->countries ? WC()->countries->get_base_country() : 'BD';
+$base_state = function_exists('WC') && WC()->countries ? WC()->countries->get_base_state() : '';
+
+$billing_fields = $checkout->get_checkout_fields('billing');
 ?>
 
 <div class="woocommerce-billing-fields">
-    <?php if (wc_ship_to_billing_address_only() && WC()->cart->needs_shipping()) : ?>
-
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white flex items-center justify-center text-sm font-bold">1</div>
-            <?php esc_html_e('Billing &amp; Shipping', 'woocommerce'); ?>
-        </h3>
-
-    <?php else : ?>
-
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white flex items-center justify-center text-sm font-bold">1</div>
-            <?php esc_html_e('Billing details', 'woocommerce'); ?>
-        </h3>
-
-    <?php endif; ?>
+    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white flex items-center justify-center text-sm font-bold">1</div>
+        <?php echo __t('Delivery Details'); ?>
+    </h3>
 
     <?php do_action('woocommerce_before_checkout_billing_form', $checkout); ?>
 
-    <div class="woocommerce-billing-fields__field-wrapper grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="woocommerce-billing-fields__field-wrapper space-y-4">
         <?php
-        $fields = $checkout->get_checkout_fields('billing');
+        $visible_fields = array('billing_first_name', 'billing_phone', 'billing_address_1', 'billing_email');
 
-        foreach ($fields as $key => $field) {
-            $is_hidden = in_array($key, ['billing_country', 'billing_state', 'billing_city', 'billing_postcode']);
-
-            if ($is_hidden) {
-                woocommerce_form_field($key, $field, $checkout->get_value($key));
-                continue;
-            }
-
-            if (in_array($key, ['billing_first_name', 'billing_address_1', 'billing_phone'])) {
-                echo '<div class="md:col-span-2">';
-                woocommerce_form_field($key, $field, $checkout->get_value($key));
-                echo '</div>';
-            } else {
+        foreach ($visible_fields as $key) {
+            if (isset($billing_fields[$key])) {
+                $field = $billing_fields[$key];
+                $field['class'] = array('form-row-wide');
                 woocommerce_form_field($key, $field, $checkout->get_value($key));
             }
         }
+
+        woocommerce_form_field('billing_country', array(
+            'type' => 'hidden',
+            'required' => false,
+        ), $checkout->get_value('billing_country') ?: $base_country);
+
+        woocommerce_form_field('billing_state', array(
+            'type' => 'hidden',
+            'required' => false,
+        ), $checkout->get_value('billing_state') ?: $base_state);
+
+        woocommerce_form_field('billing_city', array(
+            'type' => 'hidden',
+            'required' => false,
+        ), $checkout->get_value('billing_city') ?: '');
+
+        woocommerce_form_field('billing_postcode', array(
+            'type' => 'hidden',
+            'required' => false,
+        ), $checkout->get_value('billing_postcode') ?: '');
         ?>
     </div>
 
     <?php do_action('woocommerce_after_checkout_billing_form', $checkout); ?>
 </div>
-
-<!-- Account creation removed for faster checkout -->
