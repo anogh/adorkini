@@ -580,39 +580,26 @@ function warafy_force_order_data($order, $data) {
     warafy_checkout_log('ORDER DATA SET for #' . $order->get_id());
 }
 
-add_action('woocommerce_checkout_order_processed', 'warafy_finalize_cod_checkout', 0, 3);
-function warafy_finalize_cod_checkout($order_id, $posted_data, $order) {
-    if (!function_exists('WC') || !$order) {
-        return;
-    }
-
-    $payment_method = isset($posted_data['payment_method']) ? $posted_data['payment_method'] : $order->get_payment_method();
-    if ($payment_method !== 'cod') {
-        return;
-    }
-
-    warafy_checkout_log('COD FAST PATH for order #' . $order_id);
-
-    if ($order->has_status(array('pending', 'failed'))) {
-        $order->update_status('processing', 'Order placed via COD fast path.');
-    }
-
-    if (WC()->cart) {
-        WC()->cart->empty_cart();
+add_filter('woocommerce_payment_successful_result', 'warafy_force_cod_successful_result', 10, 2);
+function warafy_force_cod_successful_result($result, $order_id) {
+    $order = wc_get_order($order_id);
+    if (!$order || $order->get_payment_method() !== 'cod') {
+        return $result;
     }
 
     $redirect = $order->get_checkout_order_received_url();
-    warafy_checkout_log('COD REDIRECT: ' . $redirect);
+    warafy_checkout_log('COD SUCCESSFUL RESULT for order #' . $order_id . ' redirect=' . $redirect);
 
-    if (wp_doing_ajax() || (isset($_GET['wc-ajax']) && $_GET['wc-ajax'] === 'checkout')) {
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-        wp_send_json(array(
-            'result'   => 'success',
-            'redirect' => $redirect,
-        ));
-    }
+    return array(
+        'result'   => 'success',
+        'redirect' => $redirect,
+    );
+}
+
+add_filter('woocommerce_cod_process_payment_order_status', 'warafy_force_cod_order_status', 10, 2);
+function warafy_force_cod_order_status($status, $order) {
+    warafy_checkout_log('COD STATUS FILTER for order #' . $order->get_id() . ' status=' . $status);
+    return 'processing';
 }
 
 function warafy_checkout_log($message) {
