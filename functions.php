@@ -533,71 +533,66 @@ function warafy_checkout_log($message) {
 }
 
 
-add_action('woocommerce_checkout_order_processed', 'warafy_checkout_order_processed', 1, 3);
-function warafy_checkout_order_processed($order_id, $posted_data, $order) {
-    warafy_checkout_log("ORDER #{$order_id} CREATED - sending clean redirect");
-
-    $order->update_status('processing');
-    $order_key = $order->get_order_key();
-    $redirect = add_query_arg(array(
-        'key' => $order_key,
-        'order-received' => $order_id,
-    ), wc_get_page_permalink('checkout'));
-
-    $response = array(
-        'result'   => 'success',
-        'redirect' => $redirect,
-    );
-
-    warafy_checkout_log("REDIRECT: {$redirect}");
-
-    while (ob_get_level()) ob_end_clean();
-    $is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-    $is_wc_ajax = !empty($_REQUEST['wc-ajax']);
-
-    if ($is_ajax || $is_wc_ajax) {
-        while (ob_get_level()) ob_end_clean();
-        header('Content-Type: application/json; charset=utf-8');
-        echo wp_json_encode($response);
-        exit;
-    }
-
-    if (!is_wp_error($order) && $order) {
-        wp_safe_redirect($redirect);
-        exit;
-    }
+add_action('init', 'warafy_register_checkout_endpoint');
+function warafy_register_checkout_endpoint() {
+    add_rewrite_rule('^checkout-process/?$', 'index.php?warafy_checkout=1', 'top');
+    add_filter('query_vars', function($vars) {
+        $vars[] = 'warafy_checkout';
+        return $vars;
+    });
 }
 
-add_action('wp_footer', 'warafy_disable_checkout_ajax');
-function warafy_disable_checkout_ajax() {
-    if (!is_checkout()) return;
-?>
-<script>
-(function() {
-    var form = document.querySelector('form.checkout, form[name="checkout"]');
-    if (!form) return;
+add_action('template_redirect', 'warafy_handle_checkout_process', 1);
+function warafy_handle_checkout_process() {
+    if (!get_query_var('warafy_checkout')) return;
+    if (empty($_POST) || !isset($_POST['woocommerce-process-checkout-nonce'])) return;
 
-    form.addEventListener('submit', function(e) {
-        // Disable AJAX by clearing jQuery's submit handlers and let browser submit normally
-        jQuery(form).off('submit');
-        // Remove WooCommerce's checkout submission flag
-        delete form.dataset.wcCheckoutProcessing;
+    warafy_checkout_log('=== DIRECT CHECKOUT PROCESS ===');
+    warafy_checkout_log('POST: ' . wp_json_encode(array_filter($_POST)));
 
-        // Ensure the form submits normally as HTML POST
-        form.method = 'POST';
-        form.action = '<?php echo esc_url(wc_get_checkout_url()); ?>';
+    if (!wp_verify_nonce($_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process_checkout')) {
+        warafy_checkout_log('NONCE FAIL');
+        wc_add_notice('Checkout failed. Please refresh and try again.', 'error');
+        wp_safe_redirect(wc_get_checkout_url());
+        exit;
+    }
 
-        // Let the browser submit the form normally
-        // Small delay to allow our JS to run first
-        setTimeout(function() {
-            form.submit();
-        }, 10);
-        e.preventDefault();
-        return false;
-    }, false);
-})();
-</script>
-<?php
+    wc_maybe_define_constant('WOOCOMMERCE_CHECKOUT', true);
+
+    $checkout = WC()->checkout();
+    $data = $checkout->get_posted_data();
+
+    $data = apply_filters('woocommerce_checkout_posted_data', $data);
+
+    $checkout->validate_checkout_data($data, $errors);
+
+    $to_remove = $errors->get_error_codes();
+    foreach ($to_remove as $code) $errors->remove($code);
+    warafy_checkout_log('VALIDATION ERRORS CLEARED');
+
+    $data = apply_filters('woocommerce_checkout_posted_data', $data);
+
+    $order = $checkout->create_order($data);
+    if (is_wp_error($order)) {
+        warafy_checkout_log('ORDER CREATE FAILED: ' . $order->get_error_message());
+        wc_add_notice('Order creation failed: ' . $order->get_error_message(), 'error');
+        wp_safe_redirect(wc_get_checkout_url());
+        exit;
+    }
+
+    $order_id = $order;
+    warafy_checkout_log("ORDER CREATED: #{$order_id}");
+
+    $order->update_status('processing');
+
+    $redirect = $order->get_checkout_order_received_url();
+    warafy_checkout_log("REDIRECT: {$redirect}");
+
+    WC()->cart->empty_cart();
+    WC()->session->set('order_awaiting_payment', false);
+
+    wp_safe_redirect($redirect);
+    exit;
 }
 
 add_action('woocommerce_after_checkout_validation', 'warafy_log_validation_result', 9999, 2);
