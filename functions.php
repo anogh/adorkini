@@ -538,85 +538,96 @@ function warafy_handle_checkout_process() {
     if (!isset($_GET['warafy_checkout']) || $_GET['warafy_checkout'] !== '1') return;
     if (empty($_POST)) return;
 
-    warafy_checkout_log('=== DIRECT CHECKOUT PROCESS ===');
+    error_reporting(E_ALL);
+    @ini_set('display_errors', 0);
 
-    if (!isset($_POST['woocommerce-process-checkout-nonce']) || !wp_verify_nonce($_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process-checkout')) {
-        warafy_checkout_log('NONCE FAIL');
+    $log = function($msg) {
+        $f = WP_CONTENT_DIR . '/warafy-checkout-debug.log';
+        file_put_contents($f, "[" . date('Y-m-d H:i:s') . "] {$msg}\n", FILE_APPEND);
+    };
+
+    $log('=== DIRECT CHECKOUT START ===');
+
+    if (!isset($_POST['woocommerce-process-checkout-nonce'])) {
+        $log('NO NONCE');
         wp_safe_redirect(wc_get_checkout_url());
         exit;
     }
 
-    warafy_checkout_log('POST: ' . wp_json_encode(array_filter($_POST)));
+    if (!wp_verify_nonce($_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process-checkout')) {
+        $log('NONCE FAIL');
+        wp_safe_redirect(wc_get_checkout_url());
+        exit;
+    }
+
+    if (!function_exists('WC') || !WC()->cart) {
+        $log('WOO NOT READY');
+        wp_safe_redirect(wc_get_checkout_url());
+        exit;
+    }
+
+    $log('WC READY');
 
     wc_maybe_define_constant('WOOCOMMERCE_CHECKOUT', true);
     WC()->session->set_customer_session_cookie(true);
 
     $host = wp_parse_url(home_url(), PHP_URL_HOST) ?: 'example.com';
-    $base_country = WC()->countries ? WC()->countries->get_base_country() : 'BD';
-    $base_state = WC()->countries ? WC()->countries->get_base_state() : '';
+    $base_country = (WC()->countries && method_exists(WC()->countries, 'get_base_country')) ? WC()->countries->get_base_country() : 'BD';
+    $base_state = (WC()->countries && method_exists(WC()->countries, 'get_base_state')) ? WC()->countries->get_base_state() : '';
+
+    $email = isset($_POST['billing_email']) ? sanitize_email($_POST['billing_email']) : '';
+    foreach (array('@phone.local', '@dummy.', '@fake.') as $d) {
+        if (stripos($email, $d) !== false) $email = '';
+    }
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $phone = isset($_POST['billing_phone']) ? preg_replace('/\D+/', '', sanitize_text_field($_POST['billing_phone'])) : '';
+        if (empty($phone)) $phone = uniqid();
+        $email = 'orders+' . $phone . '@' . $host;
+    }
 
     $data = array(
         'billing_first_name'  => isset($_POST['billing_first_name']) ? sanitize_text_field($_POST['billing_first_name']) : '',
         'billing_last_name'   => '',
         'billing_address_1'   => isset($_POST['billing_address_1']) ? sanitize_text_field($_POST['billing_address_1']) : '',
         'billing_address_2'   => '',
-        'billing_city'        => '',
-        'billing_state'       => $base_state,
-        'billing_postcode'    => '',
+        'billing_city'        => $base_country,
+        'billing_state'      => $base_state,
+        'billing_postcode'   => '',
         'billing_country'     => $base_country,
-        'billing_email'       => '',
+        'billing_email'      => $email,
         'billing_phone'       => isset($_POST['billing_phone']) ? sanitize_text_field($_POST['billing_phone']) : '',
-        'shipping_first_name' => '',
+        'shipping_first_name' => isset($_POST['billing_first_name']) ? sanitize_text_field($_POST['billing_first_name']) : '',
         'shipping_last_name'  => '',
-        'shipping_address_1'  => '',
+        'shipping_address_1'  => isset($_POST['billing_address_1']) ? sanitize_text_field($_POST['billing_address_1']) : '',
         'shipping_address_2'  => '',
-        'shipping_city'       => '',
+        'shipping_city'       => $base_country,
         'shipping_state'      => $base_state,
-        'shipping_postcode'   => '',
-        'shipping_country'    => $base_country,
-        'shipping_email'      => '',
-        'shipping_phone'      => '',
-        'payment_method'      => isset($_POST['payment_method']) ? sanitize_text_field($_POST['payment_method']) : 'cod',
-        'terms'               => 0,
-        'account_password'    => '',
+        'shipping_postcode'  => '',
+        'shipping_country'   => $base_country,
+        'shipping_email'     => $email,
+        'payment_method'     => isset($_POST['payment_method']) ? sanitize_text_field($_POST['payment_method']) : 'cod',
     );
 
-    if (!empty($_POST['billing_email']) && filter_var($_POST['billing_email'], FILTER_VALIDATE_EMAIL)) {
-        $data['billing_email'] = sanitize_email($_POST['billing_email']);
-    }
-    $dummy = array('@phone.local', '@dummy.', '@fake.');
-    foreach ($dummy as $d) {
-        if (stripos($data['billing_email'], $d) !== false) {
-            $data['billing_email'] = '';
-        }
-    }
-    if (empty($data['billing_email'])) {
-        $phone = preg_replace('/\D+/', '', $data['billing_phone']);
-        if (empty($phone)) $phone = uniqid();
-        $data['billing_email'] = 'orders+' . $phone . '@' . $host;
-    }
+    $log('DATA: ' . json_encode($data));
 
-    $copy = array('first_name', 'last_name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country', 'email', 'phone');
-    foreach ($copy as $f) {
-        $data['shipping_' . $f] = $data['billing_' . $f];
-    }
+    $order_id = @wc_create_order(array(
+        'status' => 'processing',
+        'customer_id' => get_current_user_id(),
+    ));
 
-    warafy_checkout_log('ORDER DATA: ' . wp_json_encode($data));
-
-    $order = wc_create_order();
-    if (is_wp_error($order)) {
-        warafy_checkout_log('CREATE ORDER FAILED: ' . $order->get_error_message());
+    if (is_wp_error($order_id)) {
+        $log('CREATE FAILED: ' . $order_id->get_error_message());
         wp_safe_redirect(wc_get_checkout_url());
         exit;
     }
 
-    $order_id = $order->get_id();
-    warafy_checkout_log("ORDER CREATED: #{$order_id}");
+    $log("ORDER CREATED: #{$order_id}");
 
+    $order = wc_get_order($order_id);
     $order->set_billing_first_name($data['billing_first_name']);
-    $order->set_billing_last_name('');
+    $order->set_billing_last_name($data['billing_last_name']);
     $order->set_billing_address_1($data['billing_address_1']);
-    $order->set_billing_address_2('');
+    $order->set_billing_address_2($data['billing_address_2']);
     $order->set_billing_city($data['billing_city']);
     $order->set_billing_state($data['billing_state']);
     $order->set_billing_postcode($data['billing_postcode']);
@@ -625,41 +636,42 @@ function warafy_handle_checkout_process() {
     $order->set_billing_phone($data['billing_phone']);
 
     $order->set_shipping_first_name($data['shipping_first_name']);
-    $order->set_shipping_last_name('');
+    $order->set_shipping_last_name($data['shipping_last_name']);
     $order->set_shipping_address_1($data['shipping_address_1']);
-    $order->set_shipping_address_2('');
+    $order->set_shipping_address_2($data['shipping_address_2']);
     $order->set_shipping_city($data['shipping_city']);
     $order->set_shipping_state($data['shipping_state']);
     $order->set_shipping_postcode($data['shipping_postcode']);
     $order->set_shipping_country($data['shipping_country']);
 
     $order->set_payment_method($data['payment_method']);
+    $order->set_payment_method_title($data['payment_method'] === 'cod' ? 'Cash on Delivery' : $data['payment_method']);
 
-    foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
-        $product = $cart_item['data'];
-        $order->add_product($product, $cart_item['quantity'], array(
-            'variation' => $cart_item['variation'],
-            'totals'    => array(
-                'subtotal'     => $cart_item['line_subtotal'],
-                'subtotal_tax' => $cart_item['line_subtotal_tax'],
-                'total'        => $cart_item['line_total'],
-                'tax'          => $cart_item['line_tax'],
-                'tax_data'     => $cart_item['line_tax_data'],
-            ),
-        ));
+    $cart = WC()->cart;
+    if ($cart && !$cart->is_empty()) {
+        foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+            $product_id = $cart_item['product_id'];
+            $qty = $cart_item['quantity'];
+            $variation_id = isset($cart_item['variation_id']) ? $cart_item['variation_id'] : 0;
+            $variation = isset($cart_item['variation']) ? $cart_item['variation'] : array();
+            $args = array();
+            if (!empty($variation_id)) {
+                $args['variation'] = $variation;
+            }
+            $order->add_product(wc_get_product($product_id), $qty, $args);
+        }
     }
 
     $order->calculate_totals();
-    $order->update_status('processing');
+    $order->save();
 
     do_action('woocommerce_new_order', $order_id, $order);
 
-    warafy_checkout_log("ORDER #{$order_id} SAVED - redirecting");
-
-    WC()->cart->empty_cart();
+    $cart = WC()->cart;
+    if ($cart) $cart->empty_cart();
 
     $redirect = $order->get_checkout_order_received_url();
-    warafy_checkout_log("REDIRECT: {$redirect}");
+    $log("REDIRECT: {$redirect}");
 
     wp_safe_redirect($redirect);
     exit;
