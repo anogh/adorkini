@@ -64,7 +64,7 @@ $random_products_query = new WP_Query([
             <section class="flex flex-col gap-6 lg:flex-row">
                 <!-- Vertical Category List (15%) -->
                 <aside class="w-full lg:w-[18%] lg:max-w-[240px] flex-shrink-0">
-                    <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-background-dark" style="height: 500px;">
+                    <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-background-dark" style="height: 300px;">
                         <div class="h-full flex flex-col">
                             <h3 class="mb-4 text-base font-bold text-gray-900 dark:text-white p-4 pb-0"><?php echo __t('Categories'); ?></h3>
                             <div class="flex-1 overflow-y-auto px-4 pb-4">
@@ -73,6 +73,10 @@ $random_products_query = new WP_Query([
                             if (!empty($categories) && !is_wp_error($categories)) {
                                 $index = 0;
                                 foreach ($categories as $category) {
+                                    // Skip uncategorized
+                                    if (strtolower($category->slug) === 'uncategorized' || strtolower($category->name) === 'uncategorized') {
+                                        continue;
+                                    }
                                     // Get the icon for this category
                                     $category_slug = strtolower($category->slug);
                                     $category_name_lower = strtolower($category->name);
@@ -109,7 +113,7 @@ $random_products_query = new WP_Query([
                     </div>
                 </aside>
                 <!-- Hero Slider (85%) -->
-                <div class="relative w-full flex-1 overflow-hidden rounded-xl hero-slider-container" style="height: 500px;">
+                <div class="relative w-full flex-1 overflow-hidden rounded-xl hero-slider-container" style="height: 300px;">
                     <?php for ($i = 1; $i <= 3; $i++): 
                         $s = ($i == 1) ? '' : '_' . $i;
                         $bg = get_option('warafy_hero_desktop_image'.$s, ($i == 1 ? 'https://lh3.googleusercontent.com/aida-public/AB6AXuBQt_hNv9RJISICe6QmR94cZW3qkEA5JS5XEya0vVDuE6PczpKl1RV2_DCp0Aire2HzStJG74f44FC71rhQIE5i1JA4Z4i2CtFawU4Rsf1yfjJFCHy6oJx6rVaW0lRtVsoRSL0oEoTWYHNJieRZD6BtMbnGqXg7LKmuZ4f7NiCpk_ynULjVXdCo_lUTuxYWM_f2PjENgs6vmjCqBTYJxsU9Br-R7MnIjo-AHXeGJmdUaE7xvx8b1wq7jNB2kHXlWmMPTX30bfVZkQY' : ''));
