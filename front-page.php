@@ -179,7 +179,7 @@ $random_products_query = new WP_Query([
                         </button>
                     </div>
 
-                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xl py-3 rounded-lg text-center transition-colors shadow-md">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-lg py-2.5 rounded-lg text-center transition-colors shadow-md">
                         <?php echo __t('ORDER NOW'); ?>
                     </a>
                 </div>
@@ -395,7 +395,7 @@ $random_products_query = new WP_Query([
                         </button>
                     </div>
 
-                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-base py-2.5 rounded-lg text-center transition-colors shadow-sm">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-sm py-2 rounded-lg text-center transition-colors shadow-sm">
                         <?php echo __t('ORDER NOW'); ?>
                     </a>
                 </div>
