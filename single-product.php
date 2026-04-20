@@ -148,16 +148,10 @@ get_header(); ?>
                     <!-- Custom Add to Cart Form -->
                     <form class="cart flex flex-col gap-4" action="<?php echo esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) ); ?>" method="post" enctype='multipart/form-data'>
                         
-                        <!-- Quantity -->
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-gray-900 dark:text-white" for="quantity"><?php echo __t('Quantity'); ?></label>
-                            <?php if ( $product->is_sold_individually() ) : ?>
-                                <div class="single-product-qty h-12 min-w-[120px] rounded-xl border border-gray-200 bg-white px-4 text-center text-base font-semibold leading-[48px] text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                                    1
-                                    <input type="hidden" name="quantity" value="1">
-                                </div>
-                            <?php else : ?>
-                                <div class="single-product-qty inline-flex h-12 items-center overflow-hidden rounded-xl border border-[#e6b400] bg-white dark:border-[#e6b400] dark:bg-gray-900">
+                        <!-- Quantity + Buttons Row -->
+                        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                            <?php if ( !$product->is_sold_individually() ) : ?>
+                                <div class="single-product-qty inline-flex h-12 items-center overflow-hidden rounded-xl border border-[#e6b400] bg-white dark:border-[#e6b400] dark:bg-gray-900 flex-shrink-0">
                                     <button type="button" class="single-qty-btn single-qty-minus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Decrease quantity">−</button>
                                     <input
                                         type="number"
@@ -173,18 +167,14 @@ get_header(); ?>
                                     <button type="button" class="single-qty-btn single-qty-plus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Increase quantity">+</button>
                                 </div>
                             <?php endif; ?>
-                        </div>
-
-                        <!-- Buttons -->
-                        <div class="flex flex-col gap-3 sm:flex-row">
-                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-slate-900 text-white text-base font-semibold shadow-md hover:bg-slate-800">
+                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex flex-1 min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-slate-900 text-white text-base font-semibold shadow-md hover:bg-slate-800">
                                 <span class="material-symbols-outlined" data-icon="add_shopping_cart"></span>
                                 <span class="truncate"><?php echo __t('Add to Cart'); ?></span>
                             </button>
                         </div>
                         
                         <!-- Buy Now Button -->
-                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-emerald-600 text-white hover:bg-emerald-700 transition-colors font-semibold" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
+                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-[#F5A623] text-white hover:bg-[#E8960E] transition-colors font-semibold shadow-lg" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                             <span class="btn-text"><?php echo __t('Order Now'); ?></span>
                         </button>
@@ -446,7 +436,7 @@ get_header(); ?>
                         </div>
                     </form>
                     <!-- Buy Now Button -->
-                    <button type="button" class="buy-now-btn flex items-center justify-center gap-2 w-full rounded-lg h-12 px-6 bg-emerald-600 text-white hover:bg-emerald-700 transition-colors font-semibold mt-2" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
+                    <button type="button" class="buy-now-btn flex items-center justify-center gap-2 w-full rounded-lg h-12 px-6 bg-[#F5A623] text-white hover:bg-[#E8960E] transition-colors font-semibold shadow-lg mt-2" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                         <span class="btn-text"><?php echo __t('Order Now'); ?></span>
                     </button>
