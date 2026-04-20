@@ -23,6 +23,13 @@ get_header(); ?>
         }
         // Remove duplicates if the featured image is also in the gallery
         $all_image_ids = array_unique($all_image_ids);
+
+        $regular_price = (float) $product->get_regular_price();
+        $sale_price = (float) $product->get_sale_price();
+        $has_discount = $product->is_on_sale() && $regular_price > 0 && $sale_price > 0 && $sale_price < $regular_price;
+        $save_percentage = $has_discount ? round((($regular_price - $sale_price) / $regular_price) * 100) : 0;
+        $min_purchase_quantity = $product->get_min_purchase_quantity();
+        $max_purchase_quantity = $product->get_max_purchase_quantity();
         ?>
         
         <!-- Desktop Content -->
@@ -120,9 +127,20 @@ get_header(); ?>
                         <?php the_excerpt(); ?>
                     </div>
 
-                    <div>
-                        <p class="text-3xl font-bold text-gray-900 dark:text-white"><?php echo $product->get_price_html(); ?></p>
-                        <p class="text-sm text-green-600 dark:text-green-400 font-medium mt-1"><?php echo wc_get_stock_html( $product ); ?></p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-end gap-2 flex-wrap">
+                            <?php if ($has_discount) : ?>
+                                <p class="text-3xl font-extrabold text-amber-500 dark:text-amber-400"><?php echo wc_price($sale_price); ?></p>
+                                <p class="text-lg font-medium text-red-500 line-through decoration-2"><?php echo wc_price($regular_price); ?></p>
+                            <?php else : ?>
+                                <p class="text-3xl font-extrabold text-gray-900 dark:text-white"><?php echo $product->get_price_html(); ?></p>
+                            <?php endif; ?>
+                        </div>
+                        <?php if ($has_discount) : ?>
+                            <span class="inline-flex items-center rounded-2xl bg-emerald-600 px-4 py-2 text-lg font-bold text-white shadow-sm">
+                                <?php echo esc_html(sprintf(__('Save %d%%', 'woocommerce'), $save_percentage)); ?>
+                            </span>
+                        <?php endif; ?>
                     </div>
 
                     <div class="w-full h-px bg-gray-200 dark:bg-gray-700"></div>
@@ -133,30 +151,42 @@ get_header(); ?>
                         <!-- Quantity -->
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-gray-900 dark:text-white" for="quantity"><?php echo __t('Quantity'); ?></label>
-                            <?php
-                            woocommerce_quantity_input(
-                                array(
-                                    'min_value'   => apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ),
-                                    'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ),
-                                    'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) : $product->get_min_purchase_quantity(),
-                                    'classes'     => 'form-input w-24 rounded-lg border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800 text-sm focus:border-primary focus:ring-primary',
-                                )
-                            );
-                            ?>
+                            <?php if ( $product->is_sold_individually() ) : ?>
+                                <div class="single-product-qty h-12 min-w-[120px] rounded-xl border border-gray-200 bg-white px-4 text-center text-base font-semibold leading-[48px] text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                                    1
+                                    <input type="hidden" name="quantity" value="1">
+                                </div>
+                            <?php else : ?>
+                                <div class="single-product-qty inline-flex h-12 items-center overflow-hidden rounded-xl border border-[#e6b400] bg-white dark:border-[#e6b400] dark:bg-gray-900">
+                                    <button type="button" class="single-qty-btn single-qty-minus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Decrease quantity">−</button>
+                                    <input
+                                        type="number"
+                                        id="quantity"
+                                        name="quantity"
+                                        value="<?php echo isset( $_POST['quantity'] ) ? esc_attr( wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) ) : esc_attr( $min_purchase_quantity ); ?>"
+                                        min="<?php echo esc_attr( apply_filters( 'woocommerce_quantity_input_min', $min_purchase_quantity, $product ) ); ?>"
+                                        max="<?php echo esc_attr( apply_filters( 'woocommerce_quantity_input_max', $max_purchase_quantity, $product ) ); ?>"
+                                        step="1"
+                                        inputmode="numeric"
+                                        class="single-qty-input h-12 w-12 border-0 bg-transparent text-center text-base font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                    >
+                                    <button type="button" class="single-qty-btn single-qty-plus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Increase quantity">+</button>
+                                </div>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Buttons -->
                         <div class="flex flex-col gap-3 sm:flex-row">
-                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-lg hover:bg-primary/90">
+                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-slate-900 text-white text-base font-semibold shadow-md hover:bg-slate-800">
                                 <span class="material-symbols-outlined" data-icon="add_shopping_cart"></span>
                                 <span class="truncate"><?php echo __t('Add to Cart'); ?></span>
                             </button>
                         </div>
                         
                         <!-- Buy Now Button -->
-                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors font-medium" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Buy Now'); ?>">
+                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-emerald-600 text-white hover:bg-emerald-700 transition-colors font-semibold" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                            <span class="btn-text"><?php echo __t('Buy Now'); ?></span>
+                            <span class="btn-text"><?php echo __t('Order Now'); ?></span>
                         </button>
                     </form>
                     
@@ -357,7 +387,21 @@ get_header(); ?>
                             </div>
                         </div>
                     </div>
-                    <p class="text-primary dark:text-primary-light text-3xl font-bold"><?php echo $product->get_price_html(); ?></p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-end gap-2 flex-wrap">
+                            <?php if ($has_discount) : ?>
+                                <p class="text-3xl font-extrabold text-amber-500 dark:text-amber-400"><?php echo wc_price($sale_price); ?></p>
+                                <p class="text-lg font-medium text-red-500 line-through decoration-2"><?php echo wc_price($regular_price); ?></p>
+                            <?php else : ?>
+                                <p class="text-primary dark:text-primary-light text-3xl font-bold"><?php echo $product->get_price_html(); ?></p>
+                            <?php endif; ?>
+                        </div>
+                        <?php if ($has_discount) : ?>
+                            <span class="inline-flex items-center rounded-2xl bg-emerald-600 px-4 py-2 text-base font-bold text-white shadow-sm">
+                                <?php echo esc_html(sprintf(__('Save %d%%', 'woocommerce'), $save_percentage)); ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <!-- Add to Cart Footer (Sticky) -->
@@ -373,16 +417,38 @@ get_header(); ?>
                             );
                         ?>
                         <div class="flex-1 flex flex-col gap-2">
-                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg w-full">
+                            <?php if ( $product->is_sold_individually() ) : ?>
+                                <div class="single-product-qty h-12 min-w-[120px] rounded-xl border border-gray-200 bg-white px-4 text-center text-base font-semibold leading-[48px] text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-white w-full">
+                                    1
+                                    <input type="hidden" name="quantity" value="1">
+                                </div>
+                            <?php else : ?>
+                                <div class="single-product-qty inline-flex h-12 items-center overflow-hidden rounded-xl border border-[#e6b400] bg-white dark:border-[#e6b400] dark:bg-gray-900 w-full">
+                                    <button type="button" class="single-qty-btn single-qty-minus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Decrease quantity">−</button>
+                                    <input
+                                        type="number"
+                                        id="quantity-mobile"
+                                        name="quantity"
+                                        value="<?php echo isset( $_POST['quantity'] ) ? esc_attr( wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) ) : esc_attr( $min_purchase_quantity ); ?>"
+                                        min="<?php echo esc_attr( apply_filters( 'woocommerce_quantity_input_min', $min_purchase_quantity, $product ) ); ?>"
+                                        max="<?php echo esc_attr( apply_filters( 'woocommerce_quantity_input_max', $max_purchase_quantity, $product ) ); ?>"
+                                        step="1"
+                                        inputmode="numeric"
+                                        class="single-qty-input h-12 w-12 border-0 bg-transparent text-center text-base font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                                    >
+                                    <button type="button" class="single-qty-btn single-qty-plus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Increase quantity">+</button>
+                                </div>
+                            <?php endif; ?>
+                            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg w-full">
                                 <span class="material-symbols-outlined" data-icon="shopping_bag"></span>
                                 <?php echo __t('Add to Cart'); ?>
                             </button>
                         </div>
                     </form>
                     <!-- Buy Now Button -->
-                    <button type="button" class="buy-now-btn flex items-center justify-center gap-2 w-full rounded-lg h-12 px-6 bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors font-medium mt-2" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Buy Now'); ?>">
+                    <button type="button" class="buy-now-btn flex items-center justify-center gap-2 w-full rounded-lg h-12 px-6 bg-emerald-600 text-white hover:bg-emerald-700 transition-colors font-semibold mt-2" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                        <span class="btn-text"><?php echo __t('Buy Now'); ?></span>
+                        <span class="btn-text"><?php echo __t('Order Now'); ?></span>
                     </button>
                 </footer>
 
@@ -882,6 +948,25 @@ get_header(); ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Single product page loaded - Related Products script initialized');
+
+    document.body.addEventListener('click', function(e) {
+        const qtyBtn = e.target.closest('.single-qty-btn');
+        if (!qtyBtn) return;
+
+        const qtyWrap = qtyBtn.closest('.single-product-qty');
+        if (!qtyWrap) return;
+
+        const input = qtyWrap.querySelector('.single-qty-input');
+        if (!input) return;
+
+        const current = parseInt(input.value || '1', 10);
+        const min = parseInt(input.min || '1', 10);
+        const max = parseInt(input.max || '9999', 10);
+        const next = qtyBtn.classList.contains('single-qty-plus') ? Math.min(max, current + 1) : Math.max(min, current - 1);
+
+        input.value = Number.isFinite(next) ? next : min;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
 
     document.body.addEventListener('click', function(e) {
         const btn = e.target.closest('.buy-now-btn');
