@@ -160,23 +160,28 @@ $random_products_query = new WP_Query([
             function warafy_render_desktop_compact_product($product) {
                 if (!$product) return;
                 ?>
-                <div class="bg-white border border-gray-200 flex flex-col p-3 h-full rounded-md relative transition-shadow hover:shadow-lg warafy-desktop-product-card">
-                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-3 block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
+                <div class="bg-white border border-gray-100 flex flex-col p-3 h-full rounded-xl relative transition-all hover:shadow-xl warafy-desktop-product-card">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-4 block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
                     
-                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-sm font-medium text-black dark:text-gray-200 line-clamp-2 leading-[1.3] min-h-[36px] mb-3 hover:text-primary">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-base font-medium text-black line-clamp-2 leading-[1.4] min-h-[44px] mb-3 hover:text-primary">
                         <?php echo get_the_title($product->get_id()); ?>
                     </a>
                     
-                    <div class="warafy-product-actions warafy-desktop-product-actions w-full mt-auto">
-                        <div class="flex items-center flex-wrap mobile-compact-price min-w-0">
-                            <?php echo $product->get_price_html(); ?>
+                    <div class="warafy-product-actions warafy-desktop-product-actions w-full mt-auto mb-3">
+                        <div class="flex items-center flex-wrap gap-2 min-w-0">
+                            <span class="text-gray-400 line-through text-sm"><?php echo wc_price($product->get_regular_price()); ?></span>
+                            <span class="text-black font-bold text-2xl"><?php echo wc_price($product->get_price()); ?></span>
                         </div>
                         
-                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[13px] font-bold px-3 py-1 rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 transition-colors" data-product-id="<?php echo $product->get_id(); ?>">
+                        <button class="add-to-cart-btn bg-[#FFC107] hover:bg-[#FFB300] text-black text-sm font-bold px-4 py-2 rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 transition-colors shadow-sm" data-product-id="<?php echo $product->get_id(); ?>">
                             <span class="add-text"><?php echo __t('Add to cart'); ?></span>
                             <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
                         </button>
                     </div>
+
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-xl py-3 rounded-lg text-center transition-colors shadow-md">
+                        <?php echo __t('ORDER NOW'); ?>
+                    </a>
                 </div>
                 <?php
             }
@@ -371,23 +376,28 @@ $random_products_query = new WP_Query([
             function warafy_render_mobile_compact_product($product) {
                 if (!$product) return;
                 ?>
-                <div class="bg-white border border-gray-200 flex flex-col p-2 h-full rounded-[2px] relative warafy-mobile-product-card">
-                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-2 block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
+                <div class="bg-white border border-gray-100 flex flex-col p-2 h-full rounded-xl relative warafy-mobile-product-card shadow-sm">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-3 block" style='background-image: url("<?php echo get_the_post_thumbnail_url($product->get_id(), 'woocommerce_thumbnail'); ?>");'></a>
                     
-                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-[11px] font-medium text-black line-clamp-2 leading-[1.3] min-h-[29px] mb-2 hover:text-primary">
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full text-[12px] font-medium text-black line-clamp-2 leading-[1.3] min-h-[32px] mb-2 hover:text-primary">
                         <?php echo get_the_title($product->get_id()); ?>
                     </a>
                     
-                    <div class="warafy-product-actions warafy-mobile-product-actions w-full mt-auto">
-                        <div class="flex items-center flex-wrap mobile-compact-price min-w-0">
-                            <?php echo $product->get_price_html(); ?>
+                    <div class="warafy-product-actions warafy-mobile-product-actions w-full mt-auto mb-2">
+                        <div class="flex items-center flex-wrap gap-1 min-w-0">
+                            <span class="text-gray-400 line-through text-xs"><?php echo wc_price($product->get_regular_price()); ?></span>
+                            <span class="text-black font-bold text-lg"><?php echo wc_price($product->get_price()); ?></span>
                         </div>
                         
-                        <button class="add-to-cart-btn bg-[#FFB800] hover:bg-[#e6a600] text-black text-[11px] font-bold px-[7px] py-[2px] rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 justify-self-end" data-product-id="<?php echo $product->get_id(); ?>">
+                        <button class="add-to-cart-btn bg-[#FFC107] hover:bg-[#FFB300] text-black text-xs font-bold px-3 py-1.5 rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 transition-colors shadow-sm" data-product-id="<?php echo $product->get_id(); ?>">
                             <span class="add-text"><?php echo __t('Add to cart'); ?></span>
                             <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
                         </button>
                     </div>
+
+                    <a href="<?php echo get_permalink($product->get_id()); ?>" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-base py-2.5 rounded-lg text-center transition-colors shadow-sm">
+                        <?php echo __t('ORDER NOW'); ?>
+                    </a>
                 </div>
                 <?php
             }
@@ -396,14 +406,14 @@ $random_products_query = new WP_Query([
 
         <style>
             .warafy-mobile-product-card {
-                box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             }
 
             .warafy-product-actions {
                 display: grid;
-                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                grid-template-columns: minmax(0, 1fr) auto;
                 gap: 8px;
-                align-items: end;
+                align-items: center;
                 width: 100%;
             }
 
