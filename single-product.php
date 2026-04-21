@@ -164,7 +164,12 @@ get_header(); ?>
                                 </div>
                             <?php endif; ?>
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex flex-1 min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-slate-900 text-white text-base font-semibold shadow-md hover:bg-slate-800">
-                                <span class="material-symbols-outlined" data-icon="add_shopping_cart"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                    <line x1="9" y1="13" x2="15" y2="13"></line>
+                                </svg>
                                 <span class="truncate"><?php echo __t('Add to Cart'); ?></span>
                             </button>
                         </div>
@@ -427,7 +432,12 @@ get_header(); ?>
                                 </div>
                             <?php endif; ?>
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg">
-                                <span class="material-symbols-outlined" data-icon="shopping_bag"></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                    <line x1="9" y1="13" x2="15" y2="13"></line>
+                                </svg>
                                 <?php echo __t('Add to Cart'); ?>
                             </button>
                         </div>
