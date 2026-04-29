@@ -175,7 +175,7 @@ get_header(); ?>
                         </div>
                         
                         <!-- Buy Now Button -->
-                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-[#F5A623] text-white hover:bg-[#E8960E] transition-colors font-semibold shadow-lg" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
+                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 rounded-full h-12 px-6 bg-[#FFC107] text-black hover:bg-[#FFB300] transition-colors font-bold shadow-sm" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
                                 <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
                                 <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
@@ -448,7 +448,7 @@ get_header(); ?>
                         </div>
 
                         <!-- Buy Now Button -->
-                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 w-full rounded-lg h-12 px-6 bg-[#F5A623] text-white hover:bg-[#E8960E] transition-colors font-semibold shadow-lg" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
+                        <button type="button" class="buy-now-btn flex items-center justify-center gap-2 w-full rounded-full h-12 px-6 bg-[#FFC107] text-black hover:bg-[#FFB300] transition-colors font-bold shadow-sm" data-product-id="<?php echo $product->get_id(); ?>" data-checkout-url="<?php echo esc_url( wc_get_checkout_url() ); ?>" title="<?php echo __t('Order Now'); ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
                                 <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
                                 <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
@@ -611,12 +611,15 @@ get_header(); ?>
 
             .warafy-product-image-modal-stage {
                 touch-action: none;
+                cursor: grab;
             }
 
             .warafy-product-image-modal-image {
                 transition: transform 0.15s ease;
                 transform-origin: center center;
                 will-change: transform;
+                user-select: none;
+                -webkit-user-drag: none;
             }
 
             @media (max-width: 1024px) {
@@ -813,6 +816,13 @@ get_header(); ?>
                 const modalStage = document.getElementById('warafy-product-image-modal-stage');
                 const modalClose = document.getElementById('warafy-product-image-modal-close');
                 let modalZoom = 1;
+                let modalPanX = 0;
+                let modalPanY = 0;
+                let isDragging = false;
+                let dragStartX = 0;
+                let dragStartY = 0;
+                let dragPanStartX = 0;
+                let dragPanStartY = 0;
                 let pinchStartDistance = 0;
                 let pinchStartZoom = 1;
 
@@ -825,11 +835,16 @@ get_header(); ?>
                         return;
                     }
 
-                    modalImage.style.transform = 'scale(' + modalZoom + ')';
+                    modalImage.style.transformOrigin = 'center center';
+                    modalImage.style.transform = 'translate(' + modalPanX + 'px, ' + modalPanY + 'px) scale(' + modalZoom + ')';
+                    modalImage.style.cursor = modalZoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in';
                 }
 
                 function resetModalZoom() {
                     modalZoom = 1;
+                    modalPanX = 0;
+                    modalPanY = 0;
+                    isDragging = false;
                     applyModalZoom();
                 }
 
@@ -904,8 +919,43 @@ get_header(); ?>
                         applyModalZoom();
                     }, { passive: false });
 
+                    modalStage.addEventListener('mousedown', (event) => {
+                        if (modalZoom <= 1) {
+                            return;
+                        }
+
+                        isDragging = true;
+                        dragStartX = event.clientX;
+                        dragStartY = event.clientY;
+                        dragPanStartX = modalPanX;
+                        dragPanStartY = modalPanY;
+                        applyModalZoom();
+                    });
+
+                    window.addEventListener('mousemove', (event) => {
+                        if (!isDragging || modal.classList.contains('hidden')) {
+                            return;
+                        }
+
+                        modalPanX = dragPanStartX + (event.clientX - dragStartX);
+                        modalPanY = dragPanStartY + (event.clientY - dragStartY);
+                        applyModalZoom();
+                    });
+
+                    window.addEventListener('mouseup', () => {
+                        isDragging = false;
+                        applyModalZoom();
+                    });
+
                     modalStage.addEventListener('touchstart', (event) => {
-                        if (event.touches.length === 2) {
+                        if (event.touches.length === 1 && modalZoom > 1) {
+                            isDragging = true;
+                            dragStartX = event.touches[0].clientX;
+                            dragStartY = event.touches[0].clientY;
+                            dragPanStartX = modalPanX;
+                            dragPanStartY = modalPanY;
+                        } else if (event.touches.length === 2) {
+                            isDragging = false;
                             pinchStartDistance = getTouchDistance(event.touches);
                             pinchStartZoom = modalZoom;
                         }
@@ -913,6 +963,14 @@ get_header(); ?>
 
                     modalStage.addEventListener('touchmove', (event) => {
                         if (!modal || modal.classList.contains('hidden')) {
+                            return;
+                        }
+
+                        if (event.touches.length === 1 && isDragging) {
+                            event.preventDefault();
+                            modalPanX = dragPanStartX + (event.touches[0].clientX - dragStartX);
+                            modalPanY = dragPanStartY + (event.touches[0].clientY - dragStartY);
+                            applyModalZoom();
                             return;
                         }
 
@@ -925,14 +983,22 @@ get_header(); ?>
 
                     modalStage.addEventListener('touchend', () => {
                         pinchStartDistance = 0;
+                        isDragging = false;
                     });
 
                     modalStage.addEventListener('touchcancel', () => {
                         pinchStartDistance = 0;
+                        isDragging = false;
                     });
 
                     modalStage.addEventListener('dblclick', () => {
-                        modalZoom = modalZoom > 1 ? 1 : 2;
+                        if (modalZoom > 1) {
+                            modalZoom = 1;
+                            modalPanX = 0;
+                            modalPanY = 0;
+                        } else {
+                            modalZoom = 2;
+                        }
                         applyModalZoom();
                     });
 

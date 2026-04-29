@@ -184,18 +184,29 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentModalImageIndex = 0;
         const modalStage = document.getElementById('warafy-product-image-modal-stage');
         let modalZoom = 1;
+        let modalPanX = 0;
+        let modalPanY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragPanStartX = 0;
+        let dragPanStartY = 0;
         let pinchStartDistance = 0;
         let pinchStartZoom = 1;
 
         const clampZoom = (value) => Math.min(4, Math.max(1, value));
 
         function applyModalZoom() {
-            modalImage.style.transform = `scale(${modalZoom})`;
             modalImage.style.transformOrigin = 'center center';
+            modalImage.style.transform = `translate(${modalPanX}px, ${modalPanY}px) scale(${modalZoom})`;
+            modalImage.style.cursor = modalZoom > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in';
         }
 
         function resetModalZoom() {
             modalZoom = 1;
+            modalPanX = 0;
+            modalPanY = 0;
+            isDragging = false;
             applyModalZoom();
         }
 
@@ -254,8 +265,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 applyModalZoom();
             }, { passive: false });
 
+            modalStage.addEventListener('mousedown', (e) => {
+                if (modalZoom <= 1) return;
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                dragPanStartX = modalPanX;
+                dragPanStartY = modalPanY;
+                applyModalZoom();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging || modal.classList.contains('hidden')) return;
+                modalPanX = dragPanStartX + (e.clientX - dragStartX);
+                modalPanY = dragPanStartY + (e.clientY - dragStartY);
+                applyModalZoom();
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                applyModalZoom();
+            });
+
             modalStage.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 2) {
+                if (e.touches.length === 1 && modalZoom > 1) {
+                    isDragging = true;
+                    dragStartX = e.touches[0].clientX;
+                    dragStartY = e.touches[0].clientY;
+                    dragPanStartX = modalPanX;
+                    dragPanStartY = modalPanY;
+                } else if (e.touches.length === 2) {
+                    isDragging = false;
                     pinchStartDistance = getTouchDistance(e.touches);
                     pinchStartZoom = modalZoom;
                 }
@@ -263,6 +303,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             modalStage.addEventListener('touchmove', (e) => {
                 if (modal.classList.contains('hidden')) return;
+                if (e.touches.length === 1 && isDragging) {
+                    e.preventDefault();
+                    modalPanX = dragPanStartX + (e.touches[0].clientX - dragStartX);
+                    modalPanY = dragPanStartY + (e.touches[0].clientY - dragStartY);
+                    applyModalZoom();
+                    return;
+                }
                 if (e.touches.length === 2 && pinchStartDistance) {
                     e.preventDefault();
                     const distance = getTouchDistance(e.touches);
@@ -271,8 +318,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, { passive: false });
 
+            modalStage.addEventListener('touchend', () => {
+                pinchStartDistance = 0;
+                isDragging = false;
+            });
+
+            modalStage.addEventListener('touchcancel', () => {
+                pinchStartDistance = 0;
+                isDragging = false;
+            });
+
             modalStage.addEventListener('dblclick', () => {
-                modalZoom = modalZoom > 1 ? 1 : 2;
+                if (modalZoom > 1) {
+                    modalZoom = 1;
+                    modalPanX = 0;
+                    modalPanY = 0;
+                } else {
+                    modalZoom = 2;
+                }
                 applyModalZoom();
             });
 

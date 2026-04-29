@@ -226,11 +226,14 @@ Text Domain: adorkini
 /* Product image modal */
 .warafy-product-image-modal-stage {
     touch-action: none;
+    cursor: grab;
 }
 
 .warafy-product-image-modal-image {
     transition: transform 0.15s ease;
     will-change: transform;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 #warafy-product-image-modal-panel {
