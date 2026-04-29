@@ -1021,23 +1021,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const input = qtyWrap.querySelector('.single-qty-input');
         if (!input) return;
         
-        const current = parseFloat(input.value) || 1;
-        const min = parseFloat(input.getAttribute('min')) || 1;
-        const max = parseFloat(input.getAttribute('max')) || 9999;
-        const step = parseFloat(input.getAttribute('step')) || 1;
-        
-        let next;
         if (qtyBtn.classList.contains('single-qty-plus')) {
-            next = Math.min(max, current + step);
+            input.stepUp();
         } else {
-            next = Math.max(min, current - step);
+            input.stepDown();
         }
         
-        if (next !== current) {
-            input.value = next;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new Event('change', { bubbles: true }));
-        }
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
     });
 
     document.body.addEventListener('click', function(e) {
