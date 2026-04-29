@@ -1158,7 +1158,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize for Mobile
     setupRelatedProductsInfiniteScroll('.warafy-related-grid-mobile', '.warafy-related-loading-trigger-mobile', true);
-});
+    });
+    
+    // Quantity button handler
+    window.updateQty = function(button, delta) {
+        var input = delta > 0 ? button.previousElementSibling : button.nextElementSibling;
+        if (!input) return;
+        var current = parseFloat(input.value) || 1;
+        var min = parseFloat(input.getAttribute('min')) || 0;
+        var max = parseFloat(input.getAttribute('max')) || 9999;
+        var next = delta > 0 ? Math.min(max, current + 1) : Math.max(min, current - 1);
+        if (next !== current) {
+            input.value = next;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    };
 </script>
 
 <?php get_footer(); ?>
