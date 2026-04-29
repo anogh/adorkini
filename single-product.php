@@ -1026,7 +1026,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const current = parseInt(input.value || '1', 10);
         const min = parseInt(input.getAttribute('min') || '1', 10);
-        const max = parseInt(input.getAttribute('max') || '9999', 10);
+        let max = parseInt(input.getAttribute('max') || '9999', 10);
+        // Handle WooCommerce's -1 for unlimited stock
+        if (max < 1) max = 9999;
         const isPlus = qtyBtn.classList.contains('single-qty-plus');
         const next = isPlus ? Math.min(max, current + 1) : Math.max(min, current - 1);
         
