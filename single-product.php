@@ -1014,21 +1014,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('click', function(e) {
         const qtyBtn = e.target.closest('.single-qty-btn');
         if (!qtyBtn) return;
+        
         e.preventDefault();
+        e.stopPropagation();
         
         const qtyWrap = qtyBtn.closest('.single-product-qty');
-        if (!qtyWrap) {
-            console.log('qtyWrap not found');
-            return;
-        }
+        if (!qtyWrap) return;
         
         const input = qtyWrap.querySelector('.single-qty-input');
-        if (!input) {
-            console.log('input not found');
-            return;
-        }
+        if (!input) return;
         
-        console.log('qtyBtn clicked', qtyBtn.className, 'current value:', input.value);
         const current = parseInt(input.value || '1', 10);
         const min = parseInt(input.getAttribute('min') || '1', 10);
         const max = parseInt(input.getAttribute('max') || '9999', 10);
@@ -1038,9 +1033,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (next !== current) {
             input.value = next;
             input.dispatchEvent(new Event('change', { bubbles: true }));
-            console.log('value updated to:', next);
-        } else {
-            console.log('value unchanged, min:', min, 'max:', max);
         }
     });
 
