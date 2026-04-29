@@ -148,7 +148,7 @@ get_header(); ?>
                         <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
                             <?php if ( !$product->is_sold_individually() ) : ?>
                                 <div class="single-product-qty inline-flex h-12 items-center overflow-hidden rounded-xl border border-[#e6b400] bg-white dark:border-[#e6b400] dark:bg-gray-900 flex-shrink-0">
-                                    <button type="button" class="single-qty-btn single-qty-minus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Decrease quantity" onclick="var i=this.nextElementSibling;i.value=Math.max(parseFloat(i.getAttribute('min'))||0,parseFloat(i.value)-1);i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));">−</button>
+                                    <button type="button" class="single-qty-btn single-qty-minus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Decrease quantity">−</button>
                                     <input
                                         type="number"
                                         id="quantity"
@@ -160,7 +160,7 @@ get_header(); ?>
                                         inputmode="numeric"
                                         class="single-qty-input h-12 w-12 border-0 bg-transparent text-center text-base font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                     >
-                                    <button type="button" class="single-qty-btn single-qty-plus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Increase quantity" onclick="var i=this.previousElementSibling;i.value=Math.min(parseFloat(i.getAttribute('max'))||9999,parseFloat(i.value)+1);i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));">+</button>
+                                    <button type="button" class="single-qty-btn single-qty-plus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Increase quantity">+</button>
                                 </div>
                             <?php endif; ?>
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex flex-1 min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-slate-900 text-white text-base font-semibold shadow-md hover:bg-slate-800">
@@ -415,7 +415,7 @@ get_header(); ?>
                                 </div>
                             <?php else : ?>
                                 <div class="single-product-qty inline-flex h-12 items-center overflow-hidden rounded-xl border border-[#e6b400] bg-white dark:border-[#e6b400] dark:bg-gray-900 flex-shrink-0">
-                                    <button type="button" class="single-qty-btn single-qty-minus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Decrease quantity" onclick="var i=this.nextElementSibling;i.value=Math.max(parseFloat(i.getAttribute('min'))||0,parseFloat(i.value)-1);i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));">−</button>
+                                    <button type="button" class="single-qty-btn single-qty-minus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Decrease quantity">−</button>
                                     <input
                                         type="number"
                                         id="quantity-mobile"
@@ -427,7 +427,7 @@ get_header(); ?>
                                         inputmode="numeric"
                                         class="single-qty-input h-12 w-12 border-0 bg-transparent text-center text-base font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white appearance-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                     >
-                                    <button type="button" class="single-qty-btn single-qty-plus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Increase quantity" onclick="var i=this.previousElementSibling;i.value=Math.min(parseFloat(i.getAttribute('max'))||9999,parseFloat(i.value)+1);i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));">+</button>
+                                    <button type="button" class="single-qty-btn single-qty-plus flex h-12 w-12 items-center justify-center text-2xl font-medium text-gray-500 transition-colors hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-800" aria-label="Increase quantity">+</button>
                                 </div>
                             <?php endif; ?>
                             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-lg">
@@ -1011,8 +1011,39 @@ get_header(); ?>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Single product page loaded - Related Products script initialized');
 
+    document.body.addEventListener('click', function(e) {
+        const qtyBtn = e.target.closest('.single-qty-btn');
+        if (!qtyBtn) return;
+        e.preventDefault();
+        
+        const qtyWrap = qtyBtn.closest('.single-product-qty');
+        if (!qtyWrap) {
+            console.log('qtyWrap not found');
+            return;
+        }
+        
+        const input = qtyWrap.querySelector('.single-qty-input');
+        if (!input) {
+            console.log('input not found');
+            return;
+        }
+        
+        console.log('qtyBtn clicked', qtyBtn.className, 'current value:', input.value);
+        const current = parseInt(input.value || '1', 10);
+        const min = parseInt(input.getAttribute('min') || '1', 10);
+        const max = parseInt(input.getAttribute('max') || '9999', 10);
+        const isPlus = qtyBtn.classList.contains('single-qty-plus');
+        const next = isPlus ? Math.min(max, current + 1) : Math.max(min, current - 1);
+        
+        if (next !== current) {
+            input.value = next;
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            console.log('value updated to:', next);
+        } else {
+            console.log('value unchanged, min:', min, 'max:', max);
+        }
     });
-    
+
     document.body.addEventListener('click', function(e) {
         const btn = e.target.closest('.buy-now-btn');
         if (!btn) return;
@@ -1158,22 +1189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize for Mobile
     setupRelatedProductsInfiniteScroll('.warafy-related-grid-mobile', '.warafy-related-loading-trigger-mobile', true);
-    });
-    
-    // Quantity button handler
-    window.updateQty = function(button, delta) {
-        var input = delta > 0 ? button.previousElementSibling : button.nextElementSibling;
-        if (!input) return;
-        var current = parseFloat(input.value) || 1;
-        var min = parseFloat(input.getAttribute('min')) || 0;
-        var max = parseFloat(input.getAttribute('max')) || 9999;
-        var next = delta > 0 ? Math.min(max, current + 1) : Math.max(min, current - 1);
-        if (next !== current) {
-            input.value = next;
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-    };
+});
 </script>
 
 <?php get_footer(); ?>
