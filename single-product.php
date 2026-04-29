@@ -1016,19 +1016,36 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!qtyBtn) return;
         
         const qtyWrap = qtyBtn.closest('.single-product-qty');
-        if (!qtyWrap) return;
-        
-        const input = qtyWrap.querySelector('.single-qty-input');
-        if (!input) return;
-        
-        if (qtyBtn.classList.contains('single-qty-plus')) {
-            input.stepUp();
-        } else {
-            input.stepDown();
+        if (!qtyWrap) {
+            console.error('Quantity wrapper not found');
+            return;
         }
         
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
+        const input = qtyWrap.querySelector('.single-qty-input');
+        if (!input) {
+            console.error('Quantity input not found');
+            return;
+        }
+        
+        const current = parseFloat(input.value) || 0;
+        const min = parseFloat(input.getAttribute('min')) || 0;
+        const max = parseFloat(input.getAttribute('max')) || 9999;
+        const step = parseFloat(input.getAttribute('step')) || 1;
+        
+        let next;
+        if (qtyBtn.classList.contains('single-qty-plus')) {
+            next = Math.min(max, current + step);
+        } else {
+            next = Math.max(min, current - step);
+        }
+        
+        console.log('Qty button clicked:', qtyBtn.classList.contains('single-qty-plus') ? 'plus' : 'minus', 'current:', current, 'next:', next);
+        
+        if (next !== current) {
+            input.value = next;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
     });
 
     document.body.addEventListener('click', function(e) {
