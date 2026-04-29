@@ -1014,7 +1014,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('click', function(e) {
         const qtyBtn = e.target.closest('.single-qty-btn');
         if (!qtyBtn) return;
-        e.preventDefault();
         
         const qtyWrap = qtyBtn.closest('.single-product-qty');
         if (!qtyWrap) return;
@@ -1022,13 +1021,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const input = qtyWrap.querySelector('.single-qty-input');
         if (!input) return;
         
-        const current = parseInt(input.value || '1', 10);
-        const min = parseInt(input.getAttribute('min') || '1', 10);
-        const max = parseInt(input.getAttribute('max') || '9999', 10);
-        const next = qtyBtn.classList.contains('single-qty-plus') ? Math.min(max, current + 1) : Math.max(min, current - 1);
+        const current = parseFloat(input.value) || 1;
+        const min = parseFloat(input.getAttribute('min')) || 1;
+        const max = parseFloat(input.getAttribute('max')) || 9999;
+        const step = parseFloat(input.getAttribute('step')) || 1;
+        
+        let next;
+        if (qtyBtn.classList.contains('single-qty-plus')) {
+            next = Math.min(max, current + step);
+        } else {
+            next = Math.max(min, current - step);
+        }
         
         if (next !== current) {
             input.value = next;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
             input.dispatchEvent(new Event('change', { bubbles: true }));
         }
     });
