@@ -49,6 +49,16 @@ if (!$order_id && !$order_key && !$custom_order_number) {
 
 // Get order using the global function
 $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
+
+// DEBUG OUTPUT - remove after debugging
+echo '<div style="background:#f0f0f0;padding:10px;margin:10px;border:1px solid red;"><pre>';
+echo 'DEBUG:<br>';
+echo 'URL: ' . $_SERVER['REQUEST_URI'] . '<br>';
+echo 'custom_order_number: ' . var_export($custom_order_number, true) . '<br>';
+echo 'order_id: ' . var_export($order_id, true) . '<br>';
+echo 'order_key: ' . var_export($order_key, true) . '<br>';
+echo 'order found: ' . var_export($order ? $order->get_id() : null, true) . '<br>';
+echo '</pre></div>';
 ?>
 
 <div class="bg-gradient-to-br from-gray-50 via-purple-50/30 to-gray-100 dark:from-background-dark dark:via-gray-900 dark:to-background-dark min-h-[70vh] py-12 lg:py-20">

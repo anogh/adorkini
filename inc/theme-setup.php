@@ -202,3 +202,40 @@ if (!get_page_by_path('categories')) {
 if (!get_page_by_path('my-love')) {
     warafy_create_my_love_page();
 }
+
+// Create Order Details Page on Theme Activation
+function warafy_create_order_details_page() {
+    $existing_page = get_page_by_path('order-details');
+
+    if (!$existing_page) {
+        $page_data = array(
+            'post_title'    => 'Order Details',
+            'post_content'  => '<!-- This page uses the Public Order Details template -->',
+            'post_status'   => 'publish',
+            'post_type'     => 'page',
+            'post_name'     => 'order-details'
+        );
+
+        $page_id = wp_insert_post($page_data);
+
+        if ($page_id && !is_wp_error($page_id)) {
+            update_post_meta($page_id, '_wp_page_template', 'page-order-details.php');
+        }
+    }
+
+    flush_rewrite_rules();
+}
+add_action('after_setup_theme', 'warafy_create_order_details_page');
+
+// Ensure order-details page exists
+function warafy_ensure_order_details_page() {
+    if (!get_page_by_path('order-details')) {
+        warafy_create_order_details_page();
+    }
+}
+add_action('admin_init', 'warafy_ensure_order_details_page');
+
+// Create order-details page immediately when this file is loaded
+if (!get_page_by_path('order-details')) {
+    warafy_create_order_details_page();
+}
