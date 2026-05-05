@@ -133,25 +133,28 @@ get_header(); ?>
                         the_post();
                         global $product;
                         ?>
-                        <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark">
-                            <a href="<?php the_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" style='background-image: url("<?php echo get_the_post_thumbnail_url(get_the_ID(), 'large'); ?>");'></a>
-                            <div class="flex flex-col flex-1 justify-between gap-4">
-                                <div>
-                                    <a href="<?php the_permalink(); ?>" class="text-base font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors"><?php the_title(); ?></a>
-                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
+                        <div class="bg-white border border-gray-100 flex flex-col p-3 h-full rounded-xl relative transition-all hover:shadow-xl warafy-desktop-product-card">
+                            <a href="<?php the_permalink(); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-4 block" style='background-image: url("<?php echo get_the_post_thumbnail_url(get_the_ID(), 'woocommerce_thumbnail'); ?>");'></a>
+                            
+                            <a href="<?php the_permalink(); ?>" class="w-full text-base font-medium text-black line-clamp-2 leading-[1.4] min-h-[44px] mb-3 hover:text-primary">
+                                <?php the_title(); ?>
+                            </a>
+                            
+                            <div class="warafy-product-actions warafy-desktop-product-actions w-full mt-auto mb-3">
+                                <div class="flex items-center flex-wrap gap-2 min-w-0">
+                                    <span class="text-gray-400 line-through text-sm"><?php echo wc_price($product->get_regular_price()); ?></span>
+                                    <span class="text-black font-bold text-2xl"><?php echo wc_price($product->get_price()); ?></span>
                                 </div>
-                                <div class="flex flex-col gap-3">
-                                    <button type="button" class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#FFC107] hover:bg-[#FFB300] text-black text-sm font-bold transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
-                                        <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                        <span class="add-text truncate"><?php echo __t('Add to cart'); ?></span>
-                                        <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                        <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
-                                    </button>
-                                    <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-colors shadow-md w-full" title="<?php echo __t('ORDER NOW'); ?>">
-                                        <span class="truncate"><?php echo __t('ORDER NOW'); ?></span>
-                                    </a>
-                                </div>
+                                
+                                <button class="add-to-cart-btn bg-[#FFC107] hover:bg-[#FFB300] text-black text-sm font-bold px-4 py-2 rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 transition-colors shadow-sm" data-product-id="<?php echo $product->get_id(); ?>">
+                                    <span class="add-text"><?php echo __t('Add to cart'); ?></span>
+                                    <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
+                                </button>
                             </div>
+
+                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-lg py-2.5 rounded-lg text-center transition-colors shadow-md">
+                                <?php echo __t('ORDER NOW'); ?>
+                            </a>
                         </div>
                         <?php
                     }
@@ -332,27 +335,25 @@ get_header(); ?>
                     the_post();
                     global $product;
                     ?>
-                    <div class="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-background-dark shadow-sm">
-                        <div class="relative">
-                            <a href="<?php the_permalink(); ?>" class="block w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" style='background-image: url("<?php echo get_the_post_thumbnail_url(get_the_ID(), 'woocommerce_thumbnail'); ?>");'></a>
-                        </div>
-                        <div class="flex flex-col flex-1 justify-between gap-4">
-                            <div>
-                                <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                                    <a href="<?php the_permalink(); ?>" class="hover:text-primary transition-colors line-clamp-1"><?php the_title(); ?></a>
-                                </h3>
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
-                            </div>
-                            <div>
-                                <button type="button" class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
-                                    <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                    <span class="add-text truncate"><?php echo __t('Add'); ?></span>
-                                    <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
-                                    <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
+                    <div class="bg-white border border-gray-100 flex flex-col p-2 h-full rounded-xl relative warafy-mobile-product-card shadow-sm">
+                            <a href="<?php the_permalink(); ?>" class="w-full aspect-square bg-center bg-no-repeat bg-contain mb-3 block" style='background-image: url("<?php echo get_the_post_thumbnail_url(get_the_ID(), 'woocommerce_thumbnail'); ?>");'></a>
+                            
+                            <a href="<?php the_permalink(); ?>" class="w-full text-[12px] font-medium text-black line-clamp-2 leading-[1.3] min-h-[32px] mb-2 hover:text-primary">
+                                <?php the_title(); ?>
+                            </a>
+                            
+                            <div class="warafy-product-actions warafy-mobile-product-actions w-full mt-auto mb-2">
+                                <div class="flex items-center flex-wrap gap-1 min-w-0">
+                                    <span class="text-gray-400 line-through text-xs"><?php echo wc_price($product->get_regular_price()); ?></span>
+                                    <span class="text-black font-bold text-lg"><?php echo wc_price($product->get_price()); ?></span>
+                                </div>
+                                
+                                <button class="add-to-cart-btn bg-[#FFC107] hover:bg-[#FFB300] text-black text-xs font-bold px-3 py-1.5 rounded-full flex items-center justify-center whitespace-normal text-center flex-shrink-0 transition-colors shadow-sm" data-product-id="<?php echo $product->get_id(); ?>">
+                                    <span class="add-text"><?php echo __t('Add to cart'); ?></span>
+                                    <span class="added-text hidden text-white"><?php echo __t('Added'); ?></span>
                                 </button>
                             </div>
                         </div>
-                    </div>
                     <?php
                 }
             }
