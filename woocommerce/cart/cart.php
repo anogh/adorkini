@@ -133,10 +133,10 @@ if (!function_exists('WC') || !WC()->cart) {
                                                     <?php echo apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key); ?>
                                                 </p>
                                                 <button type="button"
-                                                        class="cart-item-remove text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
-                                                        data-cart-key="<?php echo $cart_item_key; ?>"
-                                                        title="<?php echo __t('Remove'); ?>">
-                                                    <span class="material-symbols-outlined" data-icon="delete"></span>
+                                                        class="cart-item-remove flex items-center gap-1 text-sm text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+                                                        data-cart-key="<?php echo $cart_item_key; ?>">
+                                                    <span class="material-symbols-outlined text-lg" data-icon="delete"></span>
+                                                    <span><?php echo __t('Remove'); ?></span>
                                                 </button>
                                             </div>
                                         </div>
@@ -189,10 +189,10 @@ if (!function_exists('WC') || !WC()->cart) {
                                                             ?>
                                                         </h3>
                                                         <button type="button"
-                                                                class="cart-item-remove text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
-                                                                data-cart-key="<?php echo $cart_item_key; ?>"
-                                                                title="<?php echo __t('Remove'); ?>">
-                                                            <span class="material-symbols-outlined text-xl" data-icon="delete"></span>
+                                                                class="cart-item-remove flex items-center gap-1 text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+                                                                data-cart-key="<?php echo $cart_item_key; ?>">
+                                                            <span class="material-symbols-outlined text-lg" data-icon="delete"></span>
+                                                            <span><?php echo __t('Remove'); ?></span>
                                                         </button>
                                                     </div>
                                                     <?php 
