@@ -17,33 +17,13 @@ get_header(); ?>
             <div class="categories-horizontal-scroll flex gap-4 overflow-x-auto pb-4 px-4" id="categoriesContainer">
                 <?php
                 $categories = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => false] );
-                $category_icons = [
-                    'Automotive' => 'directions_car',
-                    'Bags' => 'shopping_bag',
-                    'Bedding' => 'bed',
-                    'Computers' => 'computer',
-                    'DIY' => 'handyman',
-                    'Electronics' => 'devices',
-                    'Fashion' => 'checkroom',
-                    'Furniture' => 'chair',
-                    'Default' => 'category'
-                ];
-                
-                if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
-                    foreach ( $categories as $category ) {
-                        $icon_name = 'Default';
-                        foreach ($category_icons as $key => $icon) {
-                            if (stripos($category->name, $key) !== false) {
-                                $icon_name = $key;
-                                break;
-                            }
-                        }
-                        $icon = $category_icons[$icon_name];
-                        ?>
-                        <div class="category-item flex-shrink-0 cursor-pointer transition-all duration-200 hover:scale-105" data-category="<?php echo esc_attr($category->slug); ?>">
-                            <div class="category-circle w-16 h-16 rounded-full flex items-center justify-center mb-2 transition-all duration-200 bg-gray-100 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                                <span class="material-symbols-outlined text-2xl text-gray-600 dark:text-gray-400 category-icon" data-icon="<?php echo esc_attr($icon); ?>"></span>
-                            </div>
+                    if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+                        foreach ( $categories as $category ) {
+                            ?>
+                            <div class="category-item flex-shrink-0 cursor-pointer transition-all duration-200 hover:scale-105" data-category="<?php echo esc_attr($category->slug); ?>">
+                                <div class="category-circle w-16 h-16 rounded-full flex items-center justify-center mb-2 transition-all duration-200 bg-gray-100 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                                <span class="category-icon text-gray-600 dark:text-gray-400" aria-hidden="true"><?php echo warafy_get_category_icon_svg($category->slug, $category->name, 'w-6 h-6'); ?></span>
+                                </div>
                             <p class="text-xs text-center text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap">
                                 <?php echo esc_html($category->name); ?>
                             </p>
@@ -88,14 +68,17 @@ get_header(); ?>
                                     </h3>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                                 </div>
-                                <div>
+                                <div class="flex flex-col gap-3">
                                     <?php if ($product->is_in_stock()) : ?>
-                                        <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
+                                        <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#FFC107] hover:bg-[#FFB300] text-black text-sm font-bold transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
                                             <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                            <span class="add-text truncate"><?php echo __t('Add'); ?></span>
+                                            <span class="add-text truncate"><?php echo __t('Add to cart'); ?></span>
                                             <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                                             <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                         </button>
+                                        <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-colors shadow-md w-full" title="<?php echo __t('ORDER NOW'); ?>">
+                                            <span class="truncate"><?php echo __t('ORDER NOW'); ?></span>
+                                        </a>
                                     <?php else : ?>
                                         <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="<?php echo __t('Out of Stock'); ?>">
                                             <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>
@@ -144,32 +127,12 @@ get_header(); ?>
                 <div class="categories-horizontal-scroll flex gap-4 overflow-x-auto pb-4 px-4" id="categoriesContainer">
                     <?php
                     $categories = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => false] );
-                    $category_icons = [
-                        'Automotive' => 'directions_car',
-                        'Bags' => 'shopping_bag',
-                        'Bedding' => 'bed',
-                        'Computers' => 'computer',
-                        'DIY' => 'handyman',
-                        'Electronics' => 'devices',
-                        'Fashion' => 'checkroom',
-                        'Furniture' => 'chair',
-                        'Default' => 'category'
-                    ];
-                    
                     if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
                         foreach ( $categories as $category ) {
-                            $icon_name = 'Default';
-                            foreach ($category_icons as $key => $icon) {
-                                if (stripos($category->name, $key) !== false) {
-                                    $icon_name = $key;
-                                    break;
-                                }
-                            }
-                            $icon = $category_icons[$icon_name];
                             ?>
                             <div class="category-item flex-shrink-0 cursor-pointer transition-all duration-200 hover:scale-105" data-category="<?php echo esc_attr($category->slug); ?>">
                                 <div class="category-circle w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-2 transition-all duration-200 bg-gray-100 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                                    <span class="material-symbols-outlined text-2xl sm:text-3xl text-gray-600 dark:text-gray-400 category-icon" data-icon="<?php echo esc_attr($icon); ?>"></span>
+                                    <span class="category-icon text-gray-600 dark:text-gray-400" aria-hidden="true"><?php echo warafy_get_category_icon_svg($category->slug, $category->name, 'w-7 h-7'); ?></span>
                                 </div>
                                 <p class="text-xs sm:text-sm text-center text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap">
                                     <?php echo esc_html($category->name); ?>
@@ -215,17 +178,17 @@ get_header(); ?>
                                         </h3>
                                         <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                                     </div>
-                                    <div>
+                                    <div class="flex flex-col gap-3">
                                         <?php if ($product->is_in_stock()) : ?>
-                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors w-full" title="<?php echo __t('Buy Now'); ?>">
-                                                <span class="truncate"><?php echo __t('Buy Now'); ?></span>
-                                            </a>
-                                            <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
+                                            <button class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#FFC107] hover:bg-[#FFB300] text-black text-sm font-bold transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>" title="<?php echo __t('Add to Cart'); ?>">
                                                 <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
-                                                <span class="add-text truncate"><?php echo __t('Add'); ?></span>
+                                                <span class="add-text truncate"><?php echo __t('Add to cart'); ?></span>
                                                 <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
                                                 <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                             </button>
+                                            <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-colors shadow-md w-full" title="<?php echo __t('ORDER NOW'); ?>">
+                                                <span class="truncate"><?php echo __t('ORDER NOW'); ?></span>
+                                            </a>
                                         <?php else : ?>
                                             <button class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed w-full" disabled title="<?php echo __t('Out of Stock'); ?>">
                                                 <span class="material-symbols-outlined text-sm mr-2" data-icon="remove_shopping_cart"></span>

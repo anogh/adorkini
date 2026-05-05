@@ -120,6 +120,36 @@ function warafy_get_icon_svg($icon_name, $class = 'w-6 h-6') {
     return $icons[$icon_name] ?? $icons['category'];
 }
 
+function warafy_get_category_icon_svg($category_slug = '', $category_name = '', $class = 'w-5 h-5') {
+    $normalized = strtolower(trim($category_slug . ' ' . $category_name));
+    $normalized = preg_replace('/[^a-z0-9]+/', '-', $normalized);
+    $normalized = trim($normalized, '-');
+
+    $icon_name = 'category';
+
+    if ($normalized === 'all' || strpos($normalized, 'all') !== false) {
+        $icon_name = 'all';
+    } elseif (strpos($normalized, 'education') !== false || strpos($normalized, 'learning') !== false) {
+        $icon_name = 'education_learning';
+    } elseif (strpos($normalized, 'health') !== false || strpos($normalized, 'beauty') !== false) {
+        $icon_name = 'health_beauty';
+    } elseif (strpos($normalized, 'mother') !== false || strpos($normalized, 'baby') !== false) {
+        $icon_name = 'mother_baby';
+    } elseif (strpos($normalized, 'toys') !== false || strpos($normalized, 'games') !== false) {
+        $icon_name = 'toys_games';
+    }
+
+    $icons = [
+        'all' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="' . esc_attr($class) . '"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.5"/><rect x="14" y="14" width="6.5" height="6.5" rx="1.5"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.5"/></svg>',
+        'education_learning' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="' . esc_attr($class) . '"><path d="M12 4 3 8.5 12 13l9-4.5L12 4Z"/><path d="M5.5 10.2V15c0 1.9 3 3.8 6.5 3.8s6.5-1.9 6.5-3.8v-4.8"/><path d="M9 12.4V16"/></svg>',
+        'health_beauty' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="' . esc_attr($class) . '"><path d="M12 21s-6.8-4.2-8.8-8.3C1.7 8.9 3.9 5.5 7.5 5.5c1.8 0 3.3 1 4.5 2.5 1.2-1.5 2.7-2.5 4.5-2.5 3.6 0 5.8 3.4 4.3 7.2C18.8 16.8 12 21 12 21Z"/><path d="M18.7 3.8v2.1"/><path d="M19.8 4.9h-2.1"/></svg>',
+        'mother_baby' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="' . esc_attr($class) . '"><path d="M9 3.8h4l1.2 2.4H7.8L9 3.8Z"/><path d="M8 6.2h8v10.3a4 4 0 0 1-4 4h0a4 4 0 0 1-4-4V6.2Z"/><path d="M10.2 11.1h3.6"/><path d="M11 14.3h2"/></svg>',
+        'toys_games' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="' . esc_attr($class) . '"><path d="M7.5 8h9a4.5 4.5 0 0 1 4.5 4.5v1A5.5 5.5 0 0 1 15.5 19h-7A5.5 5.5 0 0 1 3 13.5v-1A4.5 4.5 0 0 1 7.5 8Z"/><path d="M9 12v.01"/><path d="M15 12v.01"/><path d="M10 15.2c.6.5 1.3.8 2 .8s1.4-.3 2-.8"/></svg>',
+    ];
+
+    return $icons[$icon_name] ?? $icons['all'];
+}
+
 // Custom Favicon - use logo image as favicon
 function warafy_custom_favicon() {
     $favicon_url = get_template_directory_uri() . '/assets/images/favicon.jpg';

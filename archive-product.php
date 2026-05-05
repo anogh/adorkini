@@ -56,27 +56,6 @@ get_header(); ?>
         $ribbon_categories = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => false] );
     }
 
-    // Category icon mapping
-    function get_category_icon($slug) {
-        $icons = [
-            'bags-and-travel' => 'shopping_bag',
-            'bedding-bath' => 'bed',
-            'diy-outdoor' => 'hardware',
-            'fashion' => 'apparel',
-            'furniture-decor' => 'chair',
-            'health-beauty' => 'spa',
-            'kitchen-dining' => 'restaurant',
-            'electronics' => 'devices',
-            'home-garden' => 'home',
-            'sports-outdoors' => 'sports',
-            'toys-games' => 'toys',
-            'laundry-cleaning' => 'cleaning',
-            'mother-baby' => 'baby',
-            'tools' => 'tools',
-            'default' => 'category'
-        ];
-        return isset($icons[$slug]) ? $icons[$slug] : $icons['default'];
-    }
     ?>
     
     <!-- Desktop Content -->
@@ -99,7 +78,7 @@ get_header(); ?>
                     
                     echo '<a href="' . esc_url( $all_link ) . '" class="flex flex-col items-center gap-2 min-w-[80px] group ' . ( $is_all_active ? 'text-primary' : 'text-gray-600 dark:text-gray-300 hover:text-primary' ) . '">';
                     echo '<div class="w-14 h-14 rounded-xl flex items-center justify-center ' . ( $is_all_active ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary/10' ) . ' transition-colors">';
-                    echo '<span class="material-symbols-outlined text-2xl" data-icon="apps"></span>';
+                    echo warafy_get_category_icon_svg('all', 'All', 'w-6 h-6');
                     echo '</div>';
                     echo '<span class="text-xs font-medium text-center whitespace-nowrap">' . __t('All') . '</span>';
                     echo '</a>';
@@ -119,11 +98,9 @@ get_header(); ?>
                                 $is_active = is_product_category() && get_queried_object_id() === $category->term_id;
                             }
 
-                            $icon = get_category_icon($category->slug);
-                            
                             echo '<a href="' . esc_url( $cat_link ) . '" class="flex flex-col items-center gap-2 min-w-[80px] group ' . ( $is_active ? 'text-primary' : 'text-gray-600 dark:text-gray-300 hover:text-primary' ) . '">';
                             echo '<div class="w-14 h-14 rounded-xl flex items-center justify-center ' . ( $is_active ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary/10' ) . ' transition-colors">';
-                            echo '<span class="material-symbols-outlined text-2xl" data-icon="' . $icon . '"></span>';
+                            echo warafy_get_category_icon_svg($category->slug, $category->name, 'w-6 h-6');
                             echo '</div>';
                             echo '<span class="text-xs font-medium text-center whitespace-nowrap">' . esc_html( $category->name ) . '</span>';
                             echo '</a>';
@@ -163,10 +140,16 @@ get_header(); ?>
                                     <a href="<?php the_permalink(); ?>" class="text-base font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors"><?php the_title(); ?></a>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400"><?php echo $product->get_price_html(); ?></p>
                                 </div>
-                                <div>
-                                    <button type="button" class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30 w-full" data-product-id="<?php echo $product->get_id(); ?>">
-                                        <span class="truncate"><?php echo __t('Add to Cart'); ?></span>
+                                <div class="flex flex-col gap-3">
+                                    <button type="button" class="add-to-cart-btn flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#FFC107] hover:bg-[#FFB300] text-black text-sm font-bold transition-colors w-full" data-product-id="<?php echo $product->get_id(); ?>">
+                                        <span class="material-symbols-outlined text-sm add-icon mr-2" data-icon="add_shopping_cart"></span>
+                                        <span class="add-text truncate"><?php echo __t('Add to cart'); ?></span>
+                                        <span class="material-symbols-outlined text-sm added-icon hidden mr-2" data-icon="check"></span>
+                                        <span class="added-text hidden truncate"><?php echo __t('Added'); ?></span>
                                     </button>
+                                    <a href="<?php echo esc_url( wc_get_checkout_url() . '?add-to-cart=' . $product->get_id() ); ?>" class="flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-colors shadow-md w-full" title="<?php echo __t('ORDER NOW'); ?>">
+                                        <span class="truncate"><?php echo __t('ORDER NOW'); ?></span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -218,11 +201,9 @@ get_header(); ?>
                             $is_active = is_product_category() && get_queried_object_id() === $category->term_id;
                         }
 
-                        $icon = get_category_icon($category->slug);
-                        
                         echo '<a href="' . esc_url( $cat_link ) . '" class="flex flex-col items-center gap-1.5 min-w-[64px] flex-shrink-0 ' . ( $is_active ? 'text-primary' : 'text-gray-600 dark:text-gray-300' ) . '">';
                         echo '<div class="w-12 h-12 rounded-xl flex items-center justify-center ' . ( $is_active ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800' ) . '">';
-                        echo '<span class="material-symbols-outlined text-xl" data-icon="' . $icon . '"></span>';
+                        echo warafy_get_category_icon_svg($category->slug, $category->name, 'w-5 h-5');
                         echo '</div>';
                         echo '<span class="text-[10px] font-medium text-center whitespace-nowrap">' . esc_html( $category->name ) . '</span>';
                         echo '</a>';

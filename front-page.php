@@ -8,44 +8,6 @@ $categories = get_terms([
     'parent' => 0, // Only top-level categories
 ]);
 
-// Icon mapping for different categories (using available SVG icons)
-$category_icons = [
-    'electronics' => 'bolt',
-    'men\'s fashion' => 'person',
-    'mens fashion' => 'person',
-    'men' => 'person',
-    'women\'s fashion' => 'person',
-    'womens fashion' => 'person',
-    'women' => 'person',
-    'home & garden' => 'home',
-    'home and garden' => 'home',
-    'home' => 'home',
-    'sports & outdoors' => 'bolt',
-    'sports and outdoors' => 'bolt',
-    'sports' => 'bolt',
-    'toys & games' => 'star',
-    'toys and games' => 'star',
-    'toys' => 'star',
-    'books' => 'inventory_2',
-    'beauty & health' => 'favorite',
-    'beauty and health' => 'favorite',
-    'beauty' => 'favorite',
-    'health' => 'favorite',
-    'clothing' => 'shopping_bag',
-    'accessories' => 'star',
-    'jewelry' => 'star',
-    'shoes' => 'shopping_bag',
-    'bags' => 'shopping_bag',
-    'food' => 'shopping_cart',
-    'pets' => 'favorite',
-    'automotive' => 'shopping_cart',
-    'music' => 'star',
-    'gaming' => 'bolt',
-    'office' => 'inventory_2',
-    'baby' => 'favorite',
-    'kids' => 'favorite',
-];
-
 // Random Products Query for New Arrivals
 $random_products_query = new WP_Query([
     'post_type' => 'product',
@@ -77,26 +39,13 @@ $random_products_query = new WP_Query([
                                     if (strtolower($category->slug) === 'uncategorized' || strtolower($category->name) === 'uncategorized') {
                                         continue;
                                     }
-                                    // Get the icon for this category
-                                    $category_slug = strtolower($category->slug);
-                                    $category_name_lower = strtolower($category->name);
-                                    
-                                    // Try to match icon by slug or name
-                                    $icon = 'category'; // default icon
-                                    foreach ($category_icons as $key => $icon_name) {
-                                        if (strpos($category_slug, $key) !== false || strpos($category_name_lower, $key) !== false) {
-                                            $icon = $icon_name;
-                                            break;
-                                        }
-                                    }
-                                    
                                     // First category gets highlighted style
                                     $class = $index === 0 
                                         ? 'flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2 text-primary dark:bg-primary/20' 
                                         : 'flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800/50';
                                     ?>
                                     <a class="<?php echo esc_attr($class); ?>" href="<?php echo esc_url(get_term_link($category)); ?>">
-                                        <?php echo warafy_get_icon_svg($icon, 'w-5 h-5'); ?>
+                                        <?php echo warafy_get_category_icon_svg($category->slug, $category->name, 'w-5 h-5'); ?>
                                         <p class="text-sm font-medium"><?php echo esc_html($category->name); ?></p>
                                     </a>
                                     <?php
