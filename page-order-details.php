@@ -51,12 +51,24 @@ if (!$order_id && !$order_key && !$custom_order_number) {
 $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
 
 // DEBUG OUTPUT - remove after debugging
+global $wpdb;
+$debug_post_id = $wpdb->get_var($wpdb->prepare(
+    "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_warafy_order_number' AND meta_value = %s LIMIT 1",
+    $custom_order_number
+));
+$debug_all_meta = $wpdb->get_results($wpdb->prepare(
+    "SELECT pm.meta_key, pm.meta_value FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id WHERE p.ID = %d",
+    $debug_post_id ? $debug_post_id : 0
+), ARRAY_A);
+
 echo '<div style="background:#f0f0f0;padding:10px;margin:10px;border:1px solid red;"><pre>';
 echo 'DEBUG:<br>';
 echo 'URL: ' . $_SERVER['REQUEST_URI'] . '<br>';
 echo 'custom_order_number: ' . var_export($custom_order_number, true) . '<br>';
 echo 'order_id: ' . var_export($order_id, true) . '<br>';
 echo 'order_key: ' . var_export($order_key, true) . '<br>';
+echo 'DB lookup post_id: ' . var_export($debug_post_id, true) . '<br>';
+echo 'Order meta from DB: ' . print_r($debug_all_meta, true) . '<br>';
 echo 'order found: ' . var_export($order ? $order->get_id() : null, true) . '<br>';
 echo '</pre></div>';
 ?>
