@@ -53,36 +53,43 @@ $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
 // DEBUG OUTPUT - remove after debugging
 global $wpdb;
 
-// Try to find the order by custom number with LIKE (in case of padding issues)
-$debug_like_post_id = $wpdb->get_var($wpdb->prepare(
-    "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_warafy_order_number' AND meta_value LIKE %s LIMIT 1",
-    '%' . ltrim($custom_order_number, '0') . '%'
-));
-
-// Get all orders and their warafy meta to find the match
-$debug_all_orders = $wpdb->get_results(
-    "SELECT p.ID, pm.meta_key, pm.meta_value FROM {$wpdb->posts} p 
-     LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = '_warafy_order_number'
-     WHERE p.post_type = 'shop_order' 
-     ORDER BY p.ID DESC LIMIT 10"
-, ARRAY_A);
-
-// Get the actual order meta for verification
-$actual_order_id = $wpdb->get_var("SELECT MAX(ID) FROM {$wpdb->posts} WHERE post_type = 'shop_order'");
-$actual_order_meta = $actual_order_id ? $wpdb->get_results($wpdb->prepare(
-    "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $actual_order_id
-), ARRAY_A) : [];
-
 echo '<div style="background:#f0f0f0;padding:10px;margin:10px;border:1px solid red;"><pre>';
 echo 'DEBUG:<br>';
-echo 'URL: ' . $_SERVER['REQUEST_URI'] . '<br>';
+echo 'DB prefix: ' . var_export($wpdb->prefix, true) . '<br>';
+echo 'WooCommerce active: ' . var_export(class_exists('WooCommerce'), true) . '<br>';
 echo 'custom_order_number: ' . var_export($custom_order_number, true) . '<br>';
-echo 'custom_order_number (int): ' . var_export((int)$custom_order_number, true) . '<br>';
-echo 'custom_order_number (trimmed 0): ' . var_export(ltrim($custom_order_number, '0'), true) . '<br>';
-echo 'Latest order ID: ' . var_export($actual_order_id, true) . '<br>';
-echo 'DB LIKE lookup post_id: ' . var_export($debug_like_post_id, true) . '<br>';
-echo 'Latest order meta: ' . print_r($actual_order_meta, true) . '<br>';
-echo 'All recent orders with warafy meta: ' . print_r($debug_all_orders, true) . '<br>';
+
+// Try using wc_get_orders to find orders
+$test_orders = wc_get_orders(array(
+    'limit' => 5,
+    'orderby' => 'date',
+    'order' => 'DESC',
+    'status' => array('pending', 'processing', 'completed', 'on-hold')
+));
+
+echo 'wc_get_orders count: ' . count($test_orders) . '<br>';
+if (!empty($test_orders)) {
+    foreach ($test_orders as $test_order) {
+        echo 'Order ID: ' . $test_order->get_id() . ' | ';
+        echo 'Order #: ' . $test_order->get_order_number() . ' | ';
+        echo 'Warafy #: ' . $test_order->get_meta('_warafy_order_number') . ' | ';
+        echo 'Status: ' . $test_order->get_status() . '<br>';
+    }
+}
+
+// Try direct query with proper prefix
+$table_name = $wpdb->prefix . 'posts';
+$meta_table = $wpdb->prefix . 'postmeta';
+$direct_orders = $wpdb->get_results(
+    "SELECT p.ID, p.post_status, pm.meta_value as warafy_num 
+     FROM {$table_name} p 
+     LEFT JOIN {$meta_table} pm ON p.ID = pm.post_id AND pm.meta_key = '_warafy_order_number'
+     WHERE p.post_type = 'shop_order' 
+     ORDER BY p.ID DESC LIMIT 5",
+    ARRAY_A
+);
+echo 'Direct query result: ' . print_r($direct_orders, true) . '<br>';
+
 echo 'order found: ' . var_export($order ? $order->get_id() : null, true) . '<br>';
 echo '</pre></div>';
 ?>
