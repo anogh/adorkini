@@ -49,49 +49,7 @@ if (!$order_id && !$order_key && !$custom_order_number) {
 
 // Get order using the global function
 $order = warafy_get_public_order($order_id, $order_key, $custom_order_number);
-
-// DEBUG OUTPUT - remove after debugging
-global $wpdb;
-
-echo '<div style="background:#f0f0f0;padding:10px;margin:10px;border:1px solid red;"><pre>';
-echo 'DEBUG:<br>';
-echo 'DB prefix: ' . var_export($wpdb->prefix, true) . '<br>';
-echo 'WooCommerce active: ' . var_export(class_exists('WooCommerce'), true) . '<br>';
-echo 'custom_order_number: ' . var_export($custom_order_number, true) . '<br>';
-
-// Try using wc_get_orders to find orders
-$test_orders = wc_get_orders(array(
-    'limit' => 5,
-    'orderby' => 'date',
-    'order' => 'DESC',
-    'status' => array('pending', 'processing', 'completed', 'on-hold')
-));
-
-echo 'wc_get_orders count: ' . count($test_orders) . '<br>';
-if (!empty($test_orders)) {
-    foreach ($test_orders as $test_order) {
-        echo 'Order ID: ' . $test_order->get_id() . ' | ';
-        echo 'Order #: ' . $test_order->get_order_number() . ' | ';
-        echo 'Warafy #: ' . $test_order->get_meta('_warafy_order_number') . ' | ';
-        echo 'Status: ' . $test_order->get_status() . '<br>';
-    }
-}
-
-// Try direct query with proper prefix
-$table_name = $wpdb->prefix . 'posts';
-$meta_table = $wpdb->prefix . 'postmeta';
-$direct_orders = $wpdb->get_results(
-    "SELECT p.ID, p.post_status, pm.meta_value as warafy_num 
-     FROM {$table_name} p 
-     LEFT JOIN {$meta_table} pm ON p.ID = pm.post_id AND pm.meta_key = '_warafy_order_number'
-     WHERE p.post_type = 'shop_order' 
-     ORDER BY p.ID DESC LIMIT 5",
-    ARRAY_A
-);
-echo 'Direct query result: ' . print_r($direct_orders, true) . '<br>';
-
-echo 'order found: ' . var_export($order ? $order->get_id() : null, true) . '<br>';
-echo '</pre></div>';
+?>
 ?>
 
 <div class="bg-gradient-to-br from-gray-50 via-purple-50/30 to-gray-100 dark:from-background-dark dark:via-gray-900 dark:to-background-dark min-h-[70vh] py-12 lg:py-20">
