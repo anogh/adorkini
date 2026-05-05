@@ -491,6 +491,108 @@ document.addEventListener('DOMContentLoaded', function() {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+.warafy-mobile-product-card {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.warafy-product-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.warafy-product-actions .add-to-cart-btn {
+    width: auto;
+    justify-self: end;
+    transform: none !important;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: normal !important;
+    text-align: center;
+}
+
+.warafy-mobile-product-card .add-to-cart-btn {
+    padding: 7px 12px !important;
+    font-size: 12px !important;
+    line-height: 1.15;
+}
+
+.warafy-product-actions .add-to-cart-btn .add-text,
+.warafy-product-actions .add-to-cart-btn .added-text {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: 1.1 !important;
+}
+
+.warafy-product-actions .add-to-cart-btn:hover {
+    transform: translateY(-1px) !important;
+}
+
+.warafy-desktop-product-card .add-to-cart-btn {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+}
+
+@media (max-width: 479px) {
+    .warafy-product-actions {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    .warafy-product-actions .add-to-cart-btn {
+        justify-self: stretch;
+        width: 100%;
+        padding: 6px 12px !important;
+        font-size: 11px !important;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+    .warafy-product-actions {
+        gap: 8px;
+    }
+
+    .warafy-product-actions .add-to-cart-btn {
+        padding: 7px 12px !important;
+        font-size: 12px !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .warafy-product-actions {
+        gap: 10px;
+    }
+
+    .warafy-product-actions .add-to-cart-btn {
+        padding: 8px 14px !important;
+        font-size: 13px !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .warafy-product-actions {
+        gap: 12px;
+    }
+
+    .warafy-product-actions .add-to-cart-btn {
+        padding: 8px 14px !important;
+        font-size: 13px !important;
+    }
+}
+
+.add-to-cart-btn.adding {
+    background-color: #d1d5db !important;
+    color: #4b5563 !important;
+}
 </style>
 
 <?php get_footer(); ?>
