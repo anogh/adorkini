@@ -129,12 +129,12 @@ if (!function_exists('WC') || !WC()->cart) {
                                                     }
                                                     ?>
                                                 </div>
-                                                <p class="w-20 text-right text-lg font-semibold text-gray-900 dark:text-white">
+                                                <p class="item-subtotal w-20 text-right text-lg font-semibold text-gray-900 dark:text-white">
                                                     <?php echo apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key); ?>
                                                 </p>
                                                 <button type="button"
-                                                        class="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
-                                                        onclick="window.location.href='<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>'"
+                                                        class="cart-item-remove text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
+                                                        data-cart-key="<?php echo $cart_item_key; ?>"
                                                         title="<?php echo __t('Remove'); ?>">
                                                     <span class="material-symbols-outlined" data-icon="delete"></span>
                                                 </button>
@@ -189,8 +189,8 @@ if (!function_exists('WC') || !WC()->cart) {
                                                             ?>
                                                         </h3>
                                                         <button type="button"
-                                                                class="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
-                                                                onclick="window.location.href='<?php echo esc_url(wc_get_cart_remove_url($cart_item_key)); ?>'"
+                                                                class="cart-item-remove text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
+                                                                data-cart-key="<?php echo $cart_item_key; ?>"
                                                                 title="<?php echo __t('Remove'); ?>">
                                                             <span class="material-symbols-outlined text-xl" data-icon="delete"></span>
                                                         </button>
@@ -265,7 +265,7 @@ if (!function_exists('WC') || !WC()->cart) {
                         <div class="mt-6 space-y-4">
                             <div class="flex items-center justify-between">
                                 <p class="text-sm text-gray-600 dark:text-gray-300"><?php echo __t('Subtotal'); ?></p>
-                                <p class="font-semibold text-gray-900 dark:text-white"><?php echo WC()->cart->get_cart_subtotal(); ?></p>
+                                <p class="order-summary-subtotal font-semibold text-gray-900 dark:text-white"><?php echo WC()->cart->get_cart_subtotal(); ?></p>
                             </div>
                             <?php if (WC()->cart->needs_shipping() && WC()->cart->show_shipping()) : ?>
                                 <?php do_action('woocommerce_cart_totals_before_shipping'); ?>
@@ -304,7 +304,7 @@ if (!function_exists('WC') || !WC()->cart) {
                         <div class="my-6 h-px w-full bg-gray-200 dark:bg-gray-700"></div>
                         <div class="flex items-center justify-between">
                             <p class="text-lg font-bold text-gray-900 dark:text-white"><?php echo __t('Total'); ?></p>
-                            <p class="text-lg font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
+                            <p class="order-summary-total text-lg font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
                         </div>
                         <a href="<?php echo esc_url(wc_get_checkout_url()); ?>"
                            class="mt-6 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-black text-white text-base font-bold shadow-lg hover:bg-gray-800">
@@ -327,7 +327,7 @@ if (!function_exists('WC') || !WC()->cart) {
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400"><?php echo __t('Total Price'); ?></p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
+                <p class="mobile-cart-total text-2xl font-bold text-gray-900 dark:text-white"><?php echo WC()->cart->get_total(); ?></p>
             </div>
             <a href="<?php echo esc_url(wc_get_checkout_url()); ?>"
                class="flex w-auto cursor-pointer items-center justify-center gap-2 rounded-full h-12 px-6 bg-black text-white text-base font-bold shadow-lg hover:bg-gray-800">
@@ -341,59 +341,187 @@ if (!function_exists('WC') || !WC()->cart) {
 <div class="lg:hidden h-20"></div>
 <?php endif; ?>
 
-<!-- Auto-submit form when quantity changes -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('.woocommerce-cart-form');
-    if (!form) return;
+    var cartAjaxUrl = '<?php echo admin_url("admin-ajax.php"); ?>';
+    var cartNonce = '<?php echo wp_create_nonce("warafy_cart_nonce"); ?>';
+    var isUpdating = false;
+
+    function getCartItemRow(cartKey) {
+        var rows = [];
+        var qtyInput = document.querySelector('input.qty-input[data-cart-key="' + cartKey + '"]');
+        if (!qtyInput) return rows;
+        var row = qtyInput.closest('.flex.flex-col.gap-6') || qtyInput.closest('.rounded-lg.border');
+        if (row) rows.push(row);
+        return rows;
+    }
+
+    function updateCartUI(data) {
+        var subtotalEls = document.querySelectorAll('.order-summary-subtotal');
+        subtotalEls.forEach(function(el) { el.innerHTML = data.subtotal; });
+
+        var totalEls = document.querySelectorAll('.order-summary-total');
+        totalEls.forEach(function(el) { el.innerHTML = data.total; });
+
+        var mobileTotalEls = document.querySelectorAll('.mobile-cart-total');
+        mobileTotalEls.forEach(function(el) { el.innerHTML = data.total; });
+
+        var cartCountEls = document.querySelectorAll('.cart-count, .warafy-cart-qty, .cart-counter');
+        cartCountEls.forEach(function(el) {
+            el.textContent = data.count;
+            el.classList.toggle('hidden', data.count === 0);
+        });
+
+        if (data.is_empty) {
+            location.reload();
+        }
+    }
+
+    function ajaxUpdateQty(cartKey, quantity) {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        var formData = new FormData();
+        formData.append('action', 'warafy_update_cart_item');
+        formData.append('nonce', cartNonce);
+        formData.append('cart_key', cartKey);
+        formData.append('quantity', quantity);
+
+        fetch(cartAjaxUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(response) {
+            if (response.success) {
+                var data = response.data;
+
+                if (data.removed) {
+                    var rows = getCartItemRow(cartKey);
+                    rows.forEach(function(row) {
+                        row.style.transition = 'opacity 0.3s, transform 0.3s';
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateX(-20px)';
+                        setTimeout(function() { row.remove(); }, 300);
+                    });
+                } else {
+                    var inputs = document.querySelectorAll('input.qty-input[data-cart-key="' + cartKey + '"]');
+                    inputs.forEach(function(input) { input.value = data.quantity; });
+
+                    var itemRow = getCartItemRow(cartKey)[0];
+                    if (itemRow) {
+                        var subtotalEl = itemRow.querySelector('.item-subtotal');
+                        if (subtotalEl) subtotalEl.innerHTML = data.item_subtotal;
+                    }
+                }
+
+                updateCartUI(data);
+            } else {
+                alert(data.message || 'Error updating cart');
+            }
+        })
+        .catch(function() {
+            alert('Network error. Please try again.');
+        })
+        .finally(function() {
+            isUpdating = false;
+        });
+    }
+
+    function ajaxRemoveItem(cartKey) {
+        if (isUpdating) return;
+        isUpdating = true;
+
+        var formData = new FormData();
+        formData.append('action', 'warafy_remove_cart_item');
+        formData.append('nonce', cartNonce);
+        formData.append('cart_key', cartKey);
+
+        fetch(cartAjaxUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(response) {
+            if (response.success) {
+                var data = response.data;
+                var rows = getCartItemRow(cartKey);
+                rows.forEach(function(row) {
+                    row.style.transition = 'opacity 0.3s, transform 0.3s';
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(-20px)';
+                    setTimeout(function() { row.remove(); }, 300);
+                });
+                updateCartUI(data);
+            } else {
+                alert('Error removing item');
+            }
+        })
+        .catch(function() {
+            alert('Network error. Please try again.');
+        })
+        .finally(function() {
+            isUpdating = false;
+        });
+    }
 
     function updateQty(btn, change) {
-        const cartKey = btn.dataset.cartKey;
-        const inputs = document.querySelectorAll(`input.qty-input[data-cart-key="${cartKey}"]`);
+        var cartKey = btn.dataset.cartKey;
+        var inputs = document.querySelectorAll('input.qty-input[data-cart-key="' + cartKey + '"]');
         if (!inputs.length) return;
 
-        const mainInput = inputs[0];
-        const currentVal = parseInt(mainInput.value) || 0;
-        const max = parseInt(btn.dataset.max) || 999;
-        const min = 0;
+        var mainInput = inputs[0];
+        var currentVal = parseInt(mainInput.value) || 0;
+        var max = parseInt(btn.dataset.max) || 999;
+        var min = 0;
 
-        let newVal = currentVal + change;
+        var newVal = currentVal + change;
         if (newVal < min) newVal = min;
         if (max > 0 && newVal > max) newVal = max;
 
         if (newVal !== currentVal) {
-            inputs.forEach(input => input.value = newVal);
-            
-            // Check for update button and trigger it to ensure WooCommerce processes the change
-            const updateBtn = form.querySelector('button[name="update_cart"]');
-            if (updateBtn) {
-                updateBtn.removeAttribute('disabled');
-                updateBtn.click();
-            } else {
-                // Fallback: Create hidden input for update_cart action
-                let hidden = form.querySelector('input[name="update_cart"]');
-                if (!hidden) {
-                    hidden = document.createElement('input');
-                    hidden.type = 'hidden';
-                    hidden.name = 'update_cart';
-                    hidden.value = '1';
-                    form.appendChild(hidden);
-                }
-                form.submit();
-            }
+            inputs.forEach(function(input) { input.value = newVal; });
+            ajaxUpdateQty(cartKey, newVal);
         }
     }
 
-    document.querySelectorAll('.qty-plus').forEach(btn => {
-        btn.addEventListener('click', function() {
-            updateQty(this, 1);
+    document.querySelectorAll('.qty-plus').forEach(function(btn) {
+        btn.addEventListener('click', function() { updateQty(this, 1); });
+    });
+
+    document.querySelectorAll('.qty-minus').forEach(function(btn) {
+        btn.addEventListener('click', function() { updateQty(this, -1); });
+    });
+
+    document.querySelectorAll('.qty-input').forEach(function(input) {
+        var debounceTimer;
+        input.addEventListener('change', function() {
+            var cartKey = this.dataset.cartKey;
+            var newVal = parseInt(this.value) || 0;
+            var max = parseInt(this.closest('.flex').querySelector('.qty-plus')?.dataset.max) || 999;
+            if (newVal < 0) newVal = 0;
+            if (max > 0 && newVal > max) newVal = max;
+            this.value = newVal;
+
+            var allInputs = document.querySelectorAll('input.qty-input[data-cart-key="' + cartKey + '"]');
+            allInputs.forEach(function(inp) { inp.value = newVal; });
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function() {
+                ajaxUpdateQty(cartKey, newVal);
+            }, 500);
         });
     });
 
-    document.querySelectorAll('.qty-minus').forEach(btn => {
-        btn.addEventListener('click', function() {
-            updateQty(this, -1);
-        });
+    document.addEventListener('click', function(e) {
+        var removeBtn = e.target.closest('.cart-item-remove');
+        if (removeBtn) {
+            e.preventDefault();
+            var cartKey = removeBtn.dataset.cartKey;
+            if (cartKey) {
+                ajaxRemoveItem(cartKey);
+            }
+        }
     });
 });
 </script>

@@ -169,6 +169,7 @@ require_once get_template_directory() . '/inc/class-warafy-session-manager.php';
 require_once get_template_directory() . '/inc/homepage-settings.php';
 require_once get_template_directory() . '/inc/logo-settings.php';
 require_once get_template_directory() . '/inc/translation-hub.php';
+require_once get_template_directory() . '/inc/ajax-handlers.php';
 
 // Initialize Session Manager
 add_action('init', function() {
