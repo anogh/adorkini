@@ -773,17 +773,15 @@ function warafy_order_number_exists($number) {
 
 // Get order by custom number
 function warafy_get_order_by_custom_number($custom_number) {
-    global $wpdb;
-    
-    $post_id = $wpdb->get_var($wpdb->prepare(
-        "SELECT post_id FROM {$wpdb->postmeta} 
-         WHERE meta_key = '_warafy_order_number' 
-         AND meta_value = %s 
-         LIMIT 1",
-        $custom_number
+    $orders = wc_get_orders(array(
+        'limit' => 1,
+        'status' => array('pending', 'processing', 'completed', 'on-hold', 'cancelled', 'refunded', 'failed'),
+        'meta_key' => '_warafy_order_number',
+        'meta_value' => $custom_number,
+        'meta_compare' => '='
     ));
-    
-    return $post_id ? wc_get_order($post_id) : null;
+
+    return !empty($orders) ? $orders[0] : null;
 }
 
 // Update rewrite rules to use custom order numbers
