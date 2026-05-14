@@ -153,6 +153,7 @@
     "Email already in use.": "ইমেল ইতিমধ্যে ব্যবহার করা হয়েছে।",
     "Personal details updated successfully.": "ব্যক্তিগত তথ্য সফলভাবে আপডেট হয়েছে।",
     "Addresses updated successfully.": "ঠিকানা সফলভাবে আপডেট হয়েছে।",
+    "Registration failed. Please check your details or try logging in.": "রেজিস্ট্রেশন ব্যর্থ হয়েছে। অনুগ্রহ করে আপনার তথ্য যাচাই করুন অথবা লগইন করার চেষ্টা করুন।",
     "An error occurred. Please try again.": "একটি ত্রুটি হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
     "All": "সব",
     "Filters": "ফিল্টার",

@@ -36,19 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['warafy_register'])) {
             $errors[] = __t('Please enter a valid email address.');
         }
         
-        // Check if email already exists
+        // Check if user already exists
+        $user_exists = false;
         if (!empty($email) && email_exists($email)) {
-            $errors[] = __t('An account with this email already exists.');
+            $user_exists = true;
         }
-        
-        // Check if phone already exists
-        if (!empty($phone)) {
-            $existing_user_by_phone = warafy_get_user_by_phone($phone);
-            if ($existing_user_by_phone) {
-                $errors[] = __t('An account with this phone number already exists.');
+        if (!$user_exists && !empty($phone)) {
+            if (warafy_get_user_by_phone($phone)) {
+                $user_exists = true;
             }
         }
         
+        if ($user_exists) {
+            $errors[] = __t('Registration failed. Please check your details or try logging in.');
+        }
+
         // Validate password
         if (empty($password) || strlen($password) < 6) {
             $errors[] = __t('Password must be at least 6 characters long.');
